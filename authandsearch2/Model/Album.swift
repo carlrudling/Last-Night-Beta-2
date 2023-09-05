@@ -12,7 +12,8 @@ struct Album: Codable {
     var albumName: String
     var endDate = Date()
     var photoLimit : Int
-    var members : [User] = []
+    //var members : [User] = []
+    var members : [String] = []
     
 }
 

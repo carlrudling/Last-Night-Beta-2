@@ -6,21 +6,20 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct FetchAlbumsView: View {
         @StateObject private var fetchAlbums = FetchAlbums() // Create an instance of FetchAlbums
-        let userViewModel = UserViewModel() // Assuming you have an instance of UserViewModel
+    @EnvironmentObject var user: UserViewModel
     
-    
-    
-
+   
         
         var body: some View {
             VStack {
                 // Your SwiftUI content here
                 
                 Button("Fetch Albums") {
-                    fetchAlbums.fetchAlbums(forUserWithID: userViewModel.uuid ?? "")
+                    fetchAlbums.fetchAlbums(with: user.uuid ?? "GpEq5QJAPMZ8zHTer5Uu6Svpq8B2")
                 }
                 
                 // You can display the fetched albums here

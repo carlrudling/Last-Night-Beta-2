@@ -12,7 +12,7 @@ struct AddMembersView: View {
     @EnvironmentObject var album : AlbumViewModel
     @StateObject var usersLookup = UsersLookupViewModel()
     @State var keyword = ""
-    @State private  var members : [User] = []
+    @State private  var members : [String] = []
     @Binding private var albumName : String
     @Binding private var  endDate : Date
     @Binding private var photoLimit : Int
@@ -80,9 +80,9 @@ struct SearchBarView2: View {
 
 struct ProfileBarView2: View {
     var user: User
-    @Binding var members : [User]
+    @Binding var members : [String]
     
-    init(user: User, members: Binding<[User]>) {
+    init(user: User, members: Binding<[String]>) {
             self.user = user
             _members = members
         }
@@ -92,7 +92,7 @@ struct ProfileBarView2: View {
             Rectangle()
             .foregroundColor(Color.gray.opacity(0.2))
             .onTapGesture {
-                members.append(user)
+                members.append(user.uuid)
             }
             HStack {
                 Text("\(user.username)")

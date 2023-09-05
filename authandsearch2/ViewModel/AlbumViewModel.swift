@@ -14,7 +14,7 @@ import FirebaseFirestoreSwift
 class AlbumViewModel: ObservableObject {
     @Published var user: User?
     @Published var album: Album?
-   // @Published var queryResultAlbums: [Album] = []
+   @Published var queryResultAlbums: [Album] = []
 
    // @EnvironmentObject var user : UserViewModel
 
@@ -46,7 +46,7 @@ class AlbumViewModel: ObservableObject {
             }
         }
     
-    func createAlbum(albumName: String, endDate: Date, photoLimit: Int, members: [User]) {
+    func createAlbum(albumName: String, endDate: Date, photoLimit: Int, members: [String]) {
         DispatchQueue.main.async {
             self.addAlbum(Album(uuid: (self.uuid)!, albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members))
             self.syncAlbums()
@@ -66,7 +66,18 @@ class AlbumViewModel: ObservableObject {
         }
     }
     
-    
+    func fetchAlbums(forUserWithID uuid: String) {
+        db.collection("albums").whereField("members", arrayContains: uuid).getDocuments { querySnapshot, error in
+            guard let documents = querySnapshot?.documents, error == nil else {
+                print("No documents")
+                return
+            }
+            self.queryResultAlbums = documents.compactMap { queryDocumentSnapshot in
+                try? queryDocumentSnapshot.data(as: Album.self)
+            }
+        }
+    }
+
 
         
     /*
