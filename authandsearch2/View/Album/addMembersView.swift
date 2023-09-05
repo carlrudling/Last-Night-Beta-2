@@ -16,11 +16,15 @@ struct AddMembersView: View {
     @Binding private var albumName : String
     @Binding private var  endDate : Date
     @Binding private var photoLimit : Int
+    @Binding private var creator : String
     
-    init(albumName: Binding<String>, endDate: Binding<Date>, photoLimit: Binding<Int>) {
+    init(albumName: Binding<String>, endDate: Binding<Date>, photoLimit: Binding<Int>, creator: Binding<String>) {
             _albumName = albumName
             _endDate = endDate
             _photoLimit = photoLimit
+            _creator = creator
+        
+        
         }
     
     
@@ -46,7 +50,7 @@ struct AddMembersView: View {
             }
             
             Button {
-                album.createAlbum(albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members)
+                album.createAlbum(albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator)
             } label: {
                 Text("Create Album")
             }
@@ -113,7 +117,8 @@ struct addMembersView_Previews: PreviewProvider {
         let albumName = Binding<String>(get: { "Sample Album" }, set: { _ in })
         let endDate = Binding<Date>(get: { Date() }, set: { _ in })
         let photoLimit = Binding<Int>(get: { 10 }, set: { _ in })
+        let creator = Binding<String>(get: {"Sample creator"}, set: { _ in})
         
-        return AddMembersView(albumName: albumName, endDate: endDate, photoLimit: photoLimit)
+        return AddMembersView(albumName: albumName, endDate: endDate, photoLimit: photoLimit, creator: creator)
     }
 }

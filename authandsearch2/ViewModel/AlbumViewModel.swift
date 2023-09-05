@@ -46,9 +46,9 @@ class AlbumViewModel: ObservableObject {
             }
         }
     
-    func createAlbum(albumName: String, endDate: Date, photoLimit: Int, members: [String]) {
+    func createAlbum(albumName: String, endDate: Date, photoLimit: Int, members: [String], creator: String) {
         DispatchQueue.main.async {
-            self.addAlbum(Album(uuid: (self.uuid)!, albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members))
+            self.addAlbum(Album(uuid: (self.uuid)!, albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator))
             self.syncAlbums()
 
         }

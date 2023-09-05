@@ -14,6 +14,8 @@ struct Album: Codable {
     var photoLimit : Int
     //var members : [User] = []
     var members : [String] = []
+    var creator : String
+    //var posts : [Post] = []
     
 }
 

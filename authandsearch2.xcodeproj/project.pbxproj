@@ -26,6 +26,7 @@
 		D33D9F672AA08B2A00498EA2 /* addMembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F662AA08B2A00498EA2 /* addMembersView.swift */; };
 		D33D9F692AA2BE2500498EA2 /* FetchAlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F682AA2BE2500498EA2 /* FetchAlbumsView.swift */; };
 		D33D9F6B2AA5A48A00498EA2 /* FetchAlbumsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */; };
+		D38DF04B2AA7167F0001EADD /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04A2AA7167F0001EADD /* Post.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		D33D9F662AA08B2A00498EA2 /* addMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addMembersView.swift; sourceTree = "<group>"; };
 		D33D9F682AA2BE2500498EA2 /* FetchAlbumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAlbumsView.swift; sourceTree = "<group>"; };
 		D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAlbumsModel.swift; sourceTree = "<group>"; };
+		D38DF04A2AA7167F0001EADD /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 			children = (
 				D33D9F4A2A9D2A4600498EA2 /* User.swift */,
 				D33D9F5F2AA072FB00498EA2 /* Album.swift */,
+				D38DF04A2AA7167F0001EADD /* Post.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */,
 				D33D9F652AA07FA500498EA2 /* createAlbumView.swift in Sources */,
 				D33D9F5E2A9D3F4800498EA2 /* UsersLookupViewModel.swift in Sources */,
+				D38DF04B2AA7167F0001EADD /* Post.swift in Sources */,
 				D33D9F4D2A9D2A6200498EA2 /* UserViewModel.swift in Sources */,
 				D33D9F512A9D2AE300498EA2 /* AuthenticationView.swift in Sources */,
 				D33D9F672AA08B2A00498EA2 /* addMembersView.swift in Sources */,

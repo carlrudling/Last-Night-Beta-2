@@ -16,6 +16,9 @@ struct createAlbumView: View {
     @State private var  endDate = Date()
     @State private var photoLimit = 0
     @State private var members : [User] = []
+    @State private var creator : String = ""
+    
+    
     
     var body: some View {
         NavigationStack{
@@ -37,7 +40,7 @@ struct createAlbumView: View {
                 Spacer()
                 
                 
-                NavigationLink(destination: AddMembersView(albumName: $albumName, endDate: $endDate, photoLimit: $photoLimit), label: {
+                NavigationLink(destination: AddMembersView(albumName: $albumName, endDate: $endDate, photoLimit: $photoLimit, creator : $creator), label: {
                     Text("Next")
                         .font(Font.custom("Chillax", size: 20))
                         .frame(maxWidth: .infinity) // Align the button to center horizontally
@@ -53,6 +56,9 @@ struct createAlbumView: View {
             
             }
             .padding(.horizontal, 20)
+            .onAppear {
+                creator = self.user.uuid ?? ""
+            }
         }
     }
 }

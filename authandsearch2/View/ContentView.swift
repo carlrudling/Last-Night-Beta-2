@@ -14,8 +14,8 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             if user.userIsAuthenticatedAndSynced {
-               // createAlbumView()
-                FetchAlbumsView()
+                createAlbumView()
+               // FetchAlbumsView()
             } else {
                 AuthenticationView()
             }
