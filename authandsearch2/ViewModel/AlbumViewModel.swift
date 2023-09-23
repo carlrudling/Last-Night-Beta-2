@@ -14,7 +14,7 @@ import FirebaseFirestoreSwift
 class AlbumViewModel: ObservableObject {
     @Published var user: User?
     @Published var album: Album?
-   @Published var queryResultAlbums: [Album] = []
+    @Published var queryResultAlbums: [Album] = []
 
    // @EnvironmentObject var user : UserViewModel
 
@@ -52,6 +52,20 @@ class AlbumViewModel: ObservableObject {
             self.syncAlbums()
 
         }
+    }
+    
+    
+    func addMembers(Albumuuid: String, member : String) {
+        guard userIsAuthenticated else {return}
+            let document = db.collection("albums").document(Albumuuid)
+            document.updateData(["members": FieldValue.arrayUnion([member])
+                                ]) {error in
+                if let error = error {
+                    print("Error adding post: \(error)")
+                } else {
+                    print("Post added suvvessfully")
+                }
+            }
     }
     
     private func syncAlbums() {

@@ -15,7 +15,6 @@
 		D33D9F4D2A9D2A6200498EA2 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F4C2A9D2A6200498EA2 /* UserViewModel.swift */; };
 		D33D9F4F2A9D2ABB00498EA2 /* ProfileSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F4E2A9D2ABB00498EA2 /* ProfileSearchView.swift */; };
 		D33D9F512A9D2AE300498EA2 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F502A9D2AE300498EA2 /* AuthenticationView.swift */; };
-		D33D9F532A9D2B9900498EA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33D9F522A9D2B9900498EA2 /* GoogleService-Info.plist */; };
 		D33D9F562A9D2C6E00498EA2 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D33D9F552A9D2C6E00498EA2 /* FirebaseAuth */; };
 		D33D9F582A9D2C6E00498EA2 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D33D9F572A9D2C6E00498EA2 /* FirebaseFirestore */; };
 		D33D9F5A2A9D2C6E00498EA2 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D33D9F592A9D2C6E00498EA2 /* FirebaseFirestoreSwift */; };
@@ -26,7 +25,13 @@
 		D33D9F672AA08B2A00498EA2 /* addMembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F662AA08B2A00498EA2 /* addMembersView.swift */; };
 		D33D9F692AA2BE2500498EA2 /* FetchAlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F682AA2BE2500498EA2 /* FetchAlbumsView.swift */; };
 		D33D9F6B2AA5A48A00498EA2 /* FetchAlbumsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */; };
+		D3539BE42AABE43D008FB64B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D3539BE32AABE43D008FB64B /* FirebaseStorage */; };
+		D3539BE72AABF955008FB64B /* ListofAlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3539BE62AABF955008FB64B /* ListofAlbumsView.swift */; };
+		D3539BE92AAC0005008FB64B /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3539BE82AAC0005008FB64B /* PostViewModel.swift */; };
 		D38DF04B2AA7167F0001EADD /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04A2AA7167F0001EADD /* Post.swift */; };
+		D38DF04D2AAAF2510001EADD /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04C2AAAF2510001EADD /* CameraViewModel.swift */; };
+		D38DF04F2AAAF37C0001EADD /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04E2AAAF37C0001EADD /* CameraView.swift */; };
+		D3C8217D2AB97917006C0687 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D3C8217C2AB97917006C0687 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +44,6 @@
 		D33D9F4C2A9D2A6200498EA2 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		D33D9F4E2A9D2ABB00498EA2 /* ProfileSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSearchView.swift; sourceTree = "<group>"; };
 		D33D9F502A9D2AE300498EA2 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
-		D33D9F522A9D2B9900498EA2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D33D9F5D2A9D3F4800498EA2 /* UsersLookupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersLookupViewModel.swift; sourceTree = "<group>"; };
 		D33D9F5F2AA072FB00498EA2 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		D33D9F612AA078E700498EA2 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
@@ -47,7 +51,12 @@
 		D33D9F662AA08B2A00498EA2 /* addMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addMembersView.swift; sourceTree = "<group>"; };
 		D33D9F682AA2BE2500498EA2 /* FetchAlbumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAlbumsView.swift; sourceTree = "<group>"; };
 		D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAlbumsModel.swift; sourceTree = "<group>"; };
+		D3539BE62AABF955008FB64B /* ListofAlbumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListofAlbumsView.swift; sourceTree = "<group>"; };
+		D3539BE82AAC0005008FB64B /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		D38DF04A2AA7167F0001EADD /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		D38DF04C2AAAF2510001EADD /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+		D38DF04E2AAAF37C0001EADD /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		D3C8217C2AB97917006C0687 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/firebaseinfoplist/GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D33D9F562A9D2C6E00498EA2 /* FirebaseAuth in Frameworks */,
+				D3539BE42AABE43D008FB64B /* FirebaseStorage in Frameworks */,
 				D33D9F582A9D2C6E00498EA2 /* FirebaseFirestore in Frameworks */,
 				D33D9F5A2A9D2C6E00498EA2 /* FirebaseFirestoreSwift in Frameworks */,
 			);
@@ -69,6 +79,7 @@
 			children = (
 				D33D9F382A9D2A1A00498EA2 /* authandsearch2 */,
 				D33D9F372A9D2A1A00498EA2 /* Products */,
+				D3539BE22AABE43D008FB64B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -83,11 +94,12 @@
 		D33D9F382A9D2A1A00498EA2 /* authandsearch2 */ = {
 			isa = PBXGroup;
 			children = (
+				D3539BE52AABF938008FB64B /* Components */,
 				D33D9F492A9D2A3600498EA2 /* Model */,
 				D33D9F482A9D2A2E00498EA2 /* ViewModel */,
 				D33D9F472A9D2A2700498EA2 /* View */,
 				D33D9F3D2A9D2A1C00498EA2 /* Assets.xcassets */,
-				D33D9F522A9D2B9900498EA2 /* GoogleService-Info.plist */,
+				D3C8217C2AB97917006C0687 /* GoogleService-Info.plist */,
 				D33D9F3F2A9D2A1C00498EA2 /* Preview Content */,
 			);
 			path = authandsearch2;
@@ -109,6 +121,7 @@
 				D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */,
 				D33D9F4E2A9D2ABB00498EA2 /* ProfileSearchView.swift */,
 				D33D9F502A9D2AE300498EA2 /* AuthenticationView.swift */,
+				D38DF04E2AAAF37C0001EADD /* CameraView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -120,6 +133,8 @@
 				D33D9F5D2A9D3F4800498EA2 /* UsersLookupViewModel.swift */,
 				D33D9F612AA078E700498EA2 /* AlbumViewModel.swift */,
 				D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */,
+				D38DF04C2AAAF2510001EADD /* CameraViewModel.swift */,
+				D3539BE82AAC0005008FB64B /* PostViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -144,6 +159,21 @@
 			path = Album;
 			sourceTree = "<group>";
 		};
+		D3539BE22AABE43D008FB64B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D3539BE52AABF938008FB64B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				D3539BE62AABF955008FB64B /* ListofAlbumsView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -164,6 +194,7 @@
 				D33D9F552A9D2C6E00498EA2 /* FirebaseAuth */,
 				D33D9F572A9D2C6E00498EA2 /* FirebaseFirestore */,
 				D33D9F592A9D2C6E00498EA2 /* FirebaseFirestoreSwift */,
+				D3539BE32AABE43D008FB64B /* FirebaseStorage */,
 			);
 			productName = authandsearch2;
 			productReference = D33D9F362A9D2A1A00498EA2 /* authandsearch2.app */;
@@ -212,7 +243,7 @@
 			files = (
 				D33D9F412A9D2A1C00498EA2 /* Preview Assets.xcassets in Resources */,
 				D33D9F3E2A9D2A1C00498EA2 /* Assets.xcassets in Resources */,
-				D33D9F532A9D2B9900498EA2 /* GoogleService-Info.plist in Resources */,
+				D3C8217D2AB97917006C0687 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,18 +256,22 @@
 			files = (
 				D33D9F622AA078E700498EA2 /* AlbumViewModel.swift in Sources */,
 				D33D9F6B2AA5A48A00498EA2 /* FetchAlbumsModel.swift in Sources */,
+				D3539BE72AABF955008FB64B /* ListofAlbumsView.swift in Sources */,
 				D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */,
 				D33D9F652AA07FA500498EA2 /* createAlbumView.swift in Sources */,
 				D33D9F5E2A9D3F4800498EA2 /* UsersLookupViewModel.swift in Sources */,
+				D3539BE92AAC0005008FB64B /* PostViewModel.swift in Sources */,
 				D38DF04B2AA7167F0001EADD /* Post.swift in Sources */,
 				D33D9F4D2A9D2A6200498EA2 /* UserViewModel.swift in Sources */,
 				D33D9F512A9D2AE300498EA2 /* AuthenticationView.swift in Sources */,
+				D38DF04D2AAAF2510001EADD /* CameraViewModel.swift in Sources */,
 				D33D9F672AA08B2A00498EA2 /* addMembersView.swift in Sources */,
 				D33D9F4F2A9D2ABB00498EA2 /* ProfileSearchView.swift in Sources */,
 				D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */,
 				D33D9F692AA2BE2500498EA2 /* FetchAlbumsView.swift in Sources */,
 				D33D9F4B2A9D2A4600498EA2 /* User.swift in Sources */,
 				D33D9F602AA072FB00498EA2 /* Album.swift in Sources */,
+				D38DF04F2AAAF37C0001EADD /* CameraView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,10 +403,11 @@
 				DEVELOPMENT_TEAM = 45Z98QXDZ5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "\"We need to access the camera to use this app\"";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "\"Hi we need acces to your photos to save images\"";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -397,10 +433,11 @@
 				DEVELOPMENT_TEAM = 45Z98QXDZ5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "\"We need to access the camera to use this app\"";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "\"Hi we need acces to your photos to save images\"";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -464,6 +501,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D33D9F542A9D2C6E00498EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestoreSwift;
+		};
+		D3539BE32AABE43D008FB64B /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D33D9F542A9D2C6E00498EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

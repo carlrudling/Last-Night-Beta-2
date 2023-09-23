@@ -16,9 +16,11 @@ struct authandsearch2App: App {
         WindowGroup {
             let user = UserViewModel()
             let album = AlbumViewModel()
+            let post = PostViewModel()
             ContentView()
                 .environmentObject(user)
                 .environmentObject(album)
+                .environmentObject(post)
         }
     }
 }

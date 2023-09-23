@@ -11,11 +11,15 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var user : UserViewModel
     @EnvironmentObject var album : AlbumViewModel
+    @EnvironmentObject var post: PostViewModel
+
     var body: some View {
         NavigationView {
             if user.userIsAuthenticatedAndSynced {
-                createAlbumView()
+               // createAlbumView()
                // FetchAlbumsView()
+                //CameraView2(albumuuid: "")
+                CameraView2(albumuuid: "LUjUOcK9ByPlcyjYYrda", post: post, album: album, user: user)
             } else {
                 AuthenticationView()
             }
