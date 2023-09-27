@@ -9,14 +9,14 @@ import SwiftUI
 import AVFoundation
 import FirebaseFirestoreSwift
 
-struct CameraView2: View {
-    @EnvironmentObject var album : AlbumViewModel
+struct CameraView: View {
     @State var albumuuid : String
     @StateObject var fetchAlbums = FetchAlbums()
-    @State private var selectedAlbumID: String? = "LUjUOcK9ByPlcyjYYrda"
-    @EnvironmentObject var post: PostViewModel
-    @EnvironmentObject var user: UserViewModel
-    @StateObject var camera = cameraModel()
+    @State private var selectedAlbumID: String? = ""
+    @StateObject var camera = CameraModel()
+    @EnvironmentObject var post : PostViewModel
+    @EnvironmentObject var user : UserViewModel
+   // let camera: CameraModel
     
    
     
@@ -29,7 +29,7 @@ struct CameraView2: View {
                 .ignoresSafeArea(.all, edges: .all)
             
             VStack{
-                        
+                AlbumPickerView(fetchAlbums: fetchAlbums, selectedAlbumID: $selectedAlbumID)
                         if camera.isTaken {
                             
                             HStack{
@@ -54,9 +54,10 @@ struct CameraView2: View {
                             // if taken showing save and again take button
                             
                             if camera.isTaken {
+                       
                                 
                                 
-                                Button(action: {if !camera.isSaved{camera.savePost(albumUuid: selectedAlbumID ?? "")}}, label: {
+                                Button(action: {if !camera.isSaved{camera.savePost(); post.createPost(albumID: selectedAlbumID!, imageURL: camera.uuidGlobal, userUUID: user.uuid!)}}, label: {
                                     Text(camera.isSaved ? "Saved" : "Save")
                                         .foregroundColor(.black)
                                         .fontWeight(.semibold)

@@ -13,6 +13,15 @@ struct Post: Codable {
     var userUuid: String
     var imageURL : String
     
+    
+    func toDictionary() -> [String: Any] {
+            return [
+                "Postuuid": Postuuid,
+                "userUuid": userUuid,
+                "imageURL": imageURL
+            ]
+        }
+    
     /*
     func asDictionary() throws -> [String: Any] {
            let data = try JSONEncoder().encode(self)

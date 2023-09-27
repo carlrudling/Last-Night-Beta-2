@@ -13,22 +13,22 @@ import FirebaseStorage
 
 class PostViewModel: ObservableObject {
     @Published var post: Post?
-    @Published var album: Album?
-    @Published var user: User?
+   // @Published var album: Album?
+    // @Published var user: User?
+   
+    
     
     private let db = Firestore.firestore()
     
     
-    func createPost(albumID: String, imageURL: String) {
-        guard let user = Auth.auth().currentUser else {
-            return
-        }
+    
+    func createPost(albumID: String, imageURL: String, userUUID : String) {
         
         // Step 1: Generate a UUID for the new post
         let newPostUUID = UUID().uuidString
         
         // Step 2: Get the user's UID (userUuid)
-        let userUUID = user.uid
+     //   let userUUID = userUUID
         
         // Step 3: Create a Post object
         let newPost = Post(Postuuid: newPostUUID, userUuid: userUUID, imageURL: imageURL)
@@ -36,7 +36,7 @@ class PostViewModel: ObservableObject {
         // Step 4: Save the Post object to Firestore
         let documentRef = db.collection("albums").document(albumID)
         documentRef.updateData([
-            "posts": FieldValue.arrayUnion([newPost])
+            "posts": FieldValue.arrayUnion([newPost.toDictionary()])
         ]) { error in
             if let error = error {
                 print("Error creating post: \(error)")

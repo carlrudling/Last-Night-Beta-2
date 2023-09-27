@@ -17,6 +17,7 @@ struct AddMembersView: View {
     @Binding private var  endDate : Date
     @Binding private var photoLimit : Int
     @Binding private var creator : String
+ 
     
     init(albumName: Binding<String>, endDate: Binding<Date>, photoLimit: Binding<Int>, creator: Binding<String>) {
             _albumName = albumName
@@ -59,6 +60,9 @@ struct AddMembersView: View {
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear{
+            members.append(self.user.uuid!)
+        }
     }
 }
 
@@ -82,32 +86,58 @@ struct SearchBarView2: View {
     }
 }
 
+
+// Propably you need to create another struct and call it when onTapgesture that displays the member (as selected)
+
+
 struct ProfileBarView2: View {
     var user: User
     @Binding var members : [String]
+    @State private var isTapped: Bool = false
     
     init(user: User, members: Binding<[String]>) {
             self.user = user
             _members = members
         }
+
     
     var body: some View {
-        ZStack {
-            Rectangle()
-            .foregroundColor(Color.gray.opacity(0.2))
-            .onTapGesture {
-                members.append(user.uuid)
+       
+            ZStack {
+                /*
+                 Rectangle()
+                 .foregroundColor(Color.gray.opacity(0.2))
+                 .onTapGesture {
+                 members.append(user.uuid)
+                 
+                 }
+                 */
+                Rectangle()
+                    .foregroundColor(isTapped ? Color.green : Color.gray.opacity(0.2))
+                    .onTapGesture {
+                        if members.contains( user.uuid) {
+                            // Member is already in the array, so remove them
+                          //  members.remove(user.uuid)
+                            isTapped = false
+                        } else {
+                            // Member is not in the array, so add them
+                            members.append(user.uuid)
+                            isTapped = true
+                        }
+                    }
+                HStack {
+                    Text("\(user.username)")
+                    Spacer()
+                    Text("\(user.firstName) \(user.lastName)")
+                }
+                .padding(.horizontal, 10)
             }
-            HStack {
-                Text("\(user.username)")
-                Spacer()
-                Text("\(user.firstName) \(user.lastName)")
-            }
-            .padding(.horizontal, 10)
-        }
-        .frame(maxWidth: .infinity, minHeight: 100)
-        .cornerRadius(13)
-        .padding()
+            .frame(maxWidth: .infinity, minHeight: 100)
+            .cornerRadius(13)
+            .padding()
+        
+        
+        
     }
 }
 

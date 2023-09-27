@@ -19,7 +19,7 @@ struct ContentView: View {
                // createAlbumView()
                // FetchAlbumsView()
                 //CameraView2(albumuuid: "")
-                CameraView2(albumuuid: "LUjUOcK9ByPlcyjYYrda", post: post, album: album, user: user)
+               CameraView(albumuuid: "LUjUOcK9ByPlcyjYYrda")
             } else {
                 AuthenticationView()
             }

@@ -10,10 +10,13 @@ import FirebaseAuth
 
 struct FetchAlbumsView: View {
         @StateObject private var fetchAlbums = FetchAlbums() // Create an instance of FetchAlbums
-    @EnvironmentObject var user: UserViewModel
+        @EnvironmentObject var user: UserViewModel
     
    
-        
+        // Remove button and fetch onAppear
+        // Have button that navigates to create album
+        // Make list of fetched albums and if pressed nav to view to display all info of that album
+    
         var body: some View {
             VStack {
                 // Your SwiftUI content here
@@ -25,6 +28,8 @@ struct FetchAlbumsView: View {
                 // You can display the fetched albums here
                 List(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
                     Text(album.albumName)
+                    
+                    
                 }
             }
         }

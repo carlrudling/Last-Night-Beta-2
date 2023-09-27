@@ -35,14 +35,23 @@ import FirebaseAuth
 import FirebaseStorage
 
 
-class cameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
+class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
     @Published var isTaken = false
     @Published var session = AVCaptureSession()
     @Published var alert = false
-    @Published var post: PostViewModel
-    @Published var album: AlbumViewModel
-    @Published var user: UserViewModel
+    
+    @Published var uuidGlobal : String = ""
+  /*
+    let post: PostViewModel
+    let album: AlbumViewModel
+    let user: UserViewModel
  
+    init(post: PostViewModel, album: AlbumViewModel, user: UserViewModel) {
+        self.post = post
+        self.album = album
+        self.user = user
+    }
+   */
     
     // Since wew going to read pic data...
     @Published var output = AVCapturePhotoOutput()
@@ -92,6 +101,7 @@ class cameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
             
             if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
                 
+                do {
                     let input = try AVCaptureDeviceInput(device: device)
                     
                     //checking and adding to session
@@ -100,8 +110,10 @@ class cameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
                         self.session.addInput(input)
                         print("Input has been added")
                     }
-               
-                
+                    
+                }  catch {
+                    print(error.localizedDescription)
+                }
                 // Same for outputs...
                
                 if self.session.canAddOutput(self.output) {
@@ -126,13 +138,19 @@ class cameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
                 DispatchQueue.main.async {
                             Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { (timer) in
                                 self.session.stopRunning()
+                               
+                                
                             }
                         }
-                DispatchQueue.main.async {
-                    withAnimation{self.isTaken.toggle()}
+               // DispatchQueue.main.async {
+                 //   withAnimation{self.isTaken.toggle()}
                     
-                }
+              //  }
             }
+            DispatchQueue.main.async {
+                withAnimation{self.isTaken.toggle()}
+            }
+           
         }
         
         func reTake() {
@@ -161,17 +179,18 @@ class cameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
             
             guard let imageData = photo.fileDataRepresentation() else {return}
             self.picData = imageData
+           // self.isSaved = false
+           
+            
             
         }
         
    
     
-    func savePost(albumUuid: String) {
+    func savePost() {
         print(" \(picData.count)")
-            // let image = UIImage(data: self.picData)!
         guard let image = UIImage(data: self.picData) else {
                print("Failed to create UIImage from picData.")
-           // self.photoOutput()
                return
            }
             let uuid = UUID().uuidString
@@ -183,6 +202,7 @@ class cameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
             let imageData = image.jpegData(compressionQuality: 0.8)
             let metadata = StorageMetadata()
             metadata.contentType = "\(uuid)/jpg"
+            uuidGlobal = uuid
             
             
             
@@ -201,7 +221,6 @@ class cameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
                 }
               
             }
-        post.createPost(albumID: albumUuid, imageURL: uuid)
         self.isSaved = true
         
       //  post.createPost(albumID: albumUuid, imageURL: uuid)
@@ -217,7 +236,7 @@ class cameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
     
     struct CameraPreview: UIViewRepresentable {
         @EnvironmentObject var post: PostViewModel
-        @ObservedObject var camera : cameraModel
+        @ObservedObject var camera : CameraModel
         func makeUIView(context: Context) -> UIView {
             
             let view = UIView(frame: UIScreen.main.bounds)

@@ -15,12 +15,15 @@ class AlbumViewModel: ObservableObject {
     @Published var user: User?
     @Published var album: Album?
     @Published var queryResultAlbums: [Album] = []
+    
+    
 
    // @EnvironmentObject var user : UserViewModel
 
     
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
+    
     var uuid: String? {
         auth.currentUser?.uid
     }
@@ -31,6 +34,7 @@ class AlbumViewModel: ObservableObject {
         user != nil && userIsAuthenticated
     }
   
+    var albumUUid = UUID().uuidString
     
     
     // Firestore Functions for albums
@@ -45,10 +49,10 @@ class AlbumViewModel: ObservableObject {
                 
             }
         }
-    
+   // Seems to be creating the uuid the same as user.uuid instead of a unique for the album
     func createAlbum(albumName: String, endDate: Date, photoLimit: Int, members: [String], creator: String) {
         DispatchQueue.main.async {
-            self.addAlbum(Album(uuid: (self.uuid)!, albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator))
+            self.addAlbum(Album(uuid: self.albumUUid, albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator))
             self.syncAlbums()
 
         }
@@ -70,7 +74,7 @@ class AlbumViewModel: ObservableObject {
     
     private func syncAlbums() {
         guard userIsAuthenticated else { return }
-        db.collection("albums").document(self.uuid!).getDocument { (document, error) in
+        db.collection("albums").document(UUID().uuidString).getDocument { (document, error) in
             guard document != nil, error == nil else { return }
             do {
                 try self.album = document!.data(as: Album.self)

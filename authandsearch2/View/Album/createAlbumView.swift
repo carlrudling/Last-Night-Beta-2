@@ -15,11 +15,11 @@ struct createAlbumView: View {
     @State private var albumName = ""
     @State private var  endDate = Date()
     @State private var photoLimit = 0
-    @State private var members : [User] = []
+    @State private var members : [String] = []
     @State private var creator : String = ""
     
     
-    
+    // add creator to members array
     var body: some View {
         NavigationStack{
             VStack(alignment: .leading, spacing: 20) {
@@ -58,6 +58,7 @@ struct createAlbumView: View {
             .padding(.horizontal, 20)
             .onAppear {
                 creator = self.user.uuid ?? ""
+                
             }
         }
     }
