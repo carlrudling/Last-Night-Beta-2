@@ -16,7 +16,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             if user.userIsAuthenticatedAndSynced {
-               // createAlbumView()
+              //  createAlbumView()
                // FetchAlbumsView()
                 //CameraView2(albumuuid: "")
                CameraView(albumuuid: "LUjUOcK9ByPlcyjYYrda")

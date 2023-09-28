@@ -201,7 +201,7 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
             let imageRef = storageRef.child("\(uuid).jpg") // Unique name for the image
             let imageData = image.jpegData(compressionQuality: 0.8)
             let metadata = StorageMetadata()
-            metadata.contentType = "\(uuid)/jpg"
+            metadata.contentType = "image/jpg"
             uuidGlobal = uuid
             
             

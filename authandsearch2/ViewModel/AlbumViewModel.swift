@@ -16,8 +16,7 @@ class AlbumViewModel: ObservableObject {
     @Published var album: Album?
     @Published var queryResultAlbums: [Album] = []
     
-    
-
+@DocumentID var id: String? = UUID().uuidString
    // @EnvironmentObject var user : UserViewModel
 
     

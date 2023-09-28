@@ -86,8 +86,8 @@ struct AuthenticationView: View {
 
 struct SignInView: View {
     @EnvironmentObject var user: UserViewModel
-    @State private var email = ""
-    @State private var password = ""
+    @State private var email = "hi@boy.com"
+    @State private var password = "123456"
     
     var body: some View {
         VStack {
