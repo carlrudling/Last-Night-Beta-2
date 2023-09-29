@@ -29,26 +29,32 @@ struct CameraView: View {
                 .ignoresSafeArea(.all, edges: .all)
             
             VStack{
-                AlbumPickerView(selectedAlbumID: $selectedAlbumID)
-                //     Spacer()
-                if camera.isTaken {
-                    
-                    HStack{
-                        Spacer()
-                        Button(action: camera.reTake, label: {
-                            Image(systemName: "arrow.triangle.2.circlepath.camera")
-                                .foregroundColor(.black)
-                                .padding()
-                                .background(Color.white)
-                                .clipShape(Circle())
-                        })
-                        .padding(.trailing,10)
+                HStack {
+                    Spacer()
+                    AlbumPickerView(selectedAlbumID: $selectedAlbumID)
+                         
+                    if camera.isTaken {
                         
+                        HStack{
+                
+                            Button(action: camera.reTake, label: {
+                                Image(systemName: "arrow.triangle.2.circlepath.camera")
+                                    .foregroundColor(.black)
+                                    .padding()
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                            })
+                            .padding(.trailing,10)
+                            
+                        }
+                        
+                        
+                     
+                    } else {
+                        Spacer()
                     }
                 }
-                
                 Spacer()
-                
                 HStack {
                     
                     
@@ -100,111 +106,6 @@ struct CameraView: View {
 }
 
 
-/*
-struct AlbumPickerView: View {
-    @StateObject var fetchAlbums = FetchAlbums()
-    // @ObservedObject var fetchAlbums = FetchAlbums()
-    // @Binding var selectedAlbumID: String = ""
-    @State private var albumsOptions : [String] = []
-    @EnvironmentObject var user : UserViewModel
-    @State var albumName : String = ""
-    @Binding var selectedAlbumID : String
-    
-    var body: some View {
-        
-        
-        VStack {
-            
-            
-            //   Image(systemName: "control")
-            //     .foregroundColor(.black)
-            //   .padding()
-            
-            HStack {
-                
-                //Text("\(albumName)")
-                //    .onTapGesture {
-                
-                
-                
-                
-                List(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
-                    HStack {
-                        Text(album.albumName)
-                        Spacer()
-                    }.contentShape(Rectangle())
-                        .onTapGesture {
-                            albumName = album.albumName
-                            selectedAlbumID = album.uuid
-                            print(albumName)
-                            print(selectedAlbumID)
-                            
-                            
-                        }
-                    
-                }
-               
-                .frame(width: 200, height: 300)
-                
-                
-                
-                
-            }
-            
-            
-            .onAppear {
-                fetchAlbums.fetchAlbums(with: user.uuid!)
-            }
-            
-        }
-
-        
-        
-    }
-    
-}
-*/
-
-/*
-struct AlbumPickerView: View {
-    @StateObject var fetchAlbums = FetchAlbums()
-    @EnvironmentObject var user: UserViewModel
-    @State var albumName: String = ""
-    @Binding var selectedAlbumID: String
-    
-    var body: some View {
-        VStack {
-            HStack {
-                ScrollView {
-                    VStack {
-                        ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
-                            HStack {
-                                Text(album.albumName)
-                                
-                                Spacer()
-                            }
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                albumName = album.albumName
-                                selectedAlbumID = album.uuid
-                                print(albumName)
-                                print(selectedAlbumID)
-                            }
-                            //.padding()  // optional, for better spacing
-                        }
-                    }
-                }
-                .frame(width: 200, height: 300)
-            }
-            .onAppear {
-                fetchAlbums.fetchAlbums(with: user.uuid!)
-            }
-        }
-    }
-}
-*/
 
 struct AlbumPickerView: View {
     @StateObject var fetchAlbums = FetchAlbums()
@@ -222,27 +123,29 @@ struct AlbumPickerView: View {
                     self.showList.toggle()  // Toggle showList value between true and false
                 }
             }) {
-                Text(albumName == "" ? "Select album" : albumName)
-                    .foregroundColor(Color.white)
+         
+                    Text(albumName == "" ? "Select album" : albumName)
+                        .foregroundColor(Color.white)
                    
             }
+            .frame(width: 180)
             .padding()
             .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
             .contentShape(Rectangle())
-            
+           
             
             if showList {
                 HStack {
                     ScrollView {
                         VStack {
                             ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
-                                HStack {
-                                    Text(album.albumName)
-                                    Spacer()
-                                }
+                              
+                                Text(album.albumName)
+                                .frame(width: 180)
                                 .padding()
                                 .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
                                 .contentShape(Rectangle())
+                               
                                 .onTapGesture {
                                     albumName = album.albumName
                                     selectedAlbumID = album.uuid
