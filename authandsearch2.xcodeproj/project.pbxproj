@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D300B39C2AC6BA2900CA7F3B /* AlbumInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D300B39B2AC6BA2900CA7F3B /* AlbumInfoView.swift */; };
 		D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */; };
 		D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */; };
 		D33D9F3E2A9D2A1C00498EA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D33D9F3D2A9D2A1C00498EA2 /* Assets.xcassets */; };
@@ -23,7 +24,7 @@
 		D33D9F622AA078E700498EA2 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F612AA078E700498EA2 /* AlbumViewModel.swift */; };
 		D33D9F652AA07FA500498EA2 /* createAlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F642AA07FA500498EA2 /* createAlbumView.swift */; };
 		D33D9F672AA08B2A00498EA2 /* addMembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F662AA08B2A00498EA2 /* addMembersView.swift */; };
-		D33D9F692AA2BE2500498EA2 /* FetchAlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F682AA2BE2500498EA2 /* FetchAlbumsView.swift */; };
+		D33D9F692AA2BE2500498EA2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F682AA2BE2500498EA2 /* HomeView.swift */; };
 		D33D9F6B2AA5A48A00498EA2 /* FetchAlbumsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */; };
 		D3539BE42AABE43D008FB64B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D3539BE32AABE43D008FB64B /* FirebaseStorage */; };
 		D3539BE72AABF955008FB64B /* ListofAlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3539BE62AABF955008FB64B /* ListofAlbumsView.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D300B39B2AC6BA2900CA7F3B /* AlbumInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumInfoView.swift; sourceTree = "<group>"; };
 		D33D9F362A9D2A1A00498EA2 /* authandsearch2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = authandsearch2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = authandsearch2App.swift; sourceTree = "<group>"; };
 		D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -49,7 +51,7 @@
 		D33D9F612AA078E700498EA2 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		D33D9F642AA07FA500498EA2 /* createAlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = createAlbumView.swift; sourceTree = "<group>"; };
 		D33D9F662AA08B2A00498EA2 /* addMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addMembersView.swift; sourceTree = "<group>"; };
-		D33D9F682AA2BE2500498EA2 /* FetchAlbumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAlbumsView.swift; sourceTree = "<group>"; };
+		D33D9F682AA2BE2500498EA2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAlbumsModel.swift; sourceTree = "<group>"; };
 		D3539BE62AABF955008FB64B /* ListofAlbumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListofAlbumsView.swift; sourceTree = "<group>"; };
 		D3539BE82AAC0005008FB64B /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
@@ -154,7 +156,8 @@
 			children = (
 				D33D9F642AA07FA500498EA2 /* createAlbumView.swift */,
 				D33D9F662AA08B2A00498EA2 /* addMembersView.swift */,
-				D33D9F682AA2BE2500498EA2 /* FetchAlbumsView.swift */,
+				D33D9F682AA2BE2500498EA2 /* HomeView.swift */,
+				D300B39B2AC6BA2900CA7F3B /* AlbumInfoView.swift */,
 			);
 			path = Album;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D300B39C2AC6BA2900CA7F3B /* AlbumInfoView.swift in Sources */,
 				D33D9F622AA078E700498EA2 /* AlbumViewModel.swift in Sources */,
 				D33D9F6B2AA5A48A00498EA2 /* FetchAlbumsModel.swift in Sources */,
 				D3539BE72AABF955008FB64B /* ListofAlbumsView.swift in Sources */,
@@ -268,7 +272,7 @@
 				D33D9F672AA08B2A00498EA2 /* addMembersView.swift in Sources */,
 				D33D9F4F2A9D2ABB00498EA2 /* ProfileSearchView.swift in Sources */,
 				D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */,
-				D33D9F692AA2BE2500498EA2 /* FetchAlbumsView.swift in Sources */,
+				D33D9F692AA2BE2500498EA2 /* HomeView.swift in Sources */,
 				D33D9F4B2A9D2A4600498EA2 /* User.swift in Sources */,
 				D33D9F602AA072FB00498EA2 /* Album.swift in Sources */,
 				D38DF04F2AAAF37C0001EADD /* CameraView.swift in Sources */,

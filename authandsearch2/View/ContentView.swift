@@ -17,9 +17,9 @@ struct ContentView: View {
         NavigationView {
             if user.userIsAuthenticatedAndSynced {
               //  createAlbumView()
-               // FetchAlbumsView()
+                FetchAlbumsView()
                 //CameraView2(albumuuid: "")
-               CameraView(albumuuid: "LUjUOcK9ByPlcyjYYrda")
+              // CameraView(albumuuid: "LUjUOcK9ByPlcyjYYrda")
             } else {
                 AuthenticationView()
             }
