@@ -30,7 +30,7 @@ struct CameraView: View {
             
             VStack{
                 AlbumPickerView(selectedAlbumID: $selectedAlbumID)
-           //     Spacer()
+                //     Spacer()
                 if camera.isTaken {
                     
                     HStack{
@@ -90,7 +90,7 @@ struct CameraView: View {
                     }
                 }
                 .frame(height: 75)
-               
+                
             }
         }
         .onAppear(perform: {
@@ -100,7 +100,7 @@ struct CameraView: View {
 }
 
 
-
+/*
 struct AlbumPickerView: View {
     @StateObject var fetchAlbums = FetchAlbums()
     // @ObservedObject var fetchAlbums = FetchAlbums()
@@ -113,20 +113,6 @@ struct AlbumPickerView: View {
     var body: some View {
         
         
-        /*
-         Picker("Select an Album", selection: $selectedAlbumID) {
-         ForEach(fetchAlbums.queryResultAlbums, id: \.self.uuid) { album in
-         Text(album.albumName).tag(album.uuid)
-         
-         }
-         }
-         
-         .pickerStyle(.menu) // Use .wheel for a wheel-style picker
-         .onChange(of: selectedAlbumID) { newSelectedAlbumID in
-         // Handle the selection change if needed                }
-         
-         }
-         */
         VStack {
             
             
@@ -138,35 +124,144 @@ struct AlbumPickerView: View {
                 
                 //Text("\(albumName)")
                 //    .onTapGesture {
-                        
-                        List(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
+                
+                
+                
+                
+                List(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
+                    HStack {
+                        Text(album.albumName)
+                        Spacer()
+                    }.contentShape(Rectangle())
+                        .onTapGesture {
+                            albumName = album.albumName
+                            selectedAlbumID = album.uuid
+                            print(albumName)
+                            print(selectedAlbumID)
+                            
+                            
+                        }
+                    
+                }
+               
+                .frame(width: 200, height: 300)
+                
+                
+                
+                
+            }
+            
+            
+            .onAppear {
+                fetchAlbums.fetchAlbums(with: user.uuid!)
+            }
+            
+        }
+
+        
+        
+    }
+    
+}
+*/
+
+/*
+struct AlbumPickerView: View {
+    @StateObject var fetchAlbums = FetchAlbums()
+    @EnvironmentObject var user: UserViewModel
+    @State var albumName: String = ""
+    @Binding var selectedAlbumID: String
+    
+    var body: some View {
+        VStack {
+            HStack {
+                ScrollView {
+                    VStack {
+                        ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
                             HStack {
                                 Text(album.albumName)
+                                
                                 Spacer()
-                            }.contentShape(Rectangle())
+                            }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                albumName = album.albumName
+                                selectedAlbumID = album.uuid
+                                print(albumName)
+                                print(selectedAlbumID)
+                            }
+                            //.padding()  // optional, for better spacing
+                        }
+                    }
+                }
+                .frame(width: 200, height: 300)
+            }
+            .onAppear {
+                fetchAlbums.fetchAlbums(with: user.uuid!)
+            }
+        }
+    }
+}
+*/
+
+struct AlbumPickerView: View {
+    @StateObject var fetchAlbums = FetchAlbums()
+    @EnvironmentObject var user: UserViewModel
+    @State var albumName: String = ""
+    @Binding var selectedAlbumID: String
+    
+    @State private var showList = false  // State variable to control visibility of list
+    
+    var body: some View {
+        VStack {
+            // Button to toggle list visibility
+            Button(action: {
+                withAnimation {  // Animates the transition
+                    self.showList.toggle()  // Toggle showList value between true and false
+                }
+            }) {
+                Text(albumName == "" ? "Select album" : albumName)
+                    .foregroundColor(Color.white)
+                   
+            }
+            .padding()
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
+            .contentShape(Rectangle())
+            
+            
+            if showList {
+                HStack {
+                    ScrollView {
+                        VStack {
+                            ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
+                                HStack {
+                                    Text(album.albumName)
+                                    Spacer()
+                                }
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
+                                .contentShape(Rectangle())
                                 .onTapGesture {
                                     albumName = album.albumName
                                     selectedAlbumID = album.uuid
                                     print(albumName)
                                     print(selectedAlbumID)
-                                
-                                    
+                                    self.showList.toggle()
                                 }
+                            }
                         }
-                        
-                        
                     }
-            
-            .frame(width: 200, height: 300, alignment: .center) // Set frame to the text
-            .background(Color.clear)
-            .onAppear {
-               fetchAlbums.fetchAlbums(with: user.uuid!)
-             }
+                    .frame(width: 200, height: 300)
+                    .offset(y: showList ? 0 : -400)  // Offset modifier to control position of list
+                }
+            }
             
         }
-        .background(Color.clear)
-        
+        .onAppear {
+            fetchAlbums.fetchAlbums(with: user.uuid!)
+        }
     }
-    
 }
 
