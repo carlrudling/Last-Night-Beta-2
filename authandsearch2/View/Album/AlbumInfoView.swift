@@ -5,6 +5,7 @@ import SwiftUI
 struct AlbumInfoView: View {
     @EnvironmentObject var imageModel : ImageViewModel
     
+    
     var album: Album
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -39,7 +40,7 @@ struct AlbumInfoView_Previews: PreviewProvider {
         return AlbumInfoView(album: dummyAlbum)
     }
 }
-
+/*
 struct FirebaseImageView: View {
     @ObservedObject private var imageLoader: ImageViewModel
     
@@ -57,3 +58,4 @@ struct FirebaseImageView: View {
         }
     }
 }
+*/

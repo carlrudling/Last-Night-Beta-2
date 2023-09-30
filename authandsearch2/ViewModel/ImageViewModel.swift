@@ -50,7 +50,7 @@ class ImageViewModel: ObservableObject {
      }
      
      func loadImage() {
-         storageRef.getData(maxSize: 1 * 1024 * 1024) { [weak self] data, error in  // 1 MB limit
+         storageRef.getData(maxSize: 10 * 1024 * 1024) { [weak self] data, error in  // 1 MB limit
              guard let self = self else { return }
              
              if let error = error {

@@ -36,15 +36,20 @@ extension String {
 
 import Foundation
 
-struct User: Codable {
+struct User: Codable, Identifiable {
     var uuid: String
     var username: String
     var firstName: String
     var lastName: String
+    var profileImage: String
     var signUpDate = Date.now
     var keywordsForLookup: [String] {
         [self.username.generateStringSequence(), self.firstName.generateStringSequence(), self.lastName.generateStringSequence(), "\(self.firstName) \(self.lastName)".generateStringSequence()].flatMap { $0 }
     }
+    
+    var id: String {
+            return uuid
+        }
 }
 
 extension String {
