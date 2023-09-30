@@ -8,7 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 
-struct FetchAlbumsView: View {
+struct HomeView: View {
     @StateObject private var fetchAlbums = FetchAlbums() // Create an instance of FetchAlbums
     @EnvironmentObject var user: UserViewModel
     
@@ -74,6 +74,6 @@ struct FetchAlbumsView: View {
 
 struct FetchAlbumsView_Previews: PreviewProvider {
     static var previews: some View {
-        FetchAlbumsView()
+        HomeView()
     }
 }

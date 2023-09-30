@@ -64,18 +64,33 @@ struct CameraView: View {
                         
                         
                         
-                        Button(action: {if !camera.isSaved{camera.savePost(); if camera.uuidGlobal != "" { post.createPost(albumId: selectedAlbumID, imageURL: camera.uuidGlobal, userUUID: user.uuid!)}}}, label: {
+                        Button(action:
+                                {if !camera.isSaved{camera.savePost();
+                                    if camera.uuidGlobal != "" { post.createPost(albumId: selectedAlbumID, imageURL: camera.uuidGlobal, userUUID: user.uuid!)
+                                        
+                                    }
+                                    
+                                }
+                            DispatchQueue.global().asyncAfter(deadline: .now() + 0.6) {
+                                  DispatchQueue.main.async {
+                                      camera.reTake()
+                                  }
+                              }
+                        }
+                               
+                               , label: {
                             Text(camera.isSaved ? "Saved" : "Save")
                                 .foregroundColor(.black)
                                 .fontWeight(.semibold)
-                                .padding(.vertical,10)
+                                .padding(.vertical,20)
                                 .padding(.horizontal,20)
-                                .background(Color.white)
+                                .background(camera.isSaved ? Color.green : Color.white)
                                 .clipShape(Capsule())
                             
                         })
-                        .padding(.leading)
-                        Spacer()
+                        .frame(alignment: .center)
+                        .padding(.bottom, 60)
+                      
                         
                     } else {
                         
@@ -93,6 +108,7 @@ struct CameraView: View {
                             }
                             
                         })
+                        .padding(.bottom, 60)
                     }
                 }
                 .frame(height: 75)

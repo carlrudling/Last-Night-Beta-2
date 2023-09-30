@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D300B39C2AC6BA2900CA7F3B /* AlbumInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D300B39B2AC6BA2900CA7F3B /* AlbumInfoView.swift */; };
+		D300B39E2AC76E1E00CA7F3B /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D300B39D2AC76E1E00CA7F3B /* ImageViewModel.swift */; };
 		D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */; };
 		D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */; };
 		D33D9F3E2A9D2A1C00498EA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D33D9F3D2A9D2A1C00498EA2 /* Assets.xcassets */; };
@@ -33,10 +34,13 @@
 		D38DF04D2AAAF2510001EADD /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04C2AAAF2510001EADD /* CameraViewModel.swift */; };
 		D38DF04F2AAAF37C0001EADD /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04E2AAAF37C0001EADD /* CameraView.swift */; };
 		D3C821802AC14FA8006C0687 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D3C8217F2AC14FA8006C0687 /* GoogleService-Info.plist */; };
+		D3F5B0CD2AC7C544007CCC0E /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0CC2AC7C544007CCC0E /* ProfileView.swift */; };
+		D3F5B0CF2AC7C575007CCC0E /* MainTabbedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D300B39B2AC6BA2900CA7F3B /* AlbumInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumInfoView.swift; sourceTree = "<group>"; };
+		D300B39D2AC76E1E00CA7F3B /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
 		D33D9F362A9D2A1A00498EA2 /* authandsearch2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = authandsearch2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = authandsearch2App.swift; sourceTree = "<group>"; };
 		D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -59,6 +63,8 @@
 		D38DF04C2AAAF2510001EADD /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		D38DF04E2AAAF37C0001EADD /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		D3C8217F2AC14FA8006C0687 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "View/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D3F5B0CC2AC7C544007CCC0E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbedView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +130,8 @@
 				D33D9F4E2A9D2ABB00498EA2 /* ProfileSearchView.swift */,
 				D33D9F502A9D2AE300498EA2 /* AuthenticationView.swift */,
 				D38DF04E2AAAF37C0001EADD /* CameraView.swift */,
+				D3F5B0CC2AC7C544007CCC0E /* ProfileView.swift */,
+				D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -137,6 +145,7 @@
 				D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */,
 				D38DF04C2AAAF2510001EADD /* CameraViewModel.swift */,
 				D3539BE82AAC0005008FB64B /* PostViewModel.swift */,
+				D300B39D2AC76E1E00CA7F3B /* ImageViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -263,6 +272,7 @@
 				D3539BE72AABF955008FB64B /* ListofAlbumsView.swift in Sources */,
 				D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */,
 				D33D9F652AA07FA500498EA2 /* createAlbumView.swift in Sources */,
+				D300B39E2AC76E1E00CA7F3B /* ImageViewModel.swift in Sources */,
 				D33D9F5E2A9D3F4800498EA2 /* UsersLookupViewModel.swift in Sources */,
 				D3539BE92AAC0005008FB64B /* PostViewModel.swift in Sources */,
 				D38DF04B2AA7167F0001EADD /* Post.swift in Sources */,
@@ -275,7 +285,9 @@
 				D33D9F692AA2BE2500498EA2 /* HomeView.swift in Sources */,
 				D33D9F4B2A9D2A4600498EA2 /* User.swift in Sources */,
 				D33D9F602AA072FB00498EA2 /* Album.swift in Sources */,
+				D3F5B0CD2AC7C544007CCC0E /* ProfileView.swift in Sources */,
 				D38DF04F2AAAF37C0001EADD /* CameraView.swift in Sources */,
+				D3F5B0CF2AC7C575007CCC0E /* MainTabbedView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

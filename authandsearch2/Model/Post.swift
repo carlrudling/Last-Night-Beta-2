@@ -8,11 +8,14 @@
 import Foundation
 import UIKit
 
-struct Post: Codable {
+struct Post: Codable, Identifiable {
     var Postuuid: String
     var userUuid: String
     var imageURL : String
     
+    var id: String {
+            return Postuuid
+        }
     
     func toDictionary() -> [String: Any] {
             return [

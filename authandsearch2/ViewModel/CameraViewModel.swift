@@ -223,7 +223,6 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
             }
         self.isSaved = true
         
-      //  post.createPost(albumID: albumUuid, imageURL: uuid)
         }
     
 
