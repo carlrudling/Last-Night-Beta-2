@@ -11,19 +11,19 @@
 
 
 /*
-
-struct CamerVIEW2Kavsoft: View {
-    var body: some View {
-        CameraView2()
-    }
-}
-
-struct CamerVIEW2Kavsoft_Previews: PreviewProvider {
-    static var previews: some View {
-        CameraView2()
-    }
-}
-*/
+ 
+ struct CamerVIEW2Kavsoft: View {
+ var body: some View {
+ CameraView2()
+ }
+ }
+ 
+ struct CamerVIEW2Kavsoft_Previews: PreviewProvider {
+ static var previews: some View {
+ CameraView2()
+ }
+ }
+ */
 
 //Camera Model...
 
@@ -41,17 +41,19 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
     @Published var alert = false
     
     @Published var uuidGlobal : String = ""
-  /*
-    let post: PostViewModel
-    let album: AlbumViewModel
-    let user: UserViewModel
- 
-    init(post: PostViewModel, album: AlbumViewModel, user: UserViewModel) {
-        self.post = post
-        self.album = album
-        self.user = user
-    }
-   */
+    @Published var isFlashOn: Bool = false
+    @Published var isUsingFrontCamera: Bool = false
+    /*
+     let post: PostViewModel
+     let album: AlbumViewModel
+     let user: UserViewModel
+     
+     init(post: PostViewModel, album: AlbumViewModel, user: UserViewModel) {
+     self.post = post
+     self.album = album
+     self.user = user
+     }
+     */
     
     // Since wew going to read pic data...
     @Published var output = AVCapturePhotoOutput()
@@ -89,6 +91,31 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
         
     }
     
+    func toggleCamera() {
+        session.beginConfiguration()
+        // Remove existing input
+        guard let currentInput = session.inputs.first else { return }
+        session.removeInput(currentInput)
+        
+        // Configure new input
+        let newCameraPosition: AVCaptureDevice.Position = isUsingFrontCamera ? .back : .front
+        guard let newDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: newCameraPosition) else { return }
+        do {
+            let newInput = try AVCaptureDeviceInput(device: newDevice)
+            if session.canAddInput(newInput) {
+                session.addInput(newInput)
+                isUsingFrontCamera.toggle()
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+        session.commitConfiguration()
+    }
+    
+    func toggleFlash() {
+        isFlashOn.toggle()
+    }
+    
     func setUp() {
         // setting up camera
         
@@ -115,7 +142,7 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
                     print(error.localizedDescription)
                 }
                 // Same for outputs...
-               
+                
                 if self.session.canAddOutput(self.output) {
                     self.session.addOutput(self.output)
                     print("Output has been added")
@@ -127,136 +154,130 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
             print(error.localizedDescription)
         }
     }
-
-   
-        // take and retake functions...
-        
-        func takePic(){
-            DispatchQueue.global(qos: .background).async {
-                print("Attempting to capture photo...")
-                self.output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
-                DispatchQueue.main.async {
-                            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { (timer) in
-                                self.session.stopRunning()
-                               
-                                
-                            }
-                        }
-               // DispatchQueue.main.async {
-                 //   withAnimation{self.isTaken.toggle()}
-                    
-              //  }
-            }
+    
+    
+    // take and retake functions...
+    
+    func takePic() {
+        DispatchQueue.global(qos: .background).async {
+            let settings = AVCapturePhotoSettings()
+            settings.flashMode = self.isFlashOn ? .on : .off  // Set flash mode based on isFlashOn state
+            self.output.capturePhoto(with: settings, delegate: self)
             DispatchQueue.main.async {
-                withAnimation{self.isTaken.toggle()}
-            }
-           
-        }
-        
-        func reTake() {
-            DispatchQueue.global(qos: .background).async {
-                self.session.startRunning()
-                
-                DispatchQueue.main.async {
-                    withAnimation{self.isTaken.toggle()}
-                    // clearing
-                    self.isSaved = false
+                Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in
+                    self.session.stopRunning()
                 }
             }
-        }
-        
-        
-        func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-            print("Inside photoOutput function")
-            if error != nil{
-                print("\(error!.localizedDescription)")
-                return
+            DispatchQueue.main.async {
+                withAnimation { self.isTaken.toggle() }
             }
+        }
+    }
+    
+    func reTake() {
+        DispatchQueue.global(qos: .background).async {
+            self.session.startRunning()
             
-            print("pic taken...")
-           // print("Image Data Size: \(imageData.count)")
-
-            
-            guard let imageData = photo.fileDataRepresentation() else {return}
-            self.picData = imageData
-           // self.isSaved = false
-           
-            
-            
+            DispatchQueue.main.async {
+                withAnimation{self.isTaken.toggle()}
+                // clearing
+                self.isSaved = false
+            }
+        }
+    }
+    
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        print("Inside photoOutput function")
+        if error != nil{
+            print("\(error!.localizedDescription)")
+            return
         }
         
-   
+        print("pic taken...")
+        // print("Image Data Size: \(imageData.count)")
+        
+        
+        guard let imageData = photo.fileDataRepresentation() else {return}
+        self.picData = imageData
+        // self.isSaved = false
+        
+        
+        
+    }
+    
+    
     
     func savePost() {
         print(" \(picData.count)")
         guard let image = UIImage(data: self.picData) else {
-               print("Failed to create UIImage from picData.")
-               return
-           }
-            let uuid = UUID().uuidString
-            
-            // Step 1: Upload the image to Firebase Storage
-            let storage = Storage.storage()
-            let storageRef = storage.reference()
-            let imageRef = storageRef.child("\(uuid).jpg") // Unique name for the image
-            let imageData = image.jpegData(compressionQuality: 0.8)
-            let metadata = StorageMetadata()
-            metadata.contentType = "image/jpg"
-            uuidGlobal = uuid
-            
-            
-            
-            if let imageData = imageData {
-                imageRef.putData(imageData, metadata: metadata) { metadata, error in
-                    if let error = error {
-                        print("Error uploading image: \(error)")
-                    }
-                    
-                    if let metadata = metadata {
-                        print("Metadata: \(metadata)")
-                    }
-                    
-                    // Step 2: Once the image is uploaded, get the download URL
-                    
+            print("Failed to create UIImage from picData.")
+            return
+        }
+        let uuid = UUID().uuidString
+        
+        // Step 1: Upload the image to Firebase Storage
+        let storage = Storage.storage()
+        let storageRef = storage.reference()
+        let imageRef = storageRef.child("\(uuid).jpg") // Unique name for the image
+        let imageData = image.jpegData(compressionQuality: 0.8)
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpg"
+        uuidGlobal = uuid
+        
+        
+        
+        if let imageData = imageData {
+            imageRef.putData(imageData, metadata: metadata) { metadata, error in
+                if let error = error {
+                    print("Error uploading image: \(error)")
                 }
-              
+                
+                if let metadata = metadata {
+                    print("Metadata: \(metadata)")
+                }
+                
+                // Step 2: Once the image is uploaded, get the download URL
+                
             }
+            
+        }
         self.isSaved = true
         
-        }
-    
-
     }
+    
+    
+}
 
-    
-    
-    //Setting view for preview...
-    
-    
-    struct CameraPreview: UIViewRepresentable {
-        @EnvironmentObject var post: PostViewModel
-        @ObservedObject var camera : CameraModel
-        func makeUIView(context: Context) -> UIView {
-            
-            let view = UIView(frame: UIScreen.main.bounds)
-    
-            camera.preview = AVCaptureVideoPreviewLayer(session: camera.session)
-            camera.preview.frame = view.frame
-            
-            // Your own properties...
-            
-            camera.preview.videoGravity = .resizeAspectFill
-            view.layer.addSublayer(camera.preview)
-            
-            //starting session
-            DispatchQueue.global(qos: .background).async {
-                   camera.session.startRunning()
-               }
-            return view
-        }
+
+
+//Setting view for preview...
+
+
+struct CameraPreview: UIViewRepresentable {
+    @EnvironmentObject var post: PostViewModel
+    @ObservedObject var camera : CameraModel
+    func makeUIView(context: Context) -> UIView {
         
-        func updateUIView(_ uiView: UIView, context: Context) {
-            
+        let view = UIView(frame: UIScreen.main.bounds)
+        
+        camera.preview = AVCaptureVideoPreviewLayer(session: camera.session)
+        camera.preview.frame = view.frame
+        
+        // Your own properties...
+        
+        camera.preview.videoGravity = .resizeAspectFill
+        view.layer.addSublayer(camera.preview)
+        
+        //starting session
+        DispatchQueue.global(qos: .background).async {
+            camera.session.startRunning()
         }
+        return view
     }
     
+    func updateUIView(_ uiView: UIView, context: Context) {
+        
+    }
+}
+

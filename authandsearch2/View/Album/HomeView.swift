@@ -77,6 +77,7 @@ struct HomeView: View {
                                     
                                         .onAppear{
                                             fetchAlbums.fetchAlbums(with: user.uuid ?? "")
+                                            isTabBarHidden = false
                                         }
                                     }
                                     }

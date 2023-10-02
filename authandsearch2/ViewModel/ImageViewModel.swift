@@ -72,6 +72,30 @@ class ImageViewModel: ObservableObject {
      }
  }
 
+extension ImageViewModel {
+    static func preloadImages(paths: [String], completion: @escaping ([UIImage]) -> Void) {
+        let dispatchGroup = DispatchGroup()
+        var images: [UIImage] = []
+
+        for path in paths {
+            dispatchGroup.enter()
+            let storageRef = Storage.storage().reference(withPath: path)
+            storageRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
+                if let data = data, let image = UIImage(data: data) {
+                    images.append(image)
+                } else {
+                    print("Failed to preload image from path \(path): \(error?.localizedDescription ?? "Unknown error")")
+                }
+                dispatchGroup.leave()
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            completion(images)
+        }
+    }
+}
+
 
 /*
  // BluePrint for deleting Images

@@ -27,34 +27,17 @@ struct CameraView: View {
             //Going to be the camera preview...
             CameraPreview(camera: camera)
                 .ignoresSafeArea(.all, edges: .all)
-            
+                .onTapGesture(count: 2, perform: {
+                    camera.toggleCamera()
+                               print("Double tapped!")
+                           })
             VStack{
-                HStack {
-                    Spacer()
-                    AlbumPickerView(selectedAlbumID: $selectedAlbumID)
-                         
-                    if camera.isTaken {
-                        
-                        HStack{
+                AlbumPickerView(selectedAlbumID: $selectedAlbumID)
                 
-                            Button(action: camera.reTake, label: {
-                                Image(systemName: "arrow.triangle.2.circlepath.camera")
-                                    .foregroundColor(.black)
-                                    .padding()
-                                    .background(Color.white)
-                                    .clipShape(Circle())
-                            })
-                            .padding(.trailing,10)
-                            
-                        }
-                        
-                        
-                     
-                    } else {
-                        Spacer()
-                    }
-                }
-                Spacer()
+                
+                    
+        Spacer()
+                
                 HStack {
                     
                     
@@ -72,10 +55,10 @@ struct CameraView: View {
                                     
                                 }
                             DispatchQueue.global().asyncAfter(deadline: .now() + 0.6) {
-                                  DispatchQueue.main.async {
-                                      camera.reTake()
-                                  }
-                              }
+                                DispatchQueue.main.async {
+                                    camera.reTake()
+                                }
+                            }
                         }
                                
                                , label: {
@@ -90,7 +73,7 @@ struct CameraView: View {
                         })
                         .frame(alignment: .center)
                         .padding(.bottom, 60)
-                      
+                        
                         
                     } else {
                         
@@ -112,12 +95,61 @@ struct CameraView: View {
                     }
                 }
                 .frame(height: 75)
+               
                 
+                }
+            
+            VStack {
+                // Buttons
+                HStack{
+                    Spacer()
+                    VStack {
+                        
+                        
+                        if camera.isTaken {
+                            
+                            HStack{
+                                // Retake photo Button
+                                Button(action: camera.reTake, label: {
+                                    Image(systemName: "xmark")
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.black.opacity(0.5))
+                                        .clipShape(Circle())
+                                })
+                            }
+                        }
+                        // Toggle Camera Button
+                        Button(action: { camera.toggleCamera() }, label: {
+                            Image(systemName: "arrow.triangle.2.circlepath.camera.fill")
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.black.opacity(0.5))
+                                .clipShape(Circle())
+                        })
+                        Button(action: { camera.toggleFlash() }, label: {
+                            Image(systemName: camera.isFlashOn ? "bolt.fill" : "bolt.slash.fill")
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.black.opacity(0.5))
+                                .clipShape(Circle())
+                        })
+                    }
+                    
+                   
+                }
+                
+                Spacer()
             }
+             
+           
+            
         }
+        
         .onAppear(perform: {
             camera.Check()
         })
+        
     }
 }
 
@@ -139,36 +171,36 @@ struct AlbumPickerView: View {
                     self.showList.toggle()  // Toggle showList value between true and false
                 }
             }) {
-         
-                    Text(albumName == "" ? "Select album" : albumName)
-                        .foregroundColor(Color.white)
-                   
+                
+                Text(albumName == "" ? "Select album" : albumName)
+                    .foregroundColor(Color.white)
+                
             }
             .frame(width: 180)
             .padding()
             .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
             .contentShape(Rectangle())
-           
+            
             
             if showList {
                 HStack {
                     ScrollView {
                         VStack {
                             ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
-                              
+                                
                                 Text(album.albumName)
-                                .frame(width: 180)
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
-                                .contentShape(Rectangle())
-                               
-                                .onTapGesture {
-                                    albumName = album.albumName
-                                    selectedAlbumID = album.uuid
-                                    print(albumName)
-                                    print(selectedAlbumID)
-                                    self.showList.toggle()
-                                }
+                                    .frame(width: 180)
+                                    .padding()
+                                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
+                                    .contentShape(Rectangle())
+                                
+                                    .onTapGesture {
+                                        albumName = album.albumName
+                                        selectedAlbumID = album.uuid
+                                        print(albumName)
+                                        print(selectedAlbumID)
+                                        self.showList.toggle()
+                                    }
                             }
                         }
                     }

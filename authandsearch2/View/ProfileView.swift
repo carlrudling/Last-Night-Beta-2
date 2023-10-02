@@ -10,6 +10,7 @@ import SwiftUI
 struct ProfileView: View {
     @EnvironmentObject var user : UserViewModel
     
+    
     func formattedImagePath(from imagepaths: String) -> String {
         let imagePath = imagepaths
         print(imagePath)
@@ -19,7 +20,7 @@ struct ProfileView: View {
     var body: some View {
         VStack {
             if let userProfile = user.user, userProfile.profileImage != "" {
-                FirebaseImageView(imagePath: formattedImagePath(from: userProfile.profileImage))
+                FirebaseProfileImageView(imagePath: formattedImagePath(from: userProfile.profileImage))
                     .clipShape(Circle())  // This line makes the image circular
                     .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
                     .shadow(radius: 10)  // Optional: Adds a shadow
@@ -50,13 +51,36 @@ struct ProfileView: View {
                            .padding(.bottom, 80)
                    }
                }
+        
         }
+        
     }
 
 
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView()
+struct FirebaseProfileImageView: View {
+    @ObservedObject  var imageLoader: ImageViewModel
+    
+    init(imagePath: String) {
+        imageLoader = ImageViewModel(imagePath: imagePath)
+    }
+    
+    var body: some View {
+        if let image = imageLoader.image {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+        } else {
+            ProgressView()  // or a placeholder image
+        }
     }
 }
 
+/*
+struct ProfileView_Previews: PreviewProvider {
+    @State var profileImage : UIImage
+    static var previews: some View {
+        ProfileView( profileImage: UIImage)
+    }
+}
+
+*/
