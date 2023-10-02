@@ -185,6 +185,17 @@ class UserViewModel: ObservableObject {
         }
     }
     
+    func checkAuthenticationStatus() {
+        if auth.currentUser != nil {
+            // User is signed in, sync their data
+            self.sync()
+        } else {
+            // No user is signed in
+            self.user = nil
+        }
+    }
+
+    
     
     
     func uploadProfileImage(_ image: UIImage, completion: @escaping (Error?) -> Void) {

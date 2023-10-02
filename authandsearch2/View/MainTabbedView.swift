@@ -29,7 +29,7 @@ import SwiftUI
 
 struct MainTabbedView: View {
     @ObservedObject var user = UserViewModel()
-    
+    @State private var isTabBarHidden: Bool = false
     
     @State var selectedTab = 0
     
@@ -37,7 +37,7 @@ struct MainTabbedView: View {
         
         ZStack(alignment: .bottom){
             TabView(selection: $selectedTab) {
-                HomeView()
+                HomeView(isTabBarHidden: $isTabBarHidden)
                     .tag(0)
                 
                 CameraView(albumuuid: self.user.uuid!)
@@ -50,24 +50,25 @@ struct MainTabbedView: View {
             
             
             
-            
-            ZStack{
-                HStack{
-                    ForEach((TabbedItems.allCases), id: \.self){ item in
-                        Button{
-                            selectedTab = item.rawValue
-                        } label: {
-                            CustomTabItem(imageName: item.iconName, isActive: (selectedTab == item.rawValue))
+            if !isTabBarHidden {
+                ZStack{
+                    HStack{
+                        ForEach((TabbedItems.allCases), id: \.self){ item in
+                            Button{
+                                selectedTab = item.rawValue
+                            } label: {
+                                CustomTabItem(imageName: item.iconName, isActive: (selectedTab == item.rawValue))
+                            }
                         }
                     }
+                    .padding(6)
                 }
-                .padding(6)
+                .frame(width: 190, height: 60)
+                .background(.purple.opacity(0.2))
+                .background(.white)
+                .cornerRadius(30)
+                .padding(.horizontal, 26)
             }
-            .frame(width: 260, height: 70)
-            .background(.purple.opacity(0.2))
-            .background(.white)
-            .cornerRadius(35)
-            .padding(.horizontal, 26)
         }
     }
 }
@@ -89,13 +90,16 @@ extension MainTabbedView{
             Image(systemName: imageName)
                 .resizable()
                 .renderingMode(.template)
+                .aspectRatio(contentMode: .fit)
                 .foregroundColor(isActive ? .black : .gray)
-                .frame(width: 25, height: 25)
+                .frame(height: 35)
             
             Spacer()
         }
-        .frame(width: 70, height: 70)
+        .frame(width: 60, height: 60)
         .background(isActive ? .purple.opacity(0.4) : .clear)
-        .cornerRadius(50)
+        .cornerRadius(30)
     }
+  
+
 }

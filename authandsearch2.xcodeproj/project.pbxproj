@@ -38,6 +38,7 @@
 		D3F5B0CF2AC7C575007CCC0E /* MainTabbedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */; };
 		D3F5B0D12AC7F7CD007CCC0E /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0D02AC7F7CD007CCC0E /* ImagePicker.swift */; };
 		D3F5B0D32AC81373007CCC0E /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0D22AC81373007CCC0E /* ProfileView.swift */; };
+		D3F5B0D52ACA3DDD007CCC0E /* AlbumSlideshowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0D42ACA3DDD007CCC0E /* AlbumSlideshowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,7 @@
 		D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbedView.swift; sourceTree = "<group>"; };
 		D3F5B0D02AC7F7CD007CCC0E /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		D3F5B0D22AC81373007CCC0E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		D3F5B0D42ACA3DDD007CCC0E /* AlbumSlideshowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSlideshowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +175,7 @@
 				D33D9F662AA08B2A00498EA2 /* addMembersView.swift */,
 				D33D9F682AA2BE2500498EA2 /* HomeView.swift */,
 				D300B39B2AC6BA2900CA7F3B /* AlbumInfoView.swift */,
+				D3F5B0D42ACA3DDD007CCC0E /* AlbumSlideshowView.swift */,
 			);
 			path = Album;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 				D33D9F5E2A9D3F4800498EA2 /* UsersLookupViewModel.swift in Sources */,
 				D3539BE92AAC0005008FB64B /* PostViewModel.swift in Sources */,
 				D38DF04B2AA7167F0001EADD /* Post.swift in Sources */,
+				D3F5B0D52ACA3DDD007CCC0E /* AlbumSlideshowView.swift in Sources */,
 				D33D9F4D2A9D2A6200498EA2 /* UserViewModel.swift in Sources */,
 				D33D9F512A9D2AE300498EA2 /* AuthenticationView.swift in Sources */,
 				D38DF04D2AAAF2510001EADD /* CameraViewModel.swift in Sources */,

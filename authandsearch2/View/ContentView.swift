@@ -9,23 +9,22 @@ import SwiftUI
 
 
 struct ContentView: View {
-    @EnvironmentObject var user : UserViewModel
-    @EnvironmentObject var album : AlbumViewModel
+    @EnvironmentObject var user: UserViewModel
+    @EnvironmentObject var album: AlbumViewModel
     @EnvironmentObject var post: PostViewModel
 
     var body: some View {
         NavigationView {
             if user.userIsAuthenticatedAndSynced {
-              //  createAlbumView()
                 MainTabbedView()
-                //CameraView2(albumuuid: "")
-              // CameraView(albumuuid: "LUjUOcK9ByPlcyjYYrda")
             } else {
                 AuthenticationView()
             }
         }
+        .onAppear(perform: user.checkAuthenticationStatus)  // call checkAuthenticationStatus when ContentView appears
     }
 }
+
 /*
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

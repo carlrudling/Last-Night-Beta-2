@@ -18,8 +18,8 @@ struct ProfileView: View {
     
     var body: some View {
         VStack {
-            if user.user?.profileImage != nil || user.user?.profileImage != "" {
-                FirebaseImageView(imagePath: formattedImagePath(from: user.user!.profileImage))
+            if let userProfile = user.user, userProfile.profileImage != "" {
+                FirebaseImageView(imagePath: formattedImagePath(from: userProfile.profileImage))
                     .clipShape(Circle())  // This line makes the image circular
                     .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
                     .shadow(radius: 10)  // Optional: Adds a shadow
@@ -35,9 +35,24 @@ struct ProfileView: View {
             Text(user.user?.username ?? "Unknown")
                 .font(.system(size: 16))
             Spacer()
+            
+            Button(action: {
+                       user.signOut()
+                   }) {
+                       Text("Sign Out")
+                           .font(.system(size: 25))
+                           .frame(width: 150)
+                           .padding()
+                           .background(Color.red)
+                           .foregroundColor(.white)
+                           .clipShape(Capsule())
+                           .frame(width: 150)
+                           .padding(.bottom, 80)
+                   }
+               }
         }
     }
-}
+
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {

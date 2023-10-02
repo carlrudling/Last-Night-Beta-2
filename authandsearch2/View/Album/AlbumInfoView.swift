@@ -4,7 +4,7 @@ import SwiftUI
 
 struct AlbumInfoView: View {
     @EnvironmentObject var imageModel : ImageViewModel
-    
+    @Binding var isTabBarHidden: Bool
     
     var album: Album
     let dateFormatter: DateFormatter = {
@@ -28,7 +28,11 @@ struct AlbumInfoView: View {
                 FirebaseImageView(imagePath: formattedImagePath(from: post.imageURL))
             }
         }
+        .onAppear{
+            isTabBarHidden = false
+        }
     }
+        
 }
 
 
@@ -36,8 +40,9 @@ struct AlbumInfoView_Previews: PreviewProvider {
     static var previews: some View {
         // Create a dummy Album instance for preview purposes
         let dummyAlbum = Album(uuid: "dummy", albumName: "dummy", photoLimit: 0, creator: "dummy")
+        let isTabBarHidden = Binding<Bool>(get: { true }, set: { _ in })
         // Pass the dummy Album instance to AlbumInfoView
-        return AlbumInfoView(album: dummyAlbum)
+        return AlbumInfoView(isTabBarHidden: isTabBarHidden, album: dummyAlbum)
     }
 }
 /*

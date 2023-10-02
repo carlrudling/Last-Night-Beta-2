@@ -11,6 +11,8 @@ import FirebaseAuth
 struct HomeView: View {
     @StateObject private var fetchAlbums = FetchAlbums() // Create an instance of FetchAlbums
     @EnvironmentObject var user: UserViewModel
+    @Binding var isTabBarHidden: Bool
+    @State var isActive : Bool = false
     
     
     // Remove button and fetch onAppear
@@ -28,7 +30,7 @@ struct HomeView: View {
                     Spacer()
                     // Your SwiftUI content here
                     
-                    NavigationLink(destination: createAlbumView(), label: {
+                    NavigationLink(destination: createAlbumView(isTabBarHidden: $isTabBarHidden, rootIsActive: self.$isActive),isActive: self.$isActive, label: {
                         Text("Create Album")
                             .font(Font.custom("Chillax", size: 20))
                             .frame(width: 240, height: 60) // Align the button to center horizontally
@@ -45,35 +47,44 @@ struct HomeView: View {
                         VStack {
                             ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
                                 NavigationLink(
-                                    destination: AlbumInfoView(album: album)
-                                ) {
-                                    Text(album.albumName)
-                                        .frame(width: 240, height: 40)
-                                        .padding()
-                                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
-                                        .contentShape(Rectangle())
-                                        .foregroundColor(.white)
-                                }
-                            }
-                        }
-                    }
-                    .frame(maxHeight: 300)
-                    .padding(.bottom, 120)
-                }
-               
-                
-            }
-        }
-
-        
-        .onAppear{
-            fetchAlbums.fetchAlbums(with: user.uuid ?? "")
-        }
-    }
-}
-
-struct FetchAlbumsView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
-    }
-}
+                                    destination: Group {
+                                        if album.endDate < Date() {
+                                            AlbumSlideshowView(isTabBarHidden: $isTabBarHidden, album: album)
+                                        } else {
+                                            AlbumInfoView(isTabBarHidden: $isTabBarHidden, album: album)
+                                        }
+                                    })  {
+                                        Text(album.albumName)
+                                            .frame(width: 240, height: 40)
+                                            .padding()
+                                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
+                                            .contentShape(Rectangle())
+                                            .foregroundColor(.white)
+                                    }
+                                    
+                                    }
+                                    
+                                    }
+                                    }
+                                        .frame(maxHeight: 300)
+                                        .padding(.bottom, 120)
+                                    
+                                    
+                                    }
+                                    }
+                                    }
+                                    
+                                    
+                                        .onAppear{
+                                            fetchAlbums.fetchAlbums(with: user.uuid ?? "")
+                                        }
+                                    }
+                                    }
+                                    
+                                    struct FetchAlbumsView_Previews: PreviewProvider {
+                                        @State static private var isTabBarHidden = false
+                                        
+                                        static var previews: some View {
+                                            HomeView(isTabBarHidden: $isTabBarHidden)
+                                        }
+                                    }

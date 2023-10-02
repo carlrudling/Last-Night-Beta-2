@@ -17,16 +17,21 @@ struct AddMembersView: View {
     @Binding private var  endDate : Date
     @Binding private var photoLimit : Int
     @Binding private var creator : String
- 
+    @Binding var isTabBarHidden: Bool
+    @State private var buttonPressed = false
+    @State private var isActive: Bool = false
+    @Binding var shouldPopToRootView : Bool
     
-    init(albumName: Binding<String>, endDate: Binding<Date>, photoLimit: Binding<Int>, creator: Binding<String>) {
-            _albumName = albumName
-            _endDate = endDate
-            _photoLimit = photoLimit
-            _creator = creator
+    
+    init(albumName: Binding<String>, endDate: Binding<Date>, photoLimit: Binding<Int>, creator: Binding<String>, isTabBarHidden: Binding<Bool>, shouldPopToRootView : Binding<Bool>) {
+        _albumName = albumName
+        _endDate = endDate
+        _photoLimit = photoLimit
+        _creator = creator
+        _isTabBarHidden = isTabBarHidden
+        _shouldPopToRootView = shouldPopToRootView
         
-        
-        }
+    }
     
     
     var body: some View {
@@ -40,28 +45,51 @@ struct AddMembersView: View {
             }
         )
         VStack {
-           
-           
+            
+            
             SearchBarView2(keyword: keywordBinding)
             ScrollView {
                 ForEach(usersLookup.queryResultUsers, id: \.uuid) { user in
                     ProfileBarView2(user: user, members: $members)
-                        
+                    
                 }
             }
             
-            Button {
-                album.createAlbum(albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator)
-            } label: {
-                Text("Create Album")
-            }
+       
+                Button {
+                    buttonPressed = true
+                    album.createAlbum(albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator)
+                    self.shouldPopToRootView = false
+                    
+                } label: {
+                    Text("Create Album")
+                        .font(Font.custom("Chillax", size: 20))
+                        .frame(maxWidth: .infinity) // Align the button to center horizontally
+                        .padding()
+                        .background(buttonPressed ? Color.green : Color.blue)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                    
 
+                }
+                
+              
+                
+                
+            
+            
+            
+            
+            
         }
+        .padding(.horizontal, 20)
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear{
             members.append(self.user.uuid!)
+            isTabBarHidden = true
+            
         }
     }
 }
@@ -76,7 +104,7 @@ struct SearchBarView2: View {
             HStack {
                 Image(systemName: "magnifyingglass")
                 TextField("Searching for...", text: $keyword)
-                .autocapitalization(.none)
+                    .autocapitalization(.none)
             }
             .padding(.leading, 13)
         }
@@ -96,45 +124,45 @@ struct ProfileBarView2: View {
     @State private var isTapped: Bool = false
     
     init(user: User, members: Binding<[String]>) {
-            self.user = user
-            _members = members
-        }
-
+        self.user = user
+        _members = members
+    }
+    
     
     var body: some View {
-       
-            ZStack {
-                /*
-                 Rectangle()
-                 .foregroundColor(Color.gray.opacity(0.2))
-                 .onTapGesture {
-                 members.append(user.uuid)
-                 
-                 }
-                 */
-                Rectangle()
-                    .foregroundColor(isTapped ? Color.green : Color.gray.opacity(0.2))
-                    .onTapGesture {
-                        if members.contains( user.uuid) {
-                            // Member is already in the array, so remove them
-                          //  members.remove(user.uuid)
-                            isTapped = false
-                        } else {
-                            // Member is not in the array, so add them
-                            members.append(user.uuid)
-                            isTapped = true
-                        }
+        
+        ZStack {
+            /*
+             Rectangle()
+             .foregroundColor(Color.gray.opacity(0.2))
+             .onTapGesture {
+             members.append(user.uuid)
+             
+             }
+             */
+            Rectangle()
+                .foregroundColor(isTapped ? Color.green : Color.gray.opacity(0.2))
+                .onTapGesture {
+                    if members.contains( user.uuid) {
+                        // Member is already in the array, so remove them
+                        //  members.remove(user.uuid)
+                        isTapped = false
+                    } else {
+                        // Member is not in the array, so add them
+                        members.append(user.uuid)
+                        isTapped = true
                     }
-                HStack {
-                    Text("\(user.username)")
-                    Spacer()
-                    Text("\(user.firstName) \(user.lastName)")
                 }
-                .padding(.horizontal, 10)
+            HStack {
+                Text("\(user.username)")
+                Spacer()
+                Text("\(user.firstName) \(user.lastName)")
             }
-            .frame(maxWidth: .infinity, minHeight: 100)
-            .cornerRadius(13)
-            .padding()
+            .padding(.horizontal, 10)
+        }
+        .frame(maxWidth: .infinity, minHeight: 100)
+        .cornerRadius(13)
+        .padding()
         
         
         
@@ -148,7 +176,9 @@ struct addMembersView_Previews: PreviewProvider {
         let endDate = Binding<Date>(get: { Date() }, set: { _ in })
         let photoLimit = Binding<Int>(get: { 10 }, set: { _ in })
         let creator = Binding<String>(get: {"Sample creator"}, set: { _ in})
+        let isTabBarHidden = Binding<Bool>(get: { true }, set: { _ in })
+        let shouldPopToRootView = Binding<Bool>(get: { true }, set: { _ in })
         
-        return AddMembersView(albumName: albumName, endDate: endDate, photoLimit: photoLimit, creator: creator)
+        return AddMembersView(albumName: albumName, endDate: endDate, photoLimit: photoLimit, creator: creator, isTabBarHidden: isTabBarHidden, shouldPopToRootView: shouldPopToRootView)
     }
 }
