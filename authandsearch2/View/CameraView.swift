@@ -13,7 +13,8 @@ struct CameraView: View {
     @State var albumuuid : String
     @State private var selectedAlbumID: String = ""
     
-    @StateObject var camera = CameraModel()
+   // @StateObject var camera = CameraModel()
+    @ObservedObject var camera = CameraManager.shared
     @EnvironmentObject var post : PostViewModel
     @EnvironmentObject var user : UserViewModel
     // let camera: CameraModel
@@ -76,7 +77,7 @@ struct CameraView: View {
                         
                         
                     } else {
-                        
+                        // Button to take picture
                         Button(action: {camera.takePic()}, label: {
                             
                             ZStack{
@@ -119,7 +120,7 @@ struct CameraView: View {
                                 })
                             }
                         }
-                        // Toggle Camera Button
+                        // Toggle to frontCamera
                         Button(action: { camera.toggleCamera() }, label: {
                             Image(systemName: "arrow.triangle.2.circlepath.camera.fill")
                                 .foregroundColor(.white)
@@ -127,6 +128,8 @@ struct CameraView: View {
                                 .background(Color.black.opacity(0.5))
                                 .clipShape(Circle())
                         })
+                        
+                        // Toggle Flash
                         Button(action: { camera.toggleFlash() }, label: {
                             Image(systemName: camera.isFlashOn ? "bolt.fill" : "bolt.slash.fill")
                                 .foregroundColor(.white)

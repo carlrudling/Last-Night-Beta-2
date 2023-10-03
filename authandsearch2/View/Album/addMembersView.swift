@@ -132,14 +132,7 @@ struct ProfileBarView2: View {
     var body: some View {
         
         ZStack {
-            /*
-             Rectangle()
-             .foregroundColor(Color.gray.opacity(0.2))
-             .onTapGesture {
-             members.append(user.uuid)
-             
-             }
-             */
+        
             Rectangle()
                 .foregroundColor(isTapped ? Color.green : Color.gray.opacity(0.2))
                 .onTapGesture {

@@ -23,6 +23,8 @@ struct authandsearch2App: App {
                } else {
                    print("User is signed out")
                }
+               CameraManager.shared.Check()
+
            }
        }
     

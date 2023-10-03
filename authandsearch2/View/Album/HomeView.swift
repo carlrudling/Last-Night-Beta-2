@@ -61,31 +61,31 @@ struct HomeView: View {
                                             .contentShape(Rectangle())
                                             .foregroundColor(.white)
                                     }
-                                    
-                                    }
-                                    
-                                    }
-                                    }
-                                        .frame(maxHeight: 300)
-                                        .padding(.bottom, 120)
-                                    
-                                    
-                                    }
-                                    }
-                                    }
-                                    
-                                    
-                                        .onAppear{
-                                            fetchAlbums.fetchAlbums(with: user.uuid ?? "")
-                                            isTabBarHidden = false
-                                        }
-                                    }
-                                    }
-                                    
-                                    struct FetchAlbumsView_Previews: PreviewProvider {
-                                        @State static private var isTabBarHidden = false
-                                        
-                                        static var previews: some View {
-                                            HomeView(isTabBarHidden: $isTabBarHidden)
-                                        }
-                                    }
+                                
+                            }
+                            
+                        }
+                    }
+                    .frame(maxHeight: 300)
+                    .padding(.bottom, 120)
+                    
+                    
+                }
+            }
+        }
+        
+        
+        .onAppear{
+            fetchAlbums.fetchAlbums(with: user.uuid ?? "")
+            isTabBarHidden = false
+        }
+    }
+}
+
+struct FetchAlbumsView_Previews: PreviewProvider {
+    @State static private var isTabBarHidden = false
+    
+    static var previews: some View {
+        HomeView(isTabBarHidden: $isTabBarHidden)
+    }
+}

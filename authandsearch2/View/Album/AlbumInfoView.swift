@@ -45,6 +45,8 @@ struct AlbumInfoView_Previews: PreviewProvider {
         return AlbumInfoView(isTabBarHidden: isTabBarHidden, album: dummyAlbum)
     }
 }
+
+
 /*
 struct FirebaseImageView: View {
     @ObservedObject private var imageLoader: ImageViewModel
