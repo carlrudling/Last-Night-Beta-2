@@ -13,8 +13,7 @@ struct CameraView: View {
     @State var albumuuid : String
     @State private var selectedAlbumID: String = ""
     
-   // @StateObject var camera = CameraModel()
-    @ObservedObject var camera = CameraManager.shared
+    @StateObject var camera = CameraModel()
     @EnvironmentObject var post : PostViewModel
     @EnvironmentObject var user : UserViewModel
     // let camera: CameraModel

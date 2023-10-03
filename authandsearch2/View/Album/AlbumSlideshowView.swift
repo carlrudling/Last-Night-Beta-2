@@ -16,6 +16,7 @@ struct AlbumSlideshowView: View {
     @State private var showPhotoGrid = false
     @State private var playButtonPressed: Bool = false  // New state variable
     
+    
     // Function to format the image path
     func formattedImagePath(from imageURL: String) -> String {
         let imagePath = "\(imageURL).jpg"
@@ -26,21 +27,29 @@ struct AlbumSlideshowView: View {
     // Function to start the slideshow
     func startSlideshow() {
         playButtonPressed = true  // Set to true when play button is pressed
-        
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             if currentImageIndex < imagesForSlideshow.count - 1 {
                 currentImageIndex += 1
             } else {
                 timer?.invalidate()
                 timer = nil
+                currentImageIndex = 0
+                playButtonPressed = false
+                
+                
             }
+            
         }
+        
     }
+    
+    
     
     // Function to stop the slideshow
     func stopSlideshow() {
         timer?.invalidate()
         timer = nil
+        
     }
     
     // Function to preload all images
@@ -105,26 +114,30 @@ struct AlbumSlideshowView: View {
                     }
                     
                     // Image Button to see photoGrid
-                    if timer == nil {
-                        HStack {
-                            Spacer()
-                            VStack {
-                                Button(action: {
+                    
+                    HStack {
+                        Spacer()
+                        VStack {
+                            if timer == nil || currentImageIndex == 0  {
+                                Button {
                                     withAnimation {
                                         showPhotoGrid.toggle()
                                     }
-                                }) {
+                                } label: {
+                                    
                                     Image(systemName: "photo")
                                         .resizable()
                                         .scaledToFit()
                                         .frame(height: 30)
                                         .foregroundColor(.white)
+                                    
+                                    
                                 }
                             }
-                            
+                            }
+                                .padding(.horizontal, 10)
                         }
-                        .padding(.horizontal, 10)
-                    }
+                    
                     VStack{
                         Spacer()
                         
@@ -149,7 +162,7 @@ struct AlbumSlideshowView: View {
                 .edgesIgnoringSafeArea(.all)
             }
             .edgesIgnoringSafeArea(.all)
-
+            
         }
         .edgesIgnoringSafeArea(.all)
         .onAppear {
@@ -169,22 +182,22 @@ struct PhotoGridView: View {
     var photos: [UIImage]  // Your array of UIImages
     
     var body: some View {
-   
-            ScrollView {
-                LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
-                    ForEach(0..<photos.count, id: \.self) { index in
-                        NavigationLink(destination: ImageDetailView(image: photos[index])) {
-                            Image(uiImage: photos[index])
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: (UIScreen.main.bounds.width - (2 * 4)) / 3)
-                            //.cornerRadius(2)  // Uncomment this if you want rounded corners on each image
-                        }
+        
+        ScrollView {
+            LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
+                ForEach(0..<photos.count, id: \.self) { index in
+                    NavigationLink(destination: ImageDetailView(image: photos[index])) {
+                        Image(uiImage: photos[index])
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: (UIScreen.main.bounds.width - (2 * 4)) / 3)
+                        //.cornerRadius(2)  // Uncomment this if you want rounded corners on each image
                     }
                 }
-                .padding(.all, 2)
             }
-            
+            .padding(.all, 2)
+        }
+        
         
         .edgesIgnoringSafeArea(.all)
         .frame(width: .infinity, height: .infinity)

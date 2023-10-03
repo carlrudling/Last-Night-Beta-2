@@ -13,6 +13,9 @@ import FirebaseAuth
 @main
 struct authandsearch2App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+  
+    
+
     
     init() {
             FirebaseApp.configure()
@@ -23,9 +26,10 @@ struct authandsearch2App: App {
                } else {
                    print("User is signed out")
                }
-               CameraManager.shared.Check()
-
+              
            }
+        
+        
        }
     
     var body: some Scene {

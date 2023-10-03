@@ -12,7 +12,7 @@ struct ContentView: View {
     @EnvironmentObject var user: UserViewModel
     @EnvironmentObject var album: AlbumViewModel
     @EnvironmentObject var post: PostViewModel
-
+    
     var body: some View {
         NavigationView {
             if user.userIsAuthenticatedAndSynced {
