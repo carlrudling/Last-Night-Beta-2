@@ -48,10 +48,11 @@ struct HomeView: View {
                             ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
                                 NavigationLink(
                                     destination: Group {
-                                        if album.endDate < Date() {
-                                            AlbumSlideshowView(isTabBarHidden: $isTabBarHidden, album: album)
-                                        } else {
+                                        if album.isActive {
                                             AlbumInfoView(isTabBarHidden: $isTabBarHidden, album: album)
+                                        } else {
+                                            
+                                            AlbumSlideshowView(isTabBarHidden: $isTabBarHidden, album: album)
                                         }
                                     })  {
                                         Text(album.albumName)

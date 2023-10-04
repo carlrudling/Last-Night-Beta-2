@@ -15,6 +15,8 @@ struct AlbumSlideshowView: View {
     @State private var imagesForSlideshow: [UIImage] = []
     @State private var showPhotoGrid = false
     @State private var playButtonPressed: Bool = false  // New state variable
+    @State private var isLoading: Bool = true
+
     
     
     // Function to format the image path
@@ -57,6 +59,7 @@ struct AlbumSlideshowView: View {
         let imagePaths = album.posts.map { formattedImagePath(from: $0.imageURL) }
         ImageViewModel.preloadImages(paths: imagePaths) { images in
             imagesForSlideshow = images
+            isLoading = false  // Done loading
         }
     }
     
@@ -64,6 +67,16 @@ struct AlbumSlideshowView: View {
         NavigationView {
             GeometryReader { geometry in
                 ZStack {
+                    
+                    // Loading until all Images are fetched
+                    if isLoading {
+                            ProgressView()
+                                .scaleEffect(2) // Optional: Increase the size of the loader
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .background(Color.black.opacity(0.4).edgesIgnoringSafeArea(.all))
+                        }
+                    
                     
                     // Black background before slideshow starts
                     if !playButtonPressed {

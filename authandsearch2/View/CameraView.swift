@@ -189,20 +189,21 @@ struct AlbumPickerView: View {
                     ScrollView {
                         VStack {
                             ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
-                                
-                                Text(album.albumName)
-                                    .frame(width: 180)
-                                    .padding()
-                                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
-                                    .contentShape(Rectangle())
-                                
-                                    .onTapGesture {
-                                        albumName = album.albumName
-                                        selectedAlbumID = album.uuid
-                                        print(albumName)
-                                        print(selectedAlbumID)
-                                        self.showList.toggle()
-                                    }
+                                if album.isActive {
+                                    Text(album.albumName)
+                                        .frame(width: 180)
+                                        .padding()
+                                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
+                                        .contentShape(Rectangle())
+                                    
+                                        .onTapGesture {
+                                            albumName = album.albumName
+                                            selectedAlbumID = album.uuid
+                                            print(albumName)
+                                            print(selectedAlbumID)
+                                            self.showList.toggle()
+                                        }
+                                }
                             }
                         }
                     }
