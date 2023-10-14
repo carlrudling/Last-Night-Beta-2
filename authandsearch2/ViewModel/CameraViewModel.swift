@@ -66,6 +66,7 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
     
     
     func Check() {
+        let startDate = Date()
         //first checking cameras got permission..
         switch AVCaptureDevice.authorizationStatus(for:  .video) {
         case .authorized:
@@ -88,6 +89,8 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
             return
             
         }
+        print("Setup: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
+
         
     }
     
@@ -116,74 +119,95 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
         isFlashOn.toggle()
     }
     
+    
     func setUp() {
-        // setting up camera
         
-        do {
+        DispatchQueue.global(qos: .userInitiated).async {
             
-            // setting configs..
-            self.session.beginConfiguration()
             
-            // change for your own
+            let startDate = Date()
+            // setting up camera
             
-            if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
+            do {
                 
-                do {
-                    let input = try AVCaptureDeviceInput(device: device)
+                // setting configs..
+                self.session.beginConfiguration()
+                
+                // change for your own
+                
+                if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
                     
-                    //checking and adding to session
+                    do {
+                        let input = try AVCaptureDeviceInput(device: device)
+                        
+                        //checking and adding to session
+                        
+                        if self.session.canAddInput(input) {
+                            self.session.addInput(input)
+                            print("Input has been added")
+                        }
+                        
+                    }  catch {
+                        print(error.localizedDescription)
+                    }
+                    // Same for outputs...
                     
-                    if self.session.canAddInput(input) {
-                        self.session.addInput(input)
-                        print("Input has been added")
+                    if self.session.canAddOutput(self.output) {
+                        self.session.addOutput(self.output)
+                        print("Output has been added")
                     }
                     
-                }  catch {
-                    print(error.localizedDescription)
+                    self.session.commitConfiguration()
+                    print("Setup: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
                 }
-                // Same for outputs...
-                
-                if self.session.canAddOutput(self.output) {
-                    self.session.addOutput(self.output)
-                    print("Output has been added")
-                }
-                
-                self.session.commitConfiguration()
+            } catch {
+                print(error.localizedDescription)
             }
-        } catch {
-            print(error.localizedDescription)
         }
+        
     }
     
     
     // take and retake functions...
     
     func takePic() {
-        DispatchQueue.global(qos: .background).async {
+   
+        DispatchQueue.global(qos: .userInitiated).async {
+            let startDate = Date()
             let settings = AVCapturePhotoSettings()
             settings.flashMode = self.isFlashOn ? .on : .off  // Set flash mode based on isFlashOn state
             self.output.capturePhoto(with: settings, delegate: self)
             DispatchQueue.main.async {
+                let startDates = Date()
                 Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in
                     self.session.stopRunning()
+                    print("TakePic, main Queue: \(Date().timeIntervalSince1970 - startDates.timeIntervalSince1970)")
+
                 }
             }
             DispatchQueue.main.async {
                 withAnimation { self.isTaken.toggle() }
             }
+            print("TakePic, when finished: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
+
         }
     }
     
     func reTake() {
-        DispatchQueue.global(qos: .background).async {
+        let startDate = Date()
+        DispatchQueue.global(qos: .userInitiated).async {
             self.session.startRunning()
-            
+            print("Retake, after starting session again: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
+
             DispatchQueue.main.async {
                 withAnimation{self.isTaken.toggle()}
                 // clearing
                 self.isSaved = false
             }
+            
         }
+        print("Retake, when finished: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
+
     }
     
     
@@ -199,6 +223,8 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
         
         
         guard let imageData = photo.fileDataRepresentation() else {return}
+        
+        
         self.picData = imageData
         // self.isSaved = false
         
@@ -208,42 +234,62 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
     
     
     
-    func savePost() {
-        print(" \(picData.count)")
-        guard let image = UIImage(data: self.picData) else {
-            print("Failed to create UIImage from picData.")
-            return
-        }
-        let uuid = UUID().uuidString
-        
-        // Step 1: Upload the image to Firebase Storage
-        let storage = Storage.storage()
-        let storageRef = storage.reference()
-        let imageRef = storageRef.child("\(uuid).jpg") // Unique name for the image
-        let imageData = image.jpegData(compressionQuality: 0.8)
-        let metadata = StorageMetadata()
-        metadata.contentType = "image/jpg"
-        uuidGlobal = uuid
-        
-        
-        
-        if let imageData = imageData {
-            imageRef.putData(imageData, metadata: metadata) { metadata, error in
-                if let error = error {
-                    print("Error uploading image: \(error)")
+    func savePost(completion: @escaping (Bool, String?) -> Void) {
+        let startDate = Date()
+        DispatchQueue.global().async {
+            
+         
+            print(" \(self.picData.count)")
+            guard let image = UIImage(data: self.picData) else {
+                print("Failed to create UIImage from picData.")
+                return
+            }
+            let uuid = UUID().uuidString
+            
+            // Step 1: Upload the image to Firebase Storage
+            let storage = Storage.storage()
+            let storageRef = storage.reference()
+            let imageRef = storageRef.child("\(uuid).jpg") // Unique name for the image
+            let imageData = image.jpegData(compressionQuality: 0.8)
+            let metadata = StorageMetadata()
+            metadata.contentType = "image/jpg"
+            self.uuidGlobal = uuid
+            
+            print("The uuidGlobal is \(self.uuidGlobal)")
+            
+            if let imageData = imageData {
+                imageRef.putData(imageData, metadata: metadata) { metadata, error in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            print("Error uploading image: \(error)")
+                            completion(false, nil)
+                        } else {
+                            // Fetch the download URL
+                            imageRef.downloadURL { (url, error) in
+                                DispatchQueue.main.async {
+                                    if let error = error {
+                                        print("Error fetching download URL: \(error)")
+                                        completion(false, nil)
+                                    } else if let downloadURL = url {
+                                        print("Image uploaded and download URL fetched!")
+                                        completion(true, downloadURL.absoluteString) // Pass the URL string to the completion handler
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                
-                if let metadata = metadata {
-                    print("Metadata: \(metadata)")
+            } else {
+                DispatchQueue.main.async {
+                    completion(false, nil)
                 }
-                
-                // Step 2: Once the image is uploaded, get the download URL
-                
             }
             
+            self.isSaved = true
+            
         }
-        self.isSaved = true
-        
+        print("SavePost: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
+
     }
     
     

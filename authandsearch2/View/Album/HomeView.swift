@@ -23,7 +23,6 @@ struct HomeView: View {
         VStack {
             
             
-            NavigationView {
                 VStack {
                     
                     
@@ -41,8 +40,14 @@ struct HomeView: View {
                         
                         
                     })
+                    .navigationBarTitleDisplayMode(.inline)
                     .padding()
-                    
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                                        // this sets the screen title in the navigation bar, when the screen is visible
+                            Text("Primary View")
+                                    }
+                                }
                     ScrollView {
                         VStack {
                             ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
@@ -73,7 +78,7 @@ struct HomeView: View {
                     
                 }
             }
-        }
+        
         
         
         .onAppear{
@@ -90,3 +95,6 @@ struct FetchAlbumsView_Previews: PreviewProvider {
         HomeView(isTabBarHidden: $isTabBarHidden)
     }
 }
+
+// Maybe it is a carusell to make it look better
+// SwiftUIWheelPicker?

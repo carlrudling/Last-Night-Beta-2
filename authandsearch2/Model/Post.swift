@@ -11,6 +11,7 @@ import UIKit
 struct Post: Codable, Identifiable {
     var Postuuid: String
     var userUuid: String
+    var imagePath : String
     var imageURL : String
     
     var id: String {
@@ -21,6 +22,7 @@ struct Post: Codable, Identifiable {
             return [
                 "Postuuid": Postuuid,
                 "userUuid": userUuid,
+                "imagePath": imagePath,
                 "imageURL": imageURL
             ]
         }

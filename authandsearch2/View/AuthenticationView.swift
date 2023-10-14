@@ -129,7 +129,7 @@ struct SignUpView: View {
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
             Button(action: {
-                user.signUp(username: username, email: email, firstName: firstName, lastName: lastName, password: password, profileImage: profileImage)
+                user.signUp(username: "@\(username)", email: email, firstName: firstName, lastName: lastName, password: password, profileImage: profileImage)
             }) {
                 Text("Sign Up")
             }

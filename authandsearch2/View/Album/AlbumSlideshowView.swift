@@ -5,6 +5,9 @@
 //  Created by Carl Rudling on 2023-10-01.
 //
 import SwiftUI
+import Drawer
+import Kingfisher
+
 
 struct AlbumSlideshowView: View {
     @EnvironmentObject var imageModel: ImageViewModel
@@ -16,12 +19,14 @@ struct AlbumSlideshowView: View {
     @State private var showPhotoGrid = false
     @State private var playButtonPressed: Bool = false  // New state variable
     @State private var isLoading: Bool = true
-
+    @State var heights = [CGFloat(500)]
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     
     
     // Function to format the image path
-    func formattedImagePath(from imageURL: String) -> String {
-        let imagePath = "\(imageURL).jpg"
+    func formattedImagePath(from imagePath: String) -> String {
+        let imagePath = "\(imagePath).jpg"
         print(imagePath)
         return imagePath
     }
@@ -56,7 +61,7 @@ struct AlbumSlideshowView: View {
     
     // Function to preload all images
     func preloadImages() {
-        let imagePaths = album.posts.map { formattedImagePath(from: $0.imageURL) }
+        let imagePaths = album.posts.map { formattedImagePath(from: $0.imagePath) }
         ImageViewModel.preloadImages(paths: imagePaths) { images in
             imagesForSlideshow = images
             isLoading = false  // Done loading
@@ -64,119 +69,171 @@ struct AlbumSlideshowView: View {
     }
     
     var body: some View {
-        NavigationView {
-            GeometryReader { geometry in
-                ZStack {
+        VStack {
+            
+            
+            ZStack {
+                
+                // Loading until all Images are fetched
+                if isLoading {
+                    ProgressView()
+                        .scaleEffect(2) // Optional: Increase the size of the loader
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.black.opacity(0.4).edgesIgnoringSafeArea(.all))
+                }
+                
+                
+                // Black background before slideshow starts
+                if !playButtonPressed {
+                    Color.black.edgesIgnoringSafeArea(.all)
+                }
+                
+                // Slideshow images
+                if playButtonPressed, imagesForSlideshow.indices.contains(currentImageIndex) {
+                    Image(uiImage: imagesForSlideshow[currentImageIndex])
+                        .resizable()
+                        .scaledToFill()
+                        .edgesIgnoringSafeArea(.all)
+                }
+                
+                
+                VStack {
+                    Spacer()
                     
-                    // Loading until all Images are fetched
-                    if isLoading {
-                            ProgressView()
-                                .scaleEffect(2) // Optional: Increase the size of the loader
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .background(Color.black.opacity(0.4).edgesIgnoringSafeArea(.all))
+                    // Play button to start slideShow
+                    Button {
+                        if timer == nil {
+                            startSlideshow()
+                        } else {
+                            stopSlideshow()
                         }
-                    
-                    
-                    // Black background before slideshow starts
-                    if !playButtonPressed {
-                        Color.black.edgesIgnoringSafeArea(.all)
-                    }
-                    
-                    // Slideshow images
-                    if playButtonPressed, imagesForSlideshow.indices.contains(currentImageIndex) {
-                        Image(uiImage: imagesForSlideshow[currentImageIndex])
-                            .resizable()
-                            .scaledToFill()
-                            .edgesIgnoringSafeArea(.all)
-                    }
-                    
-                    
-                    VStack {
-                        Spacer()
-                        
-                        // Play button to start slideShow
-                        Button {
-                            if timer == nil {
-                                startSlideshow()
-                            } else {
-                                stopSlideshow()
-                            }
-                        } label: {
-                            if timer == nil {
-                                Image(systemName: "play.circle" )
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 100, height: 100)
-                                    .foregroundColor(.white)
-                            }
+                    } label: {
+                        if timer == nil {
+                            Image(systemName: "play.circle" )
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                                .foregroundColor(.white)
                         }
-                        Spacer()
                     }
-                    
-                    // Remove PhotoGrid if tap outside
-                    if showPhotoGrid {
-                        Rectangle()
-                            .fill(Color.clear)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .contentShape(Rectangle())  // Important for registering taps
-                            .onTapGesture {
-                                print("showphotogrid = false")
-                                showPhotoGrid = false // Hide the popup when tapped outside
-                            }
-                    }
-                    
-                    // Image Button to see photoGrid
-                    
-                    HStack {
-                        Spacer()
-                        VStack {
-                            if timer == nil || currentImageIndex == 0  {
-                                Button {
-                                    withAnimation {
-                                        showPhotoGrid.toggle()
-                                    }
-                                } label: {
-                                    
-                                    Image(systemName: "photo")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 30)
-                                        .foregroundColor(.white)
-                                    
-                                    
-                                }
-                            }
-                            }
-                                .padding(.horizontal, 10)
-                        }
-                    
-                    VStack{
-                        Spacer()
-                        
-                        
-                        if showPhotoGrid {
-                            PhotoGridView(photos: imagesForSlideshow)
-                                .background(Color.white)
-                                .frame(width: .infinity, height: geometry.size.height * (2/3))
-                            //  .offset(y: geometry.size.height * (1/3))// Experiment with this line
-                                .edgesIgnoringSafeArea(.all)
-                            
-                            
-                        }
-                        
-                    }
-                    .edgesIgnoringSafeArea(.all)
-                    
-                    
-                    
-                    
+                    Spacer()
                 }
                 .edgesIgnoringSafeArea(.all)
+                
+                // Remove PhotoGrid if tap outside
+                if showPhotoGrid {
+                    Rectangle()
+                        .fill(Color.clear)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contentShape(Rectangle())  // Important for registering taps
+                        .onTapGesture {
+                            print("showphotogrid = false")
+                            showPhotoGrid = false // Hide the popup when tapped outside
+                        }
+                }
+                
+                
+                // Image Button to see photoGrid
+                
+                HStack {
+                    Spacer()
+                    VStack {
+                        if timer == nil || currentImageIndex == 0  {
+                            Button {
+                                withAnimation {
+                                    showPhotoGrid.toggle()
+                                }
+                            } label: {
+                                
+                                Image(systemName: "photo")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 30)
+                                    .foregroundColor(.white)
+                                
+                                
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 10)
+                }
+                
+                VStack{
+                    Spacer()
+                    
+                    
+                    if showPhotoGrid {
+                        
+                        /*
+                         PhotoGridView(photos: imagesForSlideshow)
+                         .background(Color.white)
+                         .frame(width: .infinity, height: geometry.size.height * (2/3))
+                         //  .offset(y: geometry.size.height * (1/3))// Experiment with this line
+                         .edgesIgnoringSafeArea(.all)
+                         
+                         */
+                        
+                        Drawer(heights: $heights) {
+                            ZStack{
+                                Color(UIColor.white)
+                                
+                                VStack {
+                                    ZStack{
+                                        Color(UIColor.purple)
+                                        
+                                        HStack{
+                                            Spacer()
+                                            Image(systemName: "plus")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 28, height: 28)
+                                                .foregroundColor(.white)
+                                                .padding(.horizontal, 10)
+                                        }
+                                    }
+                                    .frame(width: .infinity, height: 40)
+                                    
+                                    
+                                    Spacer()
+                                    
+                                    PhotoGridView(posts: album.posts)
+                                        .edgesIgnoringSafeArea(.all)
+                                    
+                                }
+                                .edgesIgnoringSafeArea(.all)
+                                
+                            }
+                            .edgesIgnoringSafeArea(.all)
+                            
+                        }.edgesIgnoringSafeArea(.vertical)
+                    }
+                    
+                }
+                
+                
+                
+                
+                
             }
-            .edgesIgnoringSafeArea(.all)
+            
+            
+            
             
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading:
+                                Group {
+            if !playButtonPressed {
+                Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                    Image(systemName: "chevron.backward")
+                        .foregroundColor(.white)
+                        .padding(12)
+                        
+                }
+            }
+        }
+        )
         .edgesIgnoringSafeArea(.all)
         .onAppear {
             isTabBarHidden = true
@@ -191,49 +248,145 @@ struct AlbumSlideshowView: View {
 }
 
 // PhotoGrid, a grid of all the images
-struct PhotoGridView: View {
-    var photos: [UIImage]  // Your array of UIImages
+
+struct PhotoGridView: View { 
+    @EnvironmentObject var post: PostViewModel
+    var posts: [Post]
     
     var body: some View {
-        
         ScrollView {
             LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
-                ForEach(0..<photos.count, id: \.self) { index in
-                    NavigationLink(destination: ImageDetailView(image: photos[index])) {
-                        Image(uiImage: photos[index])
+                ForEach(posts, id: \.Postuuid) { post in
+                    //  if let url = URL(string: post.imageURL) {
+                    //      let processor = ResizingImageProcessor(referenceSize: CGSize(width: 300, height: 300))
+                    NavigationLink(destination: ImageDetailView(post: post)) {
+                        KFImage(URL(string: post.imageURL))
+                        //     .setProcessor(processor)
                             .resizable()
-                            .aspectRatio(contentMode: .fill)
+                            .aspectRatio(contentMode: .fit)
                             .frame(width: (UIScreen.main.bounds.width - (2 * 4)) / 3)
                         //.cornerRadius(2)  // Uncomment this if you want rounded corners on each image
                     }
+                    //}
                 }
             }
             .padding(.all, 2)
         }
-        
-        
         .edgesIgnoringSafeArea(.all)
-        .frame(width: .infinity, height: .infinity)
+        .padding(.top, -7)
     }
 }
+
+
+
+
 
 
 // There is a issue here This struct only gets accessed to an Image, it has no way to know the reference of the Image in order to know who (user) posted it
 // View for Image fullscreen
 struct ImageDetailView: View {
-    var image: UIImage
-    @EnvironmentObject var post : PostViewModel
-    @EnvironmentObject var user : UserViewModel
+    var post : Post
+    @EnvironmentObject var postVM : PostViewModel
+    @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject var imageModel: ImageViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @State private var isSaved : Bool = false
+    @State private var bounceAmount: CGFloat = 1.0
+
     
     var body: some View {
-        Image(uiImage: image)
-            .resizable()
-            .scaledToFill()
-            .edgesIgnoringSafeArea(.all)
-            .frame(width: .infinity, height: .infinity)
-            .edgesIgnoringSafeArea(.all)
-        
+        ZStack {
+            KFImage(URL(string: post.imageURL))
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+                .frame(width: .infinity, height: .infinity)
+
+            if let fetchedUser = userViewModel.fetchedUser {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Text(fetchedUser.username)
+                            .font(.system(size: 18))
+                            .foregroundColor(.white)
+                            .padding(.horizontal)
+                        Spacer()
+                    }
+                }
+            }
+            
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    VStack {
+                        Button(action: {
+                            imageModel.requestPhotoLibraryPermission { permissionGranted in
+                                if permissionGranted {
+                                    if let url = URL(string: post.imageURL) {
+                                        KingfisherManager.shared.retrieveImage(with: url) { result in
+                                            switch result {
+                                            case .success(let value):
+                                                imageModel.saveImageToLibrary(image: value.image)
+                                                isSaved = true
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                        withAnimation {
+                                                            isSaved = false
+                                                        }
+                                                    }
+                                            case .failure(let error):
+                                                print("Error downloading image: \(error)")
+                                                isSaved = false
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    // This won't display a Text view, but will print in the console.
+                                    // You might need a different mechanism to inform the user, like an alert.
+                                    print("Without accepting access to your images, you can't save the image")
+                                }
+                            }
+                        }) {
+                            Image(systemName: "arrow.down.to.line")
+                                .font(.system(size: 28))
+                                .foregroundColor( isSaved ? .green : .white)
+                                .padding(.horizontal, 20)
+                        }
+                        
+                        if  isSaved {
+                            Text("Saved")
+                                .font(.system(size: 12))
+                                .foregroundColor(.green)
+                                .offset(y: isSaved ? 0 : -20)
+                                .opacity(isSaved ? 1.0 : 0.0)
+                            
+                        }
+                    }
+                    
+                                
+                }
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading:
+                                Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                                    Image(systemName: "chevron.backward")
+                                        .foregroundColor(.white)
+                                        .padding(12)
+                                        
+                                }
+        )
+        .onAppear {
+            userViewModel.fetchUser(by: post.userUuid)
+            print("onAppear: \(post.imageURL)")
+        }
+        .onDisappear {
+            print("onDissapear: \(post.imageURL)")
+        }
     }
+
+    
+    
     
 }
 
@@ -245,3 +398,12 @@ struct AlbumSlideshowView_Previews: PreviewProvider {
         AlbumSlideshowView(isTabBarHidden: isTabBarHidden, album: dummyAlbum)
     }
 }
+
+
+
+//Kingfisher = Checkout
+//Drawer = for grid
+// Qgrid could be better to than lasyVgrid
+// When creating the load screen and the is finished screen the animation could be synqed with confetti libary?
+
+// SwiftUIX should definetly checkout

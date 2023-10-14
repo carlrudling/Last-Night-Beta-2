@@ -34,44 +34,46 @@ struct MainTabbedView: View {
     @State var selectedTab = 0
     
     var body: some View {
-        
-        ZStack(alignment: .bottom){
-            TabView(selection: $selectedTab) {
-                HomeView(isTabBarHidden: $isTabBarHidden)
-                    .tag(0)
-                
-                CameraView(albumuuid: self.user.uuid!)
-                    .tag(1)
-                
-                ProfileView()
-                    .tag(2)
-                
-            }
+
             
-            
-            
-            if !isTabBarHidden {
-                ZStack{
-                    HStack{
-                        ForEach((TabbedItems.allCases), id: \.self){ item in
-                            Button{
-                                selectedTab = item.rawValue
-                            } label: {
-                                CustomTabItem(imageName: item.iconName, isActive: (selectedTab == item.rawValue))
+            ZStack(alignment: .bottom){
+                TabView(selection: $selectedTab) {
+                    HomeView(isTabBarHidden: $isTabBarHidden)
+                        .tag(0)
+                    
+                    CameraView(albumuuid: self.user.uuid!)
+                        .tag(1)
+                    
+                    ProfileView()
+                        .tag(2)
+                    
+                }
+                
+                
+                
+                if !isTabBarHidden {
+                    ZStack{
+                        HStack{
+                            ForEach((TabbedItems.allCases), id: \.self){ item in
+                                Button{
+                                    selectedTab = item.rawValue
+                                } label: {
+                                    CustomTabItem(imageName: item.iconName, isActive: (selectedTab == item.rawValue))
+                                }
                             }
                         }
+                        .padding(6)
                     }
-                    .padding(6)
+                    .frame(width: 190, height: 60)
+                    .background(.purple.opacity(0.2))
+                    .background(.white)
+                    .cornerRadius(30)
+                    .padding(.horizontal, 26)
                 }
-                .frame(width: 190, height: 60)
-                .background(.purple.opacity(0.2))
-                .background(.white)
-                .cornerRadius(30)
-                .padding(.horizontal, 26)
             }
         }
     }
-}
+
 
 
 struct MainTabbedView_Previews: PreviewProvider {

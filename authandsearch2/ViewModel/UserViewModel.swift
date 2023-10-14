@@ -106,6 +106,8 @@ import FirebaseStorage
 class UserViewModel: ObservableObject {
     @Published var user: User?
     @Published var queryResultUsers: [User] = []
+    @Published var fetchedUser: User?
+
     
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
@@ -194,6 +196,27 @@ class UserViewModel: ObservableObject {
             self.user = nil
         }
     }
+
+    
+ 
+
+    func fetchUser(by uuid: String) {
+        db.collection("users").document(uuid).getDocument { (document, error) in
+            if let document = document, document.exists, let data = document.data() {
+                self.fetchedUser = User(
+                    uuid: data["uuid"] as! String,
+                    username: data["username"] as! String,
+                    firstName: data["firstName"] as! String,
+                    lastName: data["lastName"] as! String,
+                    profileImage: data["profileImage"] as! String
+                )
+            } else {
+                print("User not found \(error?.localizedDescription ?? "")")
+            }
+        }
+    }
+
+
 
     
     

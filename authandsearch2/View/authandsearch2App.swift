@@ -37,10 +37,12 @@ struct authandsearch2App: App {
             let user = UserViewModel()
             let album = AlbumViewModel()
             let post = PostViewModel()
+            let imageViewModel = ImageViewModel(imagePath: "")
             ContentView()
                 .environmentObject(user)
                 .environmentObject(album)
                 .environmentObject(post)
+                .environmentObject(imageViewModel)
         }
     }
 }

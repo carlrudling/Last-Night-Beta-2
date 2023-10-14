@@ -5,7 +5,8 @@ import SwiftUI
 struct AlbumInfoView: View {
     @EnvironmentObject var imageModel : ImageViewModel
     @Binding var isTabBarHidden: Bool
-    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
     var album: Album
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -14,8 +15,8 @@ struct AlbumInfoView: View {
         return formatter
     }()
     
-    func formattedImagePath(from imageURL: String) -> String {
-        let imagePath = "\(imageURL).jpg"
+    func formattedImagePath(from imagePath: String) -> String {
+        let imagePath = "\(imagePath).jpg"
         print(imagePath)
         return imagePath
     }
@@ -25,9 +26,18 @@ struct AlbumInfoView: View {
             Text(album.albumName)
             Text(dateFormatter.string(from: album.endDate))
             ForEach(album.posts) { post in
-                FirebaseImageView(imagePath: formattedImagePath(from: post.imageURL))
+                FirebaseImageView(imagePath: formattedImagePath(from: post.imagePath))
             }
         }
+        .navigationBarBackButtonHidden(true)
+                    .navigationBarItems(leading:
+                        Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
+                            Image(systemName: "chevron.backward")
+                            .foregroundColor(.black)
+                            .padding(12)
+                        
+                        }
+                )
         .onAppear{
             isTabBarHidden = false
         }

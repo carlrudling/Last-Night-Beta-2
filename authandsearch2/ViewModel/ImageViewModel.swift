@@ -1,41 +1,9 @@
-//
-//  ImageViewModel.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-09-29.
-//
-/*
-import Foundation
-import UIKit
-import FirebaseStorage
 
-
-
-class ImageViewModel: ObservableObject {
-    @Published var image: UIImage?
-    
-    private var storageRef: StorageReference
-    
-    init(imagePath: String) {
-        storageRef = Storage.storage().reference(withPath: imagePath)
-        loadImage()
-    }
-    
-    func loadImage() {
-        storageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in  // 1 MB limit
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-            } else if let data = data {
-                self.image = UIImage(data: data)
-            }
-        }
-    }
-}
-
-*/
  import Foundation
  import UIKit
  import FirebaseStorage
+ import Photos
+
 
  class ImageViewModel: ObservableObject {
      @Published var image: UIImage?
@@ -69,6 +37,31 @@ class ImageViewModel: ObservableObject {
                  }
              }
          }
+     }
+     
+     func requestPhotoLibraryPermission(completion: @escaping (Bool) -> Void) {
+             let photosStatus = PHPhotoLibrary.authorizationStatus()
+
+             switch photosStatus {
+             case .authorized:
+                 // Permission is already granted
+                 completion(true)
+
+             case .notDetermined:
+                 // Permission has not been determined yet
+                 PHPhotoLibrary.requestAuthorization { newStatus in
+                     completion(newStatus == .authorized)
+                 }
+
+             default:
+                 // Permission is denied or restricted
+                 completion(false)
+             }
+         }
+
+     
+     func saveImageToLibrary(image: UIImage) {
+         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
      }
  }
 

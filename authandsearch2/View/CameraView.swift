@@ -24,19 +24,20 @@ struct CameraView: View {
     var body: some View{
         ZStack{
             
+            
             //Going to be the camera preview...
             CameraPreview(camera: camera)
                 .ignoresSafeArea(.all, edges: .all)
                 .onTapGesture(count: 2, perform: {
                     camera.toggleCamera()
-                               print("Double tapped!")
-                           })
+                    print("Double tapped!")
+                })
             VStack{
                 AlbumPickerView(selectedAlbumID: $selectedAlbumID)
                 
                 
-                    
-        Spacer()
+                
+                Spacer()
                 
                 HStack {
                     
@@ -45,22 +46,20 @@ struct CameraView: View {
                     
                     if camera.isTaken {
                         
-                        
-                        
-                        Button(action:
-                                {if !camera.isSaved{camera.savePost();
-                                    if camera.uuidGlobal != "" { post.createPost(albumId: selectedAlbumID, imageURL: camera.uuidGlobal, userUUID: user.uuid!)
+                        Button(action: {
+                            DispatchQueue.global(qos: .userInteractive).async {
+                                camera.savePost { success, imageURL in
+                                    if success, let imageURL = imageURL {
+                                        DispatchQueue.main.async {
+                                            camera.reTake() // UI-related task, should be on the main thread
+                                        }
                                         
+                                        post.createPost(albumId: selectedAlbumID, imagePath: camera.uuidGlobal, imageURL: imageURL, userUUID: user.uuid!)
                                     }
-                                    
-                                }
-                            DispatchQueue.global().asyncAfter(deadline: .now() + 0.6) {
-                                DispatchQueue.main.async {
-                                    camera.reTake()
                                 }
                             }
                         }
-                               
+
                                , label: {
                             Text(camera.isSaved ? "Saved" : "Save")
                                 .foregroundColor(.black)
@@ -95,9 +94,9 @@ struct CameraView: View {
                     }
                 }
                 .frame(height: 75)
-               
                 
-                }
+                
+            }
             
             VStack {
                 // Buttons
@@ -138,13 +137,13 @@ struct CameraView: View {
                         })
                     }
                     
-                   
+                    
                 }
                 
                 Spacer()
             }
-             
-           
+            
+            
             
         }
         

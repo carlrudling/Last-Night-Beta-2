@@ -21,6 +21,8 @@ struct AddMembersView: View {
     @State private var buttonPressed = false
     @State private var isActive: Bool = false
     @Binding var shouldPopToRootView : Bool
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
     
     
     init(albumName: Binding<String>, endDate: Binding<Date>, photoLimit: Binding<Int>, creator: Binding<String>, isTabBarHidden: Binding<Bool>, shouldPopToRootView : Binding<Bool>) {
@@ -83,15 +85,28 @@ struct AddMembersView: View {
             
         }
         .padding(.horizontal, 20)
-        .navigationBarHidden(true)
-        .navigationBarTitleDisplayMode(.inline)
+      
+        .navigationBarBackButtonHidden(true)
+                    .navigationBarItems(leading:
+                        Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
+                            Image(systemName: "chevron.backward")
+                            .foregroundColor(.black)
+                            .padding(12)
+                           
+                          
+                        }
+                )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear{
             members.append(self.user.uuid!)
             isTabBarHidden = true
             
         }
+        .onDisappear{
+            isTabBarHidden = false
+        }
     }
+    
 }
 
 struct SearchBarView2: View {
