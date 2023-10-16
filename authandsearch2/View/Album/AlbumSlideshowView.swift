@@ -180,7 +180,7 @@ struct AlbumSlideshowView: View {
                                 
                                 VStack {
                                     ZStack{
-                                        Color(UIColor.purple)
+                                        Color(UIColor.white)
                                         
                                         HStack{
                                             Spacer()
@@ -188,25 +188,36 @@ struct AlbumSlideshowView: View {
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 28, height: 28)
-                                                .foregroundColor(.white)
+                                                .foregroundColor(.black)
                                                 .padding(.horizontal, 10)
+                                                .padding(.top, 3)
+                                                .roundedCorner(20, corners: [.topLeft, .topRight])
+                                            
                                         }
                                     }
                                     .frame(width: .infinity, height: 40)
+                                    .roundedCorner(20, corners: [.topLeft, .topRight])
+
+
                                     
                                     
                                     Spacer()
                                     
                                     PhotoGridView(posts: album.posts)
                                         .edgesIgnoringSafeArea(.all)
+
                                     
                                 }
                                 .edgesIgnoringSafeArea(.all)
-                                
+
                             }
                             .edgesIgnoringSafeArea(.all)
+                            .roundedCorner(20, corners: [.topLeft, .topRight])
+
                             
                         }.edgesIgnoringSafeArea(.vertical)
+                            .roundedCorner(20, corners: [.topLeft, .topRight])
+
                     }
                     
                 }
@@ -274,6 +285,7 @@ struct PhotoGridView: View {
         }
         .edgesIgnoringSafeArea(.all)
         .padding(.top, -7)
+
     }
 }
 
@@ -306,10 +318,34 @@ struct ImageDetailView: View {
                 VStack {
                     Spacer()
                     HStack {
+                        Group {
+                          
+                            if let urlString = fetchedUser.profileImageURL, let url = URL(string: urlString) {
+                                            KFImage(url)
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 40, height: 40)
+                                                .clipShape(Circle())
+                                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                        
+                                    
+                                } else {
+                                Image(systemName: "person.crop.circle.fill")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .foregroundColor(.gray)
+                                    .frame(width: 40, height: 40)
+                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            }
+                        }
+                        .padding(.leading, 25)
+
+                       
+                        
                         Text(fetchedUser.username)
                             .font(.system(size: 18))
                             .foregroundColor(.white)
-                            .padding(.horizontal)
+                           
                         Spacer()
                     }
                 }
@@ -377,9 +413,15 @@ struct ImageDetailView: View {
                                 }
         )
         .onAppear {
-            userViewModel.fetchUser(by: post.userUuid)
-            print("onAppear: \(post.imageURL)")
+            userViewModel.fetchUser(by: post.userUuid) { fetchedUser in
+                if let user = fetchedUser {
+                    print("User fetched: \(user.username)")
+                } else {
+                    print("Failed to fetch the user.")
+                }
+            }
         }
+
         .onDisappear {
             print("onDissapear: \(post.imageURL)")
         }
@@ -390,6 +432,22 @@ struct ImageDetailView: View {
     
 }
 
+extension View {
+    func roundedCorner(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners) )
+    }
+}
+
+// CHeck if I can actually swipe back when navigating? Because the extensions doesn't seem to be here. Find in createAlbumView
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
 
 struct AlbumSlideshowView_Previews: PreviewProvider {
     static var previews: some View {

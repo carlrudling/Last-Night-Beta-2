@@ -114,6 +114,7 @@ struct SignUpView: View {
     @State private var lastName = ""
     @State private var username = ""
     @State private var profileImage = ""
+    @State private var profileImageURL = ""
     
     var body: some View {
         VStack {
@@ -129,7 +130,7 @@ struct SignUpView: View {
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
             Button(action: {
-                user.signUp(username: "@\(username)", email: email, firstName: firstName, lastName: lastName, password: password, profileImage: profileImage)
+                user.signUp(username: "\(username)", email: email, firstName: firstName, lastName: lastName, password: password, profileImage: profileImage, profileImageURL: profileImageURL)
             }) {
                 Text("Sign Up")
             }

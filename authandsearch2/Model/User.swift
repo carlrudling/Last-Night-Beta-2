@@ -42,6 +42,7 @@ struct User: Codable, Identifiable {
     var firstName: String
     var lastName: String
     var profileImage: String
+    var profileImageURL: String?
     var signUpDate = Date.now
     var keywordsForLookup: [String] {
         [self.username.generateStringSequence(), self.firstName.generateStringSequence(), self.lastName.generateStringSequence(), "\(self.firstName) \(self.lastName)".generateStringSequence()].flatMap { $0 }

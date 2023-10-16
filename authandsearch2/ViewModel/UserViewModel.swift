@@ -107,7 +107,7 @@ class UserViewModel: ObservableObject {
     @Published var user: User?
     @Published var queryResultUsers: [User] = []
     @Published var fetchedUser: User?
-
+    
     
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
@@ -132,11 +132,11 @@ class UserViewModel: ObservableObject {
         }
     }
     
-    func signUp(username: String, email: String, firstName: String, lastName: String, password: String, profileImage: String) {
+    func signUp(username: String, email: String, firstName: String, lastName: String, password: String, profileImage: String, profileImageURL: String) {
         auth.createUser(withEmail: email, password: password) { [weak self] result, error in
             guard result != nil, error == nil else { return }
             DispatchQueue.main.async {
-                self?.add(User(uuid: (self?.uuid)!, username: username, firstName: firstName, lastName: lastName, profileImage: profileImage))
+                self?.add(User(uuid: (self?.uuid)!, username: username, firstName: firstName, lastName: lastName, profileImage: profileImage, profileImageURL: profileImageURL))
                 self?.sync()
             }
         }
@@ -196,11 +196,29 @@ class UserViewModel: ObservableObject {
             self.user = nil
         }
     }
-
     
- 
-
-    func fetchUser(by uuid: String) {
+    
+    
+    /*
+     func fetchUser(by uuid: String) {
+     db.collection("users").document(uuid).getDocument { (document, error) in
+     if let document = document, document.exists, let data = document.data() {
+     self.fetchedUser = User(
+     uuid: data["uuid"] as! String,
+     username: data["username"] as! String,
+     firstName: data["firstName"] as! String,
+     lastName: data["lastName"] as! String,
+     profileImage: data["profileImage"] as! String
+     )
+     } else {
+     print("User not found \(error?.localizedDescription ?? "")")
+     }
+     }
+     }
+     */
+    
+    /*
+    func fetchUser(by uuid: String, completion: @escaping (User?) -> Void) {
         db.collection("users").document(uuid).getDocument { (document, error) in
             if let document = document, document.exists, let data = document.data() {
                 self.fetchedUser = User(
@@ -208,42 +226,149 @@ class UserViewModel: ObservableObject {
                     username: data["username"] as! String,
                     firstName: data["firstName"] as! String,
                     lastName: data["lastName"] as! String,
-                    profileImage: data["profileImage"] as! String
+                    profileImage: data["profileImage"] as! String,
+                    profileImageURL: data["profileImageURL"] as! String?
                 )
+                completion(self.fetchedUser) // Call the completion handler here
             } else {
                 print("User not found \(error?.localizedDescription ?? "")")
+                completion(nil) // Call the completion handler here with nil to indicate user wasn't found
+            }
+        }
+    }
+    
+    */
+    func fetchUser(by uuid: String, completion: @escaping (User?) -> Void) {
+        db.collection("users").document(uuid).getDocument { (document, error) in
+            if let document = document, document.exists, let data = document.data() {
+                
+                // These values might be optional, so it's okay to assign nil if they don't exist
+                let profileImage = data["profileImage"] as? String ?? ""
+                let profileImageURL = data["profileImageURL"] as? String ?? ""
+
+                
+                self.fetchedUser = User(
+                                uuid: data["uuid"] as! String,
+                                username: data["username"] as! String,
+                                firstName: data["firstName"] as! String,
+                                lastName: data["lastName"] as! String,
+                                profileImage: profileImage,
+                                profileImageURL: profileImageURL
+                            )
+                completion(self.fetchedUser) // Call the completion handler here
+            } else {
+                print("User not found \(error?.localizedDescription ?? "")")
+                completion(nil) // Call the completion handler here with nil to indicate user wasn't found
             }
         }
     }
 
-
-
     
+    
+    
+    /*
+     func uploadProfileImage(_ image: UIImage, completion: @escaping (Error?) -> Void) {
+     // Ensure the user is authenticated and has a UUID
+     /*
+      guard userIsAuthenticatedAndSynced, let uuid = uuid else {
+      completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "User is not authenticated"]))
+      return
+      }
+      */
+     print("uploadProfileImage called")
+     guard userIsAuthenticated else {
+     print("user is not auth")
+     return }
+     guard let uuid = uuid else { return }
+     // Create a unique identifier for the image
+     let imageUUID = UUID().uuidString
+     
+     // Create a reference to Firebase Storage where the image will be uploaded
+     let storageRef = Storage.storage().reference().child("\(imageUUID).jpg")
+     
+     // Convert the UIImage to Data
+     guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+     completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "Image compression failed"]))
+     return
+     }
+     
+     // Upload the image data to Firebase Storage
+     storageRef.putData(imageData, metadata: nil) { (metadata, error) in
+     print("putData callback called")  // Debug line
+     if let error = error {
+     print("Error in putData: \(error)")  // Debug li
+     completion(error)
+     return
+     }
+     
+     // Get the full path of the uploaded image
+     let imagePath = storageRef.fullPath
+     
+     // Update the user's document in Firestore with the path of the profile image
+     self.db.collection("users").document(uuid).updateData([
+     "profileImage": imagePath
+     ]) { error in
+     completion(error)
+     print(error ?? "")
+     }
+     }
+     }
+     */
+    
+    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage? {
+        let size = image.size
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        
+        let newSize = widthRatio > heightRatio ? CGSize(width: size.width * heightRatio, height: size.height * heightRatio) : CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
     
     
     func uploadProfileImage(_ image: UIImage, completion: @escaping (Error?) -> Void) {
-        // Ensure the user is authenticated and has a UUID
-        /*
-        guard userIsAuthenticatedAndSynced, let uuid = uuid else {
-            completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "User is not authenticated"]))
+        // ... (your existing code)
+        
+        guard userIsAuthenticated, let uuid = uuid else {
+            print("user is not auth or UUID is missing")
             return
         }
-        */
-        print("uploadProfileImage called")
-        guard userIsAuthenticated else {
-            print("user is not auth")
-            return }
-        guard let uuid = uuid else { return }
+        
         // Create a unique identifier for the image
         let imageUUID = UUID().uuidString
         
         // Create a reference to Firebase Storage where the image will be uploaded
-        let storageRef = Storage.storage().reference().child("\(imageUUID).jpg")
-       
-        // Convert the UIImage to Data
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-            completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "Image compression failed"]))
+        let storageRef = Storage.storage().reference().child("profile_images/\(imageUUID).jpg")
+        
+        // Resize the image to a thumbnail size
+        guard let resizedImage = resizeImage(image: image, targetSize: CGSize(width: 100, height: 100)),
+              let imageData = resizedImage.jpegData(compressionQuality: 0.8) else {
+            completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "Image resizing or compression failed"]))
             return
+        }
+        
+        
+        // Get the download URL of the uploaded image
+        storageRef.downloadURL { (url, error) in
+            if let error = error {
+                completion(error)
+                return
+            }
+            
+            guard let urlString = url?.absoluteString else { return }
+            
+            // Update the user's document with the URL of the profile image
+            self.db.collection("users").document(uuid).updateData([
+                "profileImageURL": urlString
+            ]) { error in
+                completion(error)
+            }
         }
         
         // Upload the image data to Firebase Storage
@@ -254,22 +379,34 @@ class UserViewModel: ObservableObject {
                 completion(error)
                 return
             }
-            
-            // Get the full path of the uploaded image
-            let imagePath = storageRef.fullPath
-            
-            // Update the user's document in Firestore with the path of the profile image
-            self.db.collection("users").document(uuid).updateData([
-                "profileImage": imagePath
-            ]) { error in
-                completion(error)
-                print(error ?? "")
+                
+                
+                
+                
+                // Get the full path of the uploaded image
+                let imagePath = storageRef.fullPath
+                
+                // Update the user's document in Firestore with the path of the profile image
+                self.db.collection("users").document(uuid).updateData([
+                    "profileImage": imagePath
+                ]) { error in
+                    completion(error)
+                    print(error ?? "")
+                }
+                
+                // Update the user's document with the URL of the profile image
+               
             }
         }
+        
+        func fetchImageDownloadURL(imagePath: String, completion: @escaping (URL?) -> Void) {
+            let storageRef = Storage.storage().reference().child(imagePath)
+            storageRef.downloadURL { (url, error) in
+                completion(url)
+            }
+            
+            
+        }
+        
+        
     }
-    
-    
-    
-}
-
-

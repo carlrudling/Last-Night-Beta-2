@@ -6,26 +6,30 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ProfileView: View {
-    @EnvironmentObject var user : UserViewModel
-    
-    
-    func formattedImagePath(from imagepaths: String) -> String {
-        let imagePath = imagepaths
-        print(imagePath)
-        return imagePath
-    }
+    @EnvironmentObject var user: UserViewModel
     
     var body: some View {
         VStack {
-            if let userProfile = user.user, userProfile.profileImage != "" {
-                FirebaseProfileImageView(imagePath: formattedImagePath(from: userProfile.profileImage))
+            if let userProfile = user.user, let profileImageURL = userProfile.profileImageURL, profileImageURL != "" {
+                
+                KFImage(URL(string: profileImageURL))
+                    .resizable()
+                    .placeholder {
+                        ProgressView() // Placeholder while loading
+                    }
+                    .scaledToFill() // The image will fill the frame and clip the excess parts
                     .clipShape(Circle())  // This line makes the image circular
                     .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
                     .shadow(radius: 10)  // Optional: Adds a shadow
-                    .frame(height: 200)
+                    .frame(width: 100, height: 100) // Set both width and height
                     .padding(.top, 80)
+
+
+                    
+                
             }
             
             HStack {
@@ -33,28 +37,29 @@ struct ProfileView: View {
                 Text(user.user?.lastName ?? "")
             }
             .font(.system(size: 20))
+            
             Text(user.user?.username ?? "Unknown")
                 .font(.system(size: 16))
+            
             Spacer()
             
             Button(action: {
-                       user.signOut()
-                   }) {
-                       Text("Sign Out")
-                           .font(.system(size: 25))
-                           .frame(width: 150)
-                           .padding()
-                           .background(Color.red)
-                           .foregroundColor(.white)
-                           .clipShape(Capsule())
-                           .frame(width: 150)
-                           .padding(.bottom, 80)
-                   }
-               }
-        
+                user.signOut()
+            }) {
+                Text("Sign Out")
+                    .font(.system(size: 25))
+                    .frame(width: 150)
+                    .padding()
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .clipShape(Capsule())
+                    .frame(width: 150)
+                    .padding(.bottom, 80)
+            }
         }
-        
     }
+}
+
 
 
 struct FirebaseProfileImageView: View {
