@@ -263,6 +263,8 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
                         if let error = error {
                             print("Error uploading image: \(error)")
                             completion(false, nil)
+                            print("SavePost: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
+
                         } else {
                             // Fetch the download URL
                             imageRef.downloadURL { (url, error) in
@@ -270,9 +272,12 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
                                     if let error = error {
                                         print("Error fetching download URL: \(error)")
                                         completion(false, nil)
+                                        
                                     } else if let downloadURL = url {
                                         print("Image uploaded and download URL fetched!")
                                         completion(true, downloadURL.absoluteString) // Pass the URL string to the completion handler
+                                        print("SavePost: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
+
                                     }
                                 }
                             }
@@ -288,7 +293,6 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
             self.isSaved = true
             
         }
-        print("SavePost: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
 
     }
     

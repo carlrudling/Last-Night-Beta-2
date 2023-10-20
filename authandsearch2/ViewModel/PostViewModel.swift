@@ -117,6 +117,7 @@ class PostViewModel: ObservableObject {
                                 if let error = error {
                                     print("Error creating post: \(error)")
                                 } else {
+                                    print("CreatePost: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
                                     print("Post created successfully")
                                 }
                             }
@@ -124,7 +125,6 @@ class PostViewModel: ObservableObject {
                     }
                 }
             
-            print("CreatePost: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
             
         }
     }

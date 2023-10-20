@@ -162,17 +162,7 @@ struct AlbumSlideshowView: View {
                 VStack{
                     Spacer()
                     
-                    
                     if showPhotoGrid {
-                        
-                        /*
-                         PhotoGridView(photos: imagesForSlideshow)
-                         .background(Color.white)
-                         .frame(width: .infinity, height: geometry.size.height * (2/3))
-                         //  .offset(y: geometry.size.height * (1/3))// Experiment with this line
-                         .edgesIgnoringSafeArea(.all)
-                         
-                         */
                         
                         Drawer(heights: $heights) {
                             ZStack{
@@ -192,35 +182,28 @@ struct AlbumSlideshowView: View {
                                                 .padding(.horizontal, 10)
                                                 .padding(.top, 3)
                                                 .roundedCorner(20, corners: [.topLeft, .topRight])
-                                            
                                         }
                                     }
                                     .frame(width: .infinity, height: 40)
                                     .roundedCorner(20, corners: [.topLeft, .topRight])
-
-
-                                    
                                     
                                     Spacer()
                                     
                                     PhotoGridView(posts: album.posts)
-                                        .edgesIgnoringSafeArea(.all)
-
-                                    
+                                        //.frame(maxHeight: .infinity) // Ensure it can expand
                                 }
-                                .edgesIgnoringSafeArea(.all)
-
+                                
                             }
-                            .edgesIgnoringSafeArea(.all)
-                            .roundedCorner(20, corners: [.topLeft, .topRight])
-
                             
-                        }.edgesIgnoringSafeArea(.vertical)
                             .roundedCorner(20, corners: [.topLeft, .topRight])
-
+                            
+                        }
+                            .roundedCorner(20, corners: [.topLeft, .topRight])
+                        
                     }
                     
                 }
+
                 
                 
                 
@@ -232,6 +215,7 @@ struct AlbumSlideshowView: View {
             
             
         }
+        .edgesIgnoringSafeArea(.all)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
                                 Group {
@@ -245,7 +229,7 @@ struct AlbumSlideshowView: View {
             }
         }
         )
-        .edgesIgnoringSafeArea(.all)
+        
         .onAppear {
             isTabBarHidden = true
             preloadImages()
@@ -259,33 +243,33 @@ struct AlbumSlideshowView: View {
 }
 
 // PhotoGrid, a grid of all the images
-
-struct PhotoGridView: View { 
+struct PhotoGridView: View {
     @EnvironmentObject var post: PostViewModel
     var posts: [Post]
-    
+    let spacing: CGFloat = 1  // Change this to the spacing you want
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
-                ForEach(posts, id: \.Postuuid) { post in
-                    //  if let url = URL(string: post.imageURL) {
-                    //      let processor = ResizingImageProcessor(referenceSize: CGSize(width: 300, height: 300))
-                    NavigationLink(destination: ImageDetailView(post: post)) {
-                        KFImage(URL(string: post.imageURL))
-                        //     .setProcessor(processor)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: (UIScreen.main.bounds.width - (2 * 4)) / 3)
-                        //.cornerRadius(2)  // Uncomment this if you want rounded corners on each image
+        ScrollView(.vertical) {
+                LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
+                    ForEach(posts, id: \.Postuuid) { post in
+                        NavigationLink(destination: ImageDetailView(post: post)) {
+                            let thumbnailSize = CGSize(width: 300, height: 300)
+                            
+                            KFImage(URL(string: post.imageURL))
+                                .setProcessor(DownsamplingImageProcessor(size: thumbnailSize))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: UIScreen.main.bounds.width / 3, height: (UIScreen.main.bounds.width - spacing * 2) / 3)
+                            
+                                .clipped()
+                        }
                     }
-                    //}
                 }
-            }
-            .padding(.all, 2)
+            
+                //.padding(.horizontal, 1) // Reduced padding
+            
         }
-        .edgesIgnoringSafeArea(.all)
+        .frame(maxHeight: .infinity)
         .padding(.top, -7)
-
     }
 }
 
@@ -294,7 +278,7 @@ struct PhotoGridView: View {
 
 
 
-// There is a issue here This struct only gets accessed to an Image, it has no way to know the reference of the Image in order to know who (user) posted it
+
 // View for Image fullscreen
 struct ImageDetailView: View {
     var post : Post

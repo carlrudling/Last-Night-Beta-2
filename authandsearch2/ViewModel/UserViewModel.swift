@@ -347,7 +347,7 @@ class UserViewModel: ObservableObject {
         let storageRef = Storage.storage().reference().child("profile_images/\(imageUUID).jpg")
         
         // Resize the image to a thumbnail size
-        guard let resizedImage = resizeImage(image: image, targetSize: CGSize(width: 100, height: 100)),
+        guard let resizedImage = resizeImage(image: image, targetSize: CGSize(width: 200, height: 200)),
               let imageData = resizedImage.jpegData(compressionQuality: 0.8) else {
             completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "Image resizing or compression failed"]))
             return
