@@ -11,10 +11,13 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+
 class AlbumViewModel: ObservableObject {
     @Published var user: User?
     @Published var album: Album?
     @Published var queryResultAlbums: [Album] = []
+    @Published var fetchedUsers: [User] = []
+
     
 @DocumentID var id: String? = UUID().uuidString
    // @EnvironmentObject var user : UserViewModel
@@ -96,34 +99,6 @@ class AlbumViewModel: ObservableObject {
     }
 
 
-        
-    /*
-     Album:
-     var uuid: String
-     var albumName: String
-     var endDate = Date()
-     var photoLimit : Int
-     var members : [User] = []
-     
-     User:
-     var uuid: String
-     var username: String
-     var firstName: String
-     var lastName: String
-     var signUpDate = Date.now
-     var keywordsForLookup: [String] {
-     
-    func signUp(username: String, email: String, firstName: String, lastName: String, password: String) {
-        auth.createUser(withEmail: email, password: password) { [weak self] result, error in
-            guard result != nil, error == nil else { return }
-            DispatchQueue.main.async {
-                self?.add(User(uuid: (self?.uuid)!, username: username, firstName: firstName, lastName: lastName))
-                self?.sync()
-            }
-        }
-    }
-    */
-    
     // Firestore Functions for User Data
     
     private func add(_ user: User) {
@@ -152,6 +127,34 @@ class AlbumViewModel: ObservableObject {
             print("Error updating: \(error)")
         }
     }
+    
+    
+    func fetchUsers(from album: Album, userViewModel: UserViewModel) {
+           var userUuids: Set<String> = [] // Using a set to avoid duplicates
+           
+           for post in album.posts {
+               userUuids.insert(post.userUuid)
+           }
+           
+           // Fetching users and storing them asynchronously
+           let dispatchGroup = DispatchGroup() // Using DispatchGroup to handle async calls
+           
+           for uuid in userUuids {
+               dispatchGroup.enter() // Enter group before each async call
+               
+               userViewModel.fetchUser(by: uuid) { user in
+                   if let user = user {
+                       self.fetchedUsers.append(user)
+                   }
+                   dispatchGroup.leave() // Leave group after completion handler is called
+               }
+           }
+           
+           dispatchGroup.notify(queue: .main) {
+               print("Finished fetching all users.")
+               // You can do something here after all users are fetched
+           }
+       }
 }
 
 

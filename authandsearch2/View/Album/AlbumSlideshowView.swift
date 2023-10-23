@@ -5,7 +5,6 @@
 //  Created by Carl Rudling on 2023-10-01.
 //
 import SwiftUI
-import Drawer
 import Kingfisher
 
 
@@ -17,12 +16,14 @@ struct AlbumSlideshowView: View {
     @State private var timer: Timer? = nil
     @State private var imagesForSlideshow: [UIImage] = []
     @State private var showPhotoGrid = false
+    @State private var showUserGrid = false
     @State private var playButtonPressed: Bool = false  // New state variable
     @State private var isLoading: Bool = true
-    @State var heights = [CGFloat(500)]
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    
+    @State private var isNavigationLinkActive: Bool = false
+    @State var selectedDetent: PresentationDetent = .medium
+    private let availableDetents: [PresentationDetent] = [.medium, .large]
+
     
     // Function to format the image path
     func formattedImagePath(from imagePath: String) -> String {
@@ -121,99 +122,51 @@ struct AlbumSlideshowView: View {
                 }
                 .edgesIgnoringSafeArea(.all)
                 
-                // Remove PhotoGrid if tap outside
-                if showPhotoGrid {
-                    Rectangle()
-                        .fill(Color.clear)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .contentShape(Rectangle())  // Important for registering taps
-                        .onTapGesture {
-                            print("showphotogrid = false")
-                            showPhotoGrid = false // Hide the popup when tapped outside
-                        }
-                }
-                
-                
                 // Image Button to see photoGrid
                 
                 HStack {
                     Spacer()
                     VStack {
+                        
                         if timer == nil || currentImageIndex == 0  {
-                            Button {
-                                withAnimation {
-                                    showPhotoGrid.toggle()
-                                }
-                            } label: {
-                                
+                            
+                            Button(action: {
+                                showPhotoGrid.toggle()
+                            }) {
                                 Image(systemName: "photo")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: 30)
                                     .foregroundColor(.white)
-                                
-                                
+                                    .padding(.vertical)
                             }
-                        }
-                    }
-                    .padding(.horizontal, 10)
-                }
-                
-                VStack{
-                    Spacer()
-                    
-                    if showPhotoGrid {
-                        
-                        Drawer(heights: $heights) {
-                            ZStack{
-                                Color(UIColor.white)
-                                
-                                VStack {
-                                    ZStack{
-                                        Color(UIColor.white)
-                                        
-                                        HStack{
-                                            Spacer()
-                                            Image(systemName: "plus")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 28, height: 28)
-                                                .foregroundColor(.black)
-                                                .padding(.horizontal, 10)
-                                                .padding(.top, 3)
-                                                .roundedCorner(20, corners: [.topLeft, .topRight])
-                                        }
-                                    }
-                                    .frame(width: .infinity, height: 40)
-                                    .roundedCorner(20, corners: [.topLeft, .topRight])
-                                    
-                                    Spacer()
-                                    
-                                    PhotoGridView(posts: album.posts)
-                                        //.frame(maxHeight: .infinity) // Ensure it can expand
-                                }
-                                
+                            .sheet(isPresented: $showPhotoGrid) {
+                                PhotoGridView(posts: album.posts)
+                                    .presentationDetents([.medium, .large], selection: $selectedDetent)
+                                    .presentationDragIndicator(.hidden)
                             }
                             
-                            .roundedCorner(20, corners: [.topLeft, .topRight])
+                            
+                            Button(action: {
+                                showUserGrid.toggle()
+                            }) {
+                                Image(systemName: "person.2.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 30)
+                                    .foregroundColor(.white)
+                                    .padding(.vertical)
+                            }
+                            .sheet(isPresented: $showUserGrid) {
+                                UserGridView(album: album)
+                                    .presentationDetents([.medium, .large], selection: $selectedDetent)
+                                    .presentationDragIndicator(.hidden)
+                            }
+                            
                             
                         }
-                            .roundedCorner(20, corners: [.topLeft, .topRight])
-                        
                     }
-                    
-                }
-
-                
-                
-                
-                
-                
-            }
-            
-            
-            
-            
+                }  }
         }
         .edgesIgnoringSafeArea(.all)
         .navigationBarBackButtonHidden(true)
@@ -224,7 +177,7 @@ struct AlbumSlideshowView: View {
                     Image(systemName: "chevron.backward")
                         .foregroundColor(.white)
                         .padding(12)
-                        
+                    
                 }
             }
         }
@@ -240,6 +193,7 @@ struct AlbumSlideshowView: View {
         }
         
     }
+    
 }
 
 // PhotoGrid, a grid of all the images
@@ -248,12 +202,12 @@ struct PhotoGridView: View {
     var posts: [Post]
     let spacing: CGFloat = 1  // Change this to the spacing you want
     var body: some View {
-        ScrollView(.vertical) {
+        NavigationStack {
+            ScrollView(.vertical) {
                 LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
                     ForEach(posts, id: \.Postuuid) { post in
                         NavigationLink(destination: ImageDetailView(post: post)) {
                             let thumbnailSize = CGSize(width: 300, height: 300)
-                            
                             KFImage(URL(string: post.imageURL))
                                 .setProcessor(DownsamplingImageProcessor(size: thumbnailSize))
                                 .resizable()
@@ -262,16 +216,63 @@ struct PhotoGridView: View {
                             
                                 .clipped()
                         }
+                       
                     }
+                
                 }
-            
+                
                 //.padding(.horizontal, 1) // Reduced padding
-            
+                
+            }
+            .frame(maxHeight: .infinity)
+            .padding(.top, -7)
         }
-        .frame(maxHeight: .infinity)
-        .padding(.top, -7)
     }
 }
+
+
+struct UserGridView: View {
+    @EnvironmentObject var albumViewModel: AlbumViewModel
+    var album: Album
+
+    var body: some View {
+        NavigationView {
+            ScrollView(.vertical) {
+                LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
+                    ForEach(albumViewModel.fetchedUsers, id: \.uuid) { user in
+                        VStack {
+                            if let urlString = user.profileImageURL, let url = URL(string: urlString) {
+                                KFImage(url)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 100, height: 100)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            } else {
+                                Image(systemName: "person.crop.circle.fill")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .foregroundColor(.gray)
+                                    .frame(width: 100, height: 100)
+                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            }
+                            Text(user.username)
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                        }
+                        .padding(5)
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("User Grid")
+        }
+        .onAppear {
+            albumViewModel.fetchUsers(from: album, userViewModel: UserViewModel())
+        }
+    }
+}
+
 
 
 
@@ -288,7 +289,7 @@ struct ImageDetailView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var isSaved : Bool = false
     @State private var bounceAmount: CGFloat = 1.0
-
+    
     
     var body: some View {
         ZStack {
@@ -297,23 +298,23 @@ struct ImageDetailView: View {
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
                 .frame(width: .infinity, height: .infinity)
-
+            
             if let fetchedUser = userViewModel.fetchedUser {
                 VStack {
                     Spacer()
                     HStack {
                         Group {
-                          
+                            
                             if let urlString = fetchedUser.profileImageURL, let url = URL(string: urlString) {
-                                            KFImage(url)
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: 40, height: 40)
-                                                .clipShape(Circle())
-                                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                        
-                                    
-                                } else {
+                                KFImage(url)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 40, height: 40)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                
+                                
+                            } else {
                                 Image(systemName: "person.crop.circle.fill")
                                     .resizable()
                                     .scaledToFill()
@@ -323,13 +324,13 @@ struct ImageDetailView: View {
                             }
                         }
                         .padding(.leading, 25)
-
-                       
+                        
+                        
                         
                         Text(fetchedUser.username)
                             .font(.system(size: 18))
                             .foregroundColor(.white)
-                           
+                        
                         Spacer()
                     }
                 }
@@ -350,10 +351,10 @@ struct ImageDetailView: View {
                                                 imageModel.saveImageToLibrary(image: value.image)
                                                 isSaved = true
                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                        withAnimation {
-                                                            isSaved = false
-                                                        }
+                                                    withAnimation {
+                                                        isSaved = false
                                                     }
+                                                }
                                             case .failure(let error):
                                                 print("Error downloading image: \(error)")
                                                 isSaved = false
@@ -383,18 +384,18 @@ struct ImageDetailView: View {
                         }
                     }
                     
-                                
+                    
                 }
             }
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
                                 Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
-                                    Image(systemName: "chevron.backward")
-                                        .foregroundColor(.white)
-                                        .padding(12)
-                                        
-                                }
+            Image(systemName: "chevron.backward")
+                .foregroundColor(.white)
+                .padding(12)
+            
+        }
         )
         .onAppear {
             userViewModel.fetchUser(by: post.userUuid) { fetchedUser in
@@ -405,31 +406,10 @@ struct ImageDetailView: View {
                 }
             }
         }
-
+        
         .onDisappear {
             print("onDissapear: \(post.imageURL)")
         }
-    }
-
-    
-    
-    
-}
-
-extension View {
-    func roundedCorner(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners) )
-    }
-}
-
-// CHeck if I can actually swipe back when navigating? Because the extensions doesn't seem to be here. Find in createAlbumView
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
     }
 }
 
@@ -444,7 +424,6 @@ struct AlbumSlideshowView_Previews: PreviewProvider {
 
 
 //Kingfisher = Checkout
-//Drawer = for grid
 // Qgrid could be better to than lasyVgrid
 // When creating the load screen and the is finished screen the animation could be synqed with confetti libary?
 

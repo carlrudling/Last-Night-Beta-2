@@ -43,17 +43,6 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
     @Published var uuidGlobal : String = ""
     @Published var isFlashOn: Bool = false
     @Published var isUsingFrontCamera: Bool = false
-    /*
-     let post: PostViewModel
-     let album: AlbumViewModel
-     let user: UserViewModel
-     
-     init(post: PostViewModel, album: AlbumViewModel, user: UserViewModel) {
-     self.post = post
-     self.album = album
-     self.user = user
-     }
-     */
     
     // Since wew going to read pic data...
     @Published var output = AVCapturePhotoOutput()
@@ -62,6 +51,7 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
     @Published var preview : AVCaptureVideoPreviewLayer!
     
     @Published var isSaved = false
+    @Published var isSaving = false
     @Published var picData = Data(count: 0)
     
     
@@ -277,7 +267,9 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
                                         print("Image uploaded and download URL fetched!")
                                         completion(true, downloadURL.absoluteString) // Pass the URL string to the completion handler
                                         print("SavePost: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
-
+                                        withAnimation(.default) {
+                                            self.isSaved = true
+                                        }
                                     }
                                 }
                             }
@@ -290,7 +282,7 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
                 }
             }
             
-            self.isSaved = true
+        
             
         }
 

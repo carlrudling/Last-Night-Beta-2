@@ -46,7 +46,13 @@ struct CameraView: View {
                     
                     if camera.isTaken {
                         
+                        
+                        
                         Button(action: {
+                            
+                                  camera.isSaving = true
+                            
+                              
                             DispatchQueue.global(qos: .userInteractive).async {
                                 camera.savePost { success, imageURL in
                                     if success, let imageURL = imageURL {
@@ -56,19 +62,40 @@ struct CameraView: View {
                                         
                                         post.createPost(albumId: selectedAlbumID, imagePath: camera.uuidGlobal, imageURL: imageURL, userUUID: user.uuid!)
                                     }
+                                    camera.isSaving = false
                                 }
                             }
                         }
 
                                , label: {
-                            Text(camera.isSaved ? "Saved" : "Save")
-                                .foregroundColor(.black)
-                                .fontWeight(.semibold)
-                                .padding(.vertical,20)
-                                .padding(.horizontal,20)
-                                .background(camera.isSaved ? Color.green : Color.white)
-                                .clipShape(Capsule())
                             
+                            if camera.isSaving {
+                                RotatingDotAnimation()
+                                
+                            } else if camera.isSaved {
+                                ZStack {
+                                            // Drawing the circle
+                                            Circle()
+                                                .fill(Color.green) // Fill circle with green color
+                                                .frame(width: 65, height: 65) // Change this value to resize your circle
+                                            
+                                            // Placing the checkmark inside the circle
+                                            Image(systemName: "checkmark") // SF Symbol for checkmark
+                                                .resizable()
+                                                .foregroundColor(.white) // Making checkmark white
+                                                .scaledToFit()
+                                                .frame(width: 30, height: 30) // Change this value to resize your checkmark
+                                        }
+                            } else if !camera.isSaving && !camera.isSaved {
+                                Text("Save")
+                                    .foregroundColor(.black)
+                                    .fontWeight(.semibold)
+                                    .padding(.vertical,20)
+                                    .padding(.horizontal,20)
+                                    .background(Color.white)
+                                    .clipShape(Capsule())
+                                
+                            }
                         })
                         .frame(alignment: .center)
                         .padding(.bottom, 60)
@@ -151,6 +178,33 @@ struct CameraView: View {
             camera.Check()
         })
         
+    }
+}
+                               
+struct RotatingDotAnimation: View {
+    
+    @State private var startAnimation = false
+    @State private var duration = 1.0 // Works as speed, since it repeats forever
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(lineWidth: 2)
+                .foregroundColor(.white.opacity(0.5))
+                .frame(width: 65, height: 65, alignment: .center)
+
+            Circle()
+                .fill(.white)
+                .frame(width: 18, height: 18, alignment: .center)
+                .offset(x: -63)
+                .rotationEffect(.degrees(startAnimation ? 360 : 0))
+                .animation(.easeInOut(duration: duration).repeatForever(autoreverses: false),
+                           value: startAnimation
+                )
+        }
+        .onAppear {
+            self.startAnimation.toggle()
+        }
     }
 }
 
