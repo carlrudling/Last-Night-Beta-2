@@ -23,7 +23,7 @@ struct AlbumSlideshowView: View {
     @State private var isNavigationLinkActive: Bool = false
     @State var selectedDetent: PresentationDetent = .medium
     private let availableDetents: [PresentationDetent] = [.medium, .large]
-
+    
     
     // Function to format the image path
     func formattedImagePath(from imagePath: String) -> String {
@@ -144,6 +144,8 @@ struct AlbumSlideshowView: View {
                                 PhotoGridView(posts: album.posts)
                                     .presentationDetents([.medium, .large], selection: $selectedDetent)
                                     .presentationDragIndicator(.hidden)
+                                    .presentationBackground(.white
+                                    )
                             }
                             
                             
@@ -161,6 +163,8 @@ struct AlbumSlideshowView: View {
                                 UserGridView(album: album)
                                     .presentationDetents([.medium, .large], selection: $selectedDetent)
                                     .presentationDragIndicator(.hidden)
+                                    .presentationBackground(.white
+                                    )
                             }
                             
                             
@@ -196,83 +200,137 @@ struct AlbumSlideshowView: View {
     
 }
 
-// PhotoGrid, a grid of all the images
 struct PhotoGridView: View {
     @EnvironmentObject var post: PostViewModel
     var posts: [Post]
     let spacing: CGFloat = 1  // Change this to the spacing you want
+    @State private var selectButtonPressed : Bool = false
+    @State private var selectedImageUrls: [String] = []
+    
     var body: some View {
         NavigationStack {
+            Button {
+                withAnimation(.default) {
+                    selectButtonPressed.toggle()
+                }
+                //Select images for new slideshow or for download
+            } label: {
+                HStack {
+                    Spacer() // This will push the button to the right
+                    Image(systemName: "plus")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 20)
+                        .foregroundColor(selectButtonPressed ? .white : .black)
+                        .rotationEffect(.degrees(selectButtonPressed ? -45 : 0))
+                        .frame(width: 40, height: 40) // Giving a frame to the button itself
+                }
+                .background(selectButtonPressed ? Color.purple : Color.white) // Applying background color here
+            }
+            .frame(width: .infinity) // Making sure the Button covers the full width
+
             ScrollView(.vertical) {
                 LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
                     ForEach(posts, id: \.Postuuid) { post in
-                        NavigationLink(destination: ImageDetailView(post: post)) {
-                            let thumbnailSize = CGSize(width: 300, height: 300)
-                            KFImage(URL(string: post.imageURL))
-                                .setProcessor(DownsamplingImageProcessor(size: thumbnailSize))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: UIScreen.main.bounds.width / 3, height: (UIScreen.main.bounds.width - spacing * 2) / 3)
-                            
-                                .clipped()
+                        ZStack(alignment: .bottomTrailing) {
+                            if selectButtonPressed {
+                                Button(action: {
+                                    if let index = selectedImageUrls.firstIndex(of: post.imageURL) {
+                                        selectedImageUrls.remove(at: index)
+                                        print("The array: \(selectedImageUrls)")
+                                    } else {
+                                        selectedImageUrls.append(post.imageURL)
+                                        print("The array: \(selectedImageUrls)")
+                                    }
+                                }) {
+                                    image(for: post)
+                                }
+                                
+                                if selectButtonPressed && selectedImageUrls.contains(post.imageURL) {
+                                    Circle()
+                                        .frame(width: 25, height: 25)
+                                        .foregroundColor(.purple)
+                                        .overlay(
+                                            Image(systemName: "checkmark")
+                                                .foregroundColor(.white)
+                                            
+                                        )
+                                        .padding(4)
+                                }
+                            } else {
+                                NavigationLink(destination: ImageDetailView(post: post)) {
+                                    KFImage(URL(string: post.imageURL))
+                                        .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 300, height: 300)))
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: UIScreen.main.bounds.width / 3, height: (UIScreen.main.bounds.width - spacing * 2) / 3)
+                                        .clipped()
+                                }
+                            }
                         }
-                       
                     }
-                
                 }
-                
-                //.padding(.horizontal, 1) // Reduced padding
-                
             }
             .frame(maxHeight: .infinity)
             .padding(.top, -7)
         }
+    }
+    
+    func image(for post: Post) -> some View {
+        KFImage(URL(string: post.imageURL))
+            .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 300, height: 300)))
+            .resizable()
+            .scaledToFill()
+            .frame(width: UIScreen.main.bounds.width / 3, height: (UIScreen.main.bounds.width - spacing * 2) / 3)
+            .clipped()
     }
 }
 
 
 struct UserGridView: View {
     @EnvironmentObject var albumViewModel: AlbumViewModel
+    @EnvironmentObject var userViewModel: UserViewModel // Assuming you have a UserViewModel available as an EnvironmentObject
+    @State private var users: [User] = [] // State to hold the fetched users
     var album: Album
-
+    
     var body: some View {
         NavigationView {
             ScrollView(.vertical) {
                 LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
-                    ForEach(albumViewModel.fetchedUsers, id: \.uuid) { user in
+                    ForEach(users, id: \.uuid) { user in
                         VStack {
                             if let urlString = user.profileImageURL, let url = URL(string: urlString) {
                                 KFImage(url)
                                     .resizable()
                                     .scaledToFill()
-                                    .frame(width: 100, height: 100)
+                                    .frame(width: 70, height: 70)
                                     .clipShape(Circle())
-                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                    .overlay(Circle().stroke(Color.black, lineWidth: 2))
                             } else {
                                 Image(systemName: "person.crop.circle.fill")
                                     .resizable()
                                     .scaledToFill()
                                     .foregroundColor(.gray)
-                                    .frame(width: 100, height: 100)
-                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                    .frame(width: 70, height: 70)
+                                    .overlay(Circle().stroke(Color.black, lineWidth: 2))
                             }
                             Text(user.username)
                                 .font(.caption)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.black)
                         }
                         .padding(5)
                     }
                 }
                 .padding()
             }
-            .navigationTitle("User Grid")
         }
         .onAppear {
-            albumViewModel.fetchUsers(from: album, userViewModel: UserViewModel())
+            albumViewModel.fetchUsersFromAlbum(album: album, userViewModel: userViewModel) { fetchedUsers in
+                users = fetchedUsers // Updating the state with fetched users
+            }
         }
     }
 }
-
 
 
 

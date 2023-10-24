@@ -195,8 +195,8 @@ struct RotatingDotAnimation: View {
 
             Circle()
                 .fill(.white)
-                .frame(width: 18, height: 18, alignment: .center)
-                .offset(x: -63)
+                .frame(width: 16, height: 16, alignment: .center)
+                .offset(x: -23)
                 .rotationEffect(.degrees(startAnimation ? 360 : 0))
                 .animation(.easeInOut(duration: duration).repeatForever(autoreverses: false),
                            value: startAnimation
@@ -267,6 +267,8 @@ struct AlbumPickerView: View {
             
         }
         .onAppear {
+            // Make safe, creates Fatal error: Thread 1: Fatal error: Unexpectedly found nil while unwrapping an Optional value
+            // This happens when pressing SignOut button from profileView
             fetchAlbums.fetchAlbums(with: user.uuid!)
         }
     }

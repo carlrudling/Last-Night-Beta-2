@@ -155,6 +155,35 @@ class AlbumViewModel: ObservableObject {
                // You can do something here after all users are fetched
            }
        }
+    
+    
+    
+    func fetchUsersFromAlbum(album: Album, userViewModel: UserViewModel, completion: @escaping ([User]) -> Void) {
+        // An array to hold the fetched User objects
+        var fetchedUsers: [User] = []
+        
+        // Using a DispatchGroup to handle the asynchronous fetching of users
+        let dispatchGroup = DispatchGroup()
+        
+        // Iterating over each member UUID in the album
+        for memberUuid in album.members {
+            dispatchGroup.enter() // Entering the group before each async call
+            
+            // Fetching each user by UUID
+            userViewModel.fetchUser(by: memberUuid) { user in
+                if let user = user {
+                    fetchedUsers.append(user) // Adding the fetched user to the array
+                }
+                dispatchGroup.leave() // Leaving the group when the fetching is done
+            }
+        }
+        
+        // After all the users have been fetched
+        dispatchGroup.notify(queue: .main) {
+            completion(fetchedUsers) // Returning the fetched users in the completion handler
+        }
+    }
+
 }
 
 

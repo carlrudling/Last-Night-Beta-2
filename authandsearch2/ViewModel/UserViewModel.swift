@@ -170,6 +170,7 @@ class UserViewModel: ObservableObject {
         // Get the download URL of the uploaded image
         storageRef.downloadURL { (url, error) in
             if let error = error {
+                print("Error 1")
                 completion(error)
                 return
             }
@@ -180,6 +181,7 @@ class UserViewModel: ObservableObject {
             self.db.collection("users").document(uuid).updateData([
                 "profileImageURL": urlString
             ]) { error in
+                print("Error 2")
                 completion(error)
             }
         }

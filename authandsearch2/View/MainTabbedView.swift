@@ -44,7 +44,7 @@ struct MainTabbedView: View {
                     CameraView(albumuuid: self.user.uuid!)
                         .tag(1)
                     
-                    ProfileView()
+                    EditProfileView()
                         .tag(2)
                     
                 }
