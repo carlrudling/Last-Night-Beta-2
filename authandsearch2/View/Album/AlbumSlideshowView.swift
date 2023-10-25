@@ -202,77 +202,136 @@ struct AlbumSlideshowView: View {
 
 struct PhotoGridView: View {
     @EnvironmentObject var post: PostViewModel
+    @EnvironmentObject var imageModel: ImageViewModel
     var posts: [Post]
     let spacing: CGFloat = 1  // Change this to the spacing you want
     @State private var selectButtonPressed : Bool = false
     @State private var selectedImageUrls: [String] = []
+    @State private var isSaved: Bool = false
+    @State private var progress: CGFloat = 0
     
     var body: some View {
-        NavigationStack {
-            Button {
-                withAnimation(.default) {
-                    selectButtonPressed.toggle()
+        ZStack {
+            NavigationStack {
+                Button {
+                    withAnimation(.default) {
+                        selectButtonPressed.toggle()
+                    }
+                    //Select images for new slideshow or for download
+                } label: {
+                    HStack {
+                        Spacer() // This will push the button to the right
+                        Image(systemName: "plus")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 20)
+                            .foregroundColor(selectButtonPressed ? .white : .black)
+                            .rotationEffect(.degrees(selectButtonPressed ? -45 : 0))
+                            .frame(width: 40, height: 40) // Giving a frame to the button itself
+                    }
+                    .background(selectButtonPressed ? Color.purple : Color.white) // Applying background color here
                 }
-                //Select images for new slideshow or for download
-            } label: {
-                HStack {
-                    Spacer() // This will push the button to the right
-                    Image(systemName: "plus")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 20)
-                        .foregroundColor(selectButtonPressed ? .white : .black)
-                        .rotationEffect(.degrees(selectButtonPressed ? -45 : 0))
-                        .frame(width: 40, height: 40) // Giving a frame to the button itself
-                }
-                .background(selectButtonPressed ? Color.purple : Color.white) // Applying background color here
-            }
-            .frame(width: .infinity) // Making sure the Button covers the full width
-
-            ScrollView(.vertical) {
-                LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
-                    ForEach(posts, id: \.Postuuid) { post in
-                        ZStack(alignment: .bottomTrailing) {
-                            if selectButtonPressed {
-                                Button(action: {
-                                    if let index = selectedImageUrls.firstIndex(of: post.imageURL) {
-                                        selectedImageUrls.remove(at: index)
-                                        print("The array: \(selectedImageUrls)")
-                                    } else {
-                                        selectedImageUrls.append(post.imageURL)
-                                        print("The array: \(selectedImageUrls)")
+                .frame(width: .infinity) // Making sure the Button covers the full width
+                
+                ScrollView(.vertical) {
+                    LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
+                        ForEach(posts, id: \.Postuuid) { post in
+                            ZStack(alignment: .bottomTrailing) {
+                                if selectButtonPressed {
+                                    Button(action: {
+                                        if let index = selectedImageUrls.firstIndex(of: post.imageURL) {
+                                            selectedImageUrls.remove(at: index)
+                                            print("The array: \(selectedImageUrls)")
+                                        } else {
+                                            selectedImageUrls.append(post.imageURL)
+                                            print("The array: \(selectedImageUrls)")
+                                        }
+                                    }) {
+                                        image(for: post)
                                     }
-                                }) {
-                                    image(for: post)
-                                }
-                                
-                                if selectButtonPressed && selectedImageUrls.contains(post.imageURL) {
-                                    Circle()
-                                        .frame(width: 25, height: 25)
-                                        .foregroundColor(.purple)
-                                        .overlay(
-                                            Image(systemName: "checkmark")
-                                                .foregroundColor(.white)
-                                            
-                                        )
-                                        .padding(4)
-                                }
-                            } else {
-                                NavigationLink(destination: ImageDetailView(post: post)) {
-                                    KFImage(URL(string: post.imageURL))
-                                        .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 300, height: 300)))
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: UIScreen.main.bounds.width / 3, height: (UIScreen.main.bounds.width - spacing * 2) / 3)
-                                        .clipped()
+                                    
+                                    if selectButtonPressed && selectedImageUrls.contains(post.imageURL) {
+                                        Circle()
+                                            .frame(width: 25, height: 25)
+                                            .foregroundColor(.purple)
+                                            .overlay(
+                                                Image(systemName: "checkmark")
+                                                    .foregroundColor(.white)
+                                                
+                                            )
+                                            .padding(4)
+                                    }
+                                } else {
+                                    NavigationLink(destination: ImageDetailView(post: post)) {
+                                        KFImage(URL(string: post.imageURL))
+                                            .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 300, height: 300)))
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: UIScreen.main.bounds.width / 3, height: (UIScreen.main.bounds.width - spacing * 2) / 3)
+                                            .clipped()
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                .frame(maxHeight: .infinity)
+                .padding(.top, -7)
             }
-            .frame(maxHeight: .infinity)
-            .padding(.top, -7)
+            
+            //End of Nav
+            if selectButtonPressed {
+                VStack {
+                    Spacer()
+                    Button(action: {
+                        
+                        imageModel.requestPhotoLibraryPermission { granted in
+                                            if granted {
+                                                imageModel.saveImagesToLibrary(urls: selectedImageUrls)
+                                                                    withAnimation {
+                                                                        isSaved.toggle()
+                                                                    }
+                                            } else {
+                                                // Handle error: permission not granted
+                                                print("Didn't have permission, needs to accept. Create prompt")
+                                            }
+                                        }
+                        
+                        
+                        
+                        
+                    }) {
+                        
+                        HStack {
+                            Text("Save Images")
+                                .foregroundColor(isSaved ? .green : .white)
+                            
+                            Group{
+                                
+                                if isSaved {
+                                    Image(systemName: "arrow.down")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.green)
+                                    .overlay(
+                                        ring(for: .green)
+                                            .frame(width: 20)
+                                    )} else {
+                                        Image(systemName: "arrow.down.to.line")
+                                            .font(.system(size: 20))
+                                            .foregroundColor(.white)
+                                    }
+                                        
+                                    
+                               
+                            }
+                        }
+                        .padding()
+                        .frame(width: UIScreen.main.bounds.width, alignment: .center)
+                        .background(Color.purple)
+                    }
+                }
+                .edgesIgnoringSafeArea(.bottom)
+            }
         }
     }
     
@@ -284,6 +343,22 @@ struct PhotoGridView: View {
             .frame(width: UIScreen.main.bounds.width / 3, height: (UIScreen.main.bounds.width - spacing * 2) / 3)
             .clipped()
     }
+    
+  
+
+    func ring(for color: Color) -> some View {
+        Circle()
+            .trim(from: 0, to: progress)
+            .stroke(color, lineWidth: 1)
+            .rotationEffect(.degrees(-90))
+            .onAppear {
+                withAnimation(Animation.linear(duration: 2)) {
+                    progress = 1
+                }
+            }
+            
+    }
+
 }
 
 

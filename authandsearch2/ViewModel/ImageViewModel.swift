@@ -3,6 +3,7 @@
  import UIKit
  import FirebaseStorage
  import Photos
+ import Kingfisher
 
 
  class ImageViewModel: ObservableObject {
@@ -63,6 +64,23 @@
      func saveImageToLibrary(image: UIImage) {
          UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
      }
+     
+     func saveImagesToLibrary(urls: [String]) {
+            for urlStr in urls {
+                if let url = URL(string: urlStr) {
+                    KingfisherManager.shared.retrieveImage(with: url) { result in
+                        switch result {
+                        case .success(let value):
+                            UIImageWriteToSavedPhotosAlbum(value.image, nil, nil, nil)
+                        case .failure:
+                            print("There was an issue in saving the images, in saveImagesToLibrary")
+                            break
+                            // Handle error: unable to download or save image
+                        }
+                    }
+                }
+            }
+        }
  }
 
 extension ImageViewModel {
