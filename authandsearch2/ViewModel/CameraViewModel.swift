@@ -35,7 +35,7 @@ import FirebaseAuth
 import FirebaseStorage
 
 
-class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
+class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate, AVCaptureMetadataOutputObjectsDelegate {
     @Published var isTaken = false
     @Published var session = AVCaptureSession()
     @Published var alert = false
@@ -46,13 +46,14 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
     
     // Since wew going to read pic data...
     @Published var output = AVCapturePhotoOutput()
-    
+    @Published var metadataOutput = AVCaptureMetadataOutput()
     // preview
     @Published var preview : AVCaptureVideoPreviewLayer!
     
     @Published var isSaved = false
     @Published var isSaving = false
     @Published var picData = Data(count: 0)
+    var qrCodeFoundHandler: ((String) -> Void)?
     
     
     func Check() {
@@ -146,6 +147,13 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
                         self.session.addOutput(self.output)
                         print("Output has been added")
                     }
+                    
+                    if self.session.canAddOutput(self.metadataOutput) {
+                                    self.session.addOutput(self.metadataOutput)
+                                    
+                                    self.metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+                                    self.metadataOutput.metadataObjectTypes = [.qr] // you can add other types you need like: .ean13, .ean8
+                            }
                     
                     self.session.commitConfiguration()
                     print("Setup: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
@@ -287,6 +295,25 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate {
         }
 
     }
+    
+    
+    
+    
+    // FOR QR-Codes, and Metadata
+
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+            if let metadataObject = metadataObjects.first {
+                guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
+                found(code: readableObject.stringValue!)
+            }
+        }
+    
+    
+    func found(code: String) {
+           print("QR Code Detected: \(code)")
+            qrCodeFoundHandler?(code)
+           // You can add further actions that you want to perform when a QR code is found
+       }
     
     
 }

@@ -40,7 +40,7 @@ class AlbumViewModel: ObservableObject {
     
     
     // Firestore Functions for albums
-    
+    /*
     private func addAlbum(_ album: Album) {
         guard userIsAuthenticated else {return}
         do {
@@ -51,7 +51,20 @@ class AlbumViewModel: ObservableObject {
                 
             }
         }
+    
+    */
+    // ADD_ALBUM
+    private func addAlbum(_ album: Album) {
+        guard userIsAuthenticated else {return}
+        do {
+            let _ = try db.collection("albums").addDocument(from: album)
+        } catch {
+            print("Error albumSettings: \(error)")
+        }
+    }
+    
    // Seems to be creating the uuid the same as user.uuid instead of a unique for the album
+    /*
     func createAlbum(albumName: String, endDate: Date, photoLimit: Int, members: [String], creator: String) {
         DispatchQueue.main.async {
             self.addAlbum(Album(uuid: self.albumUUid, albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator))
@@ -59,8 +72,31 @@ class AlbumViewModel: ObservableObject {
 
         }
     }
+    */
+    // CREATE_ALBUM
+    func createAlbum(albumName: String, endDate: Date, photoLimit: Int, members: [String], creator: String) {
+        DispatchQueue.main.async {
+            let album = Album(uuid: self.albumUUid, albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator)
+            self.addAlbum(album)
+            self.syncAlbums()
+        }
+    }
     
     
+    // ADD_MEMBERS
+    func addMembers(documentID: String, member: String) {
+        guard userIsAuthenticated else {return}
+        let document = db.collection("albums").document(documentID)
+        document.updateData(["members": FieldValue.arrayUnion([member])]) { error in
+            if let error = error {
+                print("Error adding member: \(error.localizedDescription)")
+            } else {
+                print("Member added successfully")
+            }
+        }
+    }
+
+    /*
     func addMembers(Albumuuid: String, member : String) {
         guard userIsAuthenticated else {return}
             let document = db.collection("albums").document(Albumuuid)
@@ -74,6 +110,10 @@ class AlbumViewModel: ObservableObject {
             }
     }
     
+    */
+    
+    // SYNQ
+    /*
     private func syncAlbums() {
         guard userIsAuthenticated else { return }
         db.collection("albums").document(UUID().uuidString).getDocument { (document, error) in
@@ -85,6 +125,22 @@ class AlbumViewModel: ObservableObject {
             }
         }
     }
+    */
+    private func syncAlbums() {
+        guard userIsAuthenticated else { return }
+        db.collection("albums").getDocuments { (querySnapshot, error) in
+            guard let documents = querySnapshot?.documents, error == nil else {
+                print("No documents")
+                return
+            }
+            self.queryResultAlbums = documents.compactMap { queryDocumentSnapshot in
+                var album = try? queryDocumentSnapshot.data(as: Album.self)
+                album?.documentID = queryDocumentSnapshot.documentID // Setting the documentID
+                return album
+            }
+        }
+    }
+
     
     func fetchAlbums(forUserWithID uuid: String) {
         db.collection("albums").whereField("members", arrayContains: uuid).getDocuments { querySnapshot, error in
@@ -98,7 +154,9 @@ class AlbumViewModel: ObservableObject {
         }
     }
 
-
+    
+    // THINK IT SHOULD BE REMOVED!!
+/*
     // Firestore Functions for User Data
     
     private func add(_ user: User) {
@@ -112,7 +170,7 @@ class AlbumViewModel: ObservableObject {
             print("Error adding: \(error)")
         }
     }
-    
+   */
     
     
     
@@ -129,7 +187,9 @@ class AlbumViewModel: ObservableObject {
     }
     
     
-    func fetchUsers(from album: Album, userViewModel: UserViewModel) {
+    // ISN'T Being USED!!
+    /*
+    func fetchPoster(from album: Album, userViewModel: UserViewModel) {
            var userUuids: Set<String> = [] // Using a set to avoid duplicates
            
            for post in album.posts {
@@ -155,7 +215,7 @@ class AlbumViewModel: ObservableObject {
                // You can do something here after all users are fetched
            }
        }
-    
+    */
     
     
     func fetchUsersFromAlbum(album: Album, userViewModel: UserViewModel, completion: @escaping ([User]) -> Void) {

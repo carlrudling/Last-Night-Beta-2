@@ -4,7 +4,7 @@
 //
 //  Created by Carl Rudling on 2023-09-03.
 //
-
+/*
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
@@ -17,7 +17,7 @@ class FetchAlbums: ObservableObject {
     
     private let db = Firestore.firestore()
     
-    
+
     
     func fetchAlbums(with uuid: String) {
         db.collection("albums").whereField("members", arrayContains: uuid).getDocuments { querySnapshot, error in
@@ -45,3 +45,9 @@ func fetchAlbums(forUserWithID uuid: String) {
     }
 }
 */
+*/
+
+
+// WAS ONLY USED IN THE HOMEVIEW & AlbumPickerView (in cameraview)!!
+
+// SEE IF IT WORKS USING ALBUMVIEWMODEL INSTEAD, IF WORKS. REMOVE THIS VIEWMODEL!!

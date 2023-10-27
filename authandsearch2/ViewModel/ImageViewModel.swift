@@ -9,6 +9,7 @@
  class ImageViewModel: ObservableObject {
      @Published var image: UIImage?
      @Published var error: Error?
+   
      
      private var storageRef: StorageReference
      

@@ -9,7 +9,8 @@ import SwiftUI
 import FirebaseAuth
 
 struct HomeView: View {
-    @StateObject private var fetchAlbums = FetchAlbums() // Create an instance of FetchAlbums
+    //@StateObject private var fetchAlbums = FetchAlbums() // Create an instance of FetchAlbums
+    @EnvironmentObject var album: AlbumViewModel
     @EnvironmentObject var user: UserViewModel
     @Binding var isTabBarHidden: Bool
     @State var isActive : Bool = false
@@ -50,7 +51,7 @@ struct HomeView: View {
                                 }
                     ScrollView {
                         VStack {
-                            ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
+                            ForEach(album.queryResultAlbums, id: \.uuid) { album in
                                 NavigationLink(
                                     destination: Group {
                                         if album.isActive {
@@ -82,7 +83,7 @@ struct HomeView: View {
         
         
         .onAppear{
-            fetchAlbums.fetchAlbums(with: user.uuid ?? "")
+            album.fetchAlbums(forUserWithID: user.uuid ?? "")
             isTabBarHidden = false
         }
     }

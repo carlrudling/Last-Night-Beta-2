@@ -10,16 +10,19 @@ import AVFoundation
 import FirebaseFirestoreSwift
 
 struct CameraView: View {
-    @State var albumuuid : String
+    @State var albumuuid: String
     @State private var selectedAlbumID: String = ""
     
     @StateObject var camera = CameraModel()
-    @EnvironmentObject var post : PostViewModel
-    @EnvironmentObject var user : UserViewModel
-    // let camera: CameraModel
+    @EnvironmentObject var post: PostViewModel
+    @EnvironmentObject var user: UserViewModel
+    @EnvironmentObject var album: AlbumViewModel
+  
     
     
-    
+    func handleQRCode(_ qrCode: String) {
+        album.addMembers(documentID: qrCode, member: user.uuid!)
+        }
     
     var body: some View{
         ZStack{
@@ -176,6 +179,7 @@ struct CameraView: View {
         
         .onAppear(perform: {
             camera.Check()
+            camera.qrCodeFoundHandler = handleQRCode // Setting the handler when the view appears
         })
         
     }
@@ -211,7 +215,8 @@ struct RotatingDotAnimation: View {
 
 
 struct AlbumPickerView: View {
-    @StateObject var fetchAlbums = FetchAlbums()
+   // @StateObject var fetchAlbums = FetchAlbums()
+    @EnvironmentObject var album: AlbumViewModel
     @EnvironmentObject var user: UserViewModel
     @State var albumName: String = ""
     @Binding var selectedAlbumID: String
@@ -241,7 +246,7 @@ struct AlbumPickerView: View {
                 HStack {
                     ScrollView {
                         VStack {
-                            ForEach(fetchAlbums.queryResultAlbums, id: \.uuid) { album in
+                            ForEach(album.queryResultAlbums, id: \.uuid) { album in
                                 if album.isActive {
                                     Text(album.albumName)
                                         .frame(width: 180)
@@ -269,7 +274,7 @@ struct AlbumPickerView: View {
         .onAppear {
             // Make safe, creates Fatal error: Thread 1: Fatal error: Unexpectedly found nil while unwrapping an Optional value
             // This happens when pressing SignOut button from profileView
-            fetchAlbums.fetchAlbums(with: user.uuid!)
+            album.fetchAlbums(forUserWithID: user.uuid!)
         }
     }
 }

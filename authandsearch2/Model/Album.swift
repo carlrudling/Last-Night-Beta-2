@@ -5,7 +5,10 @@
 //  Created by Carl Rudling on 2023-08-30.
 //
 
+
 import Foundation
+import FirebaseFirestoreSwift
+
 
 struct Album: Codable {
     var uuid: String
@@ -15,6 +18,9 @@ struct Album: Codable {
     var members : [String] = []
     var creator : String
     var posts : [Post] = []
+    
+    @DocumentID var documentID: String? // Adding a documentID property
+
 
     
     var isActive: Bool {

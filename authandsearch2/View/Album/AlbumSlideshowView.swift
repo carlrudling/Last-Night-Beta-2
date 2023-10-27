@@ -205,9 +205,9 @@ struct PhotoGridView: View {
     @EnvironmentObject var imageModel: ImageViewModel
     var posts: [Post]
     let spacing: CGFloat = 1  // Change this to the spacing you want
-    @State private var selectButtonPressed : Bool = false
-    @State private var selectedImageUrls: [String] = []
     @State private var isSaved: Bool = false
+    @State private var selectButtonPressed: Bool = false
+    @State private var selectedImageUrls: [String] = []
     @State private var progress: CGFloat = 0
     
     var body: some View {
@@ -286,16 +286,19 @@ struct PhotoGridView: View {
                     Button(action: {
                         
                         imageModel.requestPhotoLibraryPermission { granted in
-                                            if granted {
-                                                imageModel.saveImagesToLibrary(urls: selectedImageUrls)
-                                                                    withAnimation {
-                                                                        isSaved.toggle()
-                                                                    }
-                                            } else {
-                                                // Handle error: permission not granted
-                                                print("Didn't have permission, needs to accept. Create prompt")
-                                            }
-                                        }
+                            if granted {
+                                imageModel.saveImagesToLibrary(urls: selectedImageUrls)
+                                isSaved = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                    withAnimation {
+                                        isSaved = false
+                                    }
+                                }} else {
+                                    isSaved = false
+                                    // Handle error: permission not granted
+                                    print("Didn't have permission, needs to accept. Create prompt")
+                                }
+                        }
                         
                         
                         
@@ -303,31 +306,18 @@ struct PhotoGridView: View {
                     }) {
                         
                         HStack {
-                            Text("Save Images")
-                                .foregroundColor(isSaved ? .green : .white)
+                            Text(isSaved ? "Saved" : "Save Images")
+                                .foregroundColor(.white)
                             
                             Group{
-                                
-                                if isSaved {
-                                    Image(systemName: "arrow.down")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.green)
-                                    .overlay(
-                                        ring(for: .green)
-                                            .frame(width: 20)
-                                    )} else {
-                                        Image(systemName: "arrow.down.to.line")
-                                            .font(.system(size: 20))
-                                            .foregroundColor(.white)
-                                    }
-                                        
-                                    
-                               
+                                Image(systemName: "arrow.down.to.line")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
                             }
                         }
                         .padding()
                         .frame(width: UIScreen.main.bounds.width, alignment: .center)
-                        .background(Color.purple)
+                        .background(isSaved ? .green : Color.purple)
                     }
                 }
                 .edgesIgnoringSafeArea(.bottom)
@@ -344,21 +334,22 @@ struct PhotoGridView: View {
             .clipped()
     }
     
-  
-
-    func ring(for color: Color) -> some View {
-        Circle()
-            .trim(from: 0, to: progress)
-            .stroke(color, lineWidth: 1)
-            .rotationEffect(.degrees(-90))
-            .onAppear {
-                withAnimation(Animation.linear(duration: 2)) {
-                    progress = 1
-                }
-            }
-            
-    }
-
+    
+    /*
+     func ring(for color: Color) -> some View {
+     Circle()
+     .trim(from: 0, to: progress)
+     .stroke(color, lineWidth: 1)
+     .rotationEffect(.degrees(-90))
+     .onAppear {
+     withAnimation(Animation.linear(duration: 2)) {
+     progress = 1
+     }
+     }
+     
+     }
+     */
+    
 }
 
 
