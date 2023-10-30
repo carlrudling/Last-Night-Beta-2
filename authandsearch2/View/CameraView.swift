@@ -12,6 +12,7 @@ import FirebaseFirestoreSwift
 struct CameraView: View {
     @State var albumuuid: String
     @State private var selectedAlbumID: String = ""
+    @State private var checkCorrectAlbumID = false  // Checks and gives alert if albumID in't pointing to existing album
     
     @StateObject var camera = CameraModel()
     @EnvironmentObject var post: PostViewModel
@@ -37,7 +38,15 @@ struct CameraView: View {
                 })
             VStack{
                 AlbumPickerView(selectedAlbumID: $selectedAlbumID)
-                
+             
+                    Text("You need to select an album!")
+                        .bold()
+                        .foregroundColor(.red)
+                        .padding(.top, 10)
+                        .offset(y: checkCorrectAlbumID ? 0 : -30)
+                        .opacity(checkCorrectAlbumID ? 1.0 : 0.0)
+                        .scaleEffect(checkCorrectAlbumID ? 1.0 : 0.7)
+                       
                 
                 
                 Spacer()
@@ -52,6 +61,20 @@ struct CameraView: View {
                         
                         
                         Button(action: {
+                            
+                            if selectedAlbumID == "" || selectedAlbumID == "Select album" {
+                                withAnimation(){
+                                    checkCorrectAlbumID = true
+                                }
+                                // Setting a timer to revert checkCorrectAlbumID after 3 seconds
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                        withAnimation(){
+                                            checkCorrectAlbumID = false
+                                        }
+                                    }
+                                    return
+                                
+                            }
                             
                                   camera.isSaving = true
                             
@@ -139,7 +162,10 @@ struct CameraView: View {
                             
                             HStack{
                                 // Retake photo Button
-                                Button(action: camera.reTake, label: {
+                                Button(action: {camera.reTake()
+                                    withAnimation(){
+                                        checkCorrectAlbumID = false
+                                    }}, label: {
                                     Image(systemName: "xmark")
                                         .foregroundColor(.white)
                                         .padding()
@@ -274,6 +300,7 @@ struct AlbumPickerView: View {
         .onAppear {
             // Make safe, creates Fatal error: Thread 1: Fatal error: Unexpectedly found nil while unwrapping an Optional value
             // This happens when pressing SignOut button from profileView
+            
             album.fetchAlbums(forUserWithID: user.uuid!)
         }
     }

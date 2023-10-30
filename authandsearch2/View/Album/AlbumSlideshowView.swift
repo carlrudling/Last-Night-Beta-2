@@ -141,7 +141,7 @@ struct AlbumSlideshowView: View {
                                     .padding(.vertical)
                             }
                             .sheet(isPresented: $showPhotoGrid) {
-                                PhotoGridView(posts: album.posts)
+                                PhotoGridView(selectedDetent: $selectedDetent, posts: album.posts)
                                     .presentationDetents([.medium, .large], selection: $selectedDetent)
                                     .presentationDragIndicator(.hidden)
                                     .presentationBackground(.white
@@ -160,7 +160,7 @@ struct AlbumSlideshowView: View {
                                     .padding(.vertical)
                             }
                             .sheet(isPresented: $showUserGrid) {
-                                UserGridView(album: album)
+                                UserGridView(selectedDetent: $selectedDetent, album: album)
                                     .presentationDetents([.medium, .large], selection: $selectedDetent)
                                     .presentationDragIndicator(.hidden)
                                     .presentationBackground(.white
@@ -203,6 +203,8 @@ struct AlbumSlideshowView: View {
 struct PhotoGridView: View {
     @EnvironmentObject var post: PostViewModel
     @EnvironmentObject var imageModel: ImageViewModel
+    @Binding var selectedDetent: PresentationDetent
+    @EnvironmentObject var fetchAlbum: FetchAlbums
     var posts: [Post]
     let spacing: CGFloat = 1  // Change this to the spacing you want
     @State private var isSaved: Bool = false
@@ -323,6 +325,9 @@ struct PhotoGridView: View {
                 .edgesIgnoringSafeArea(.bottom)
             }
         }
+        .onAppear {
+            selectedDetent = .large
+        }
     }
     
     func image(for post: Post) -> some View {
@@ -335,27 +340,14 @@ struct PhotoGridView: View {
     }
     
     
-    /*
-     func ring(for color: Color) -> some View {
-     Circle()
-     .trim(from: 0, to: progress)
-     .stroke(color, lineWidth: 1)
-     .rotationEffect(.degrees(-90))
-     .onAppear {
-     withAnimation(Animation.linear(duration: 2)) {
-     progress = 1
-     }
-     }
-     
-     }
-     */
-    
 }
 
 
 struct UserGridView: View {
     @EnvironmentObject var albumViewModel: AlbumViewModel
-    @EnvironmentObject var userViewModel: UserViewModel // Assuming you have a UserViewModel available as an EnvironmentObject
+    @EnvironmentObject var userViewModel: UserViewModel
+    // Assuming you have a UserViewModel available as an EnvironmentObject
+    @Binding var selectedDetent: PresentationDetent
     @State private var users: [User] = [] // State to hold the fetched users
     var album: Album
     
@@ -393,7 +385,9 @@ struct UserGridView: View {
         .onAppear {
             albumViewModel.fetchUsersFromAlbum(album: album, userViewModel: userViewModel) { fetchedUsers in
                 users = fetchedUsers // Updating the state with fetched users
+                    
             }
+            selectedDetent = .medium
         }
     }
 }
@@ -407,7 +401,8 @@ struct UserGridView: View {
 // View for Image fullscreen
 struct ImageDetailView: View {
     var post : Post
-    @EnvironmentObject var postVM : PostViewModel
+   // @Binding var selectedDetent: PresentationDetent
+    @EnvironmentObject var postVM: PostViewModel
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var imageModel: ImageViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -529,10 +524,12 @@ struct ImageDetailView: View {
                     print("Failed to fetch the user.")
                 }
             }
+          //  selectedDetent = .large
         }
         
         .onDisappear {
             print("onDissapear: \(post.imageURL)")
+           // selectedDetent = .medium
         }
     }
 }

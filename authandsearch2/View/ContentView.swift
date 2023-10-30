@@ -12,6 +12,7 @@ struct ContentView: View {
     @EnvironmentObject var user: UserViewModel
     @EnvironmentObject var album: AlbumViewModel
     @EnvironmentObject var post: PostViewModel
+    @EnvironmentObject var fetchAlbumModel: FetchAlbums
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     var body: some View {
