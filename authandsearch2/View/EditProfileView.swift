@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct EditProfileView: View {
-    @ObservedObject var userViewModel = UserViewModel()
+    @EnvironmentObject var user: UserViewModel
     @State private var isImagePickerPresented: Bool = false
     @State private var selectedImage: UIImage?
     @State private var uploadError: Error?
@@ -13,11 +13,14 @@ struct EditProfileView: View {
             if selectedImage != nil {
                 Button(action: {
                     print("Upload Image button tapped")
-                    // Ensure selectedImage is unwrapped before passing it to uploadImage
                     if let selectedImage = selectedImage {
-                        userViewModel.uploadProfileImage(selectedImage) { error in
-                            self.uploadError = error
-                            print(error ?? "Image uploaded successfully")
+                        user.uploadProfileImage(selectedImage) { error in
+                            if let error = error {
+                                self.uploadError = error
+                                print("Error uploading image: \(error.localizedDescription)")
+                            } else {
+                                print("Image uploaded successfully")
+                            }
                         }
                     }
                 }) {

@@ -32,25 +32,26 @@ struct AlbumSlideshowView: View {
         return imagePath
     }
     
+   
+    
+     
     // Function to start the slideshow
     func startSlideshow() {
         playButtonPressed = true  // Set to true when play button is pressed
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            if currentImageIndex < imagesForSlideshow.count - 1 {
-                currentImageIndex += 1
-            } else {
-                timer?.invalidate()
-                timer = nil
-                currentImageIndex = 0
-                playButtonPressed = false
-                
-                
+        timer = Timer.scheduledTimer(withTimeInterval: 1.2, repeats: true) { _ in
+            withAnimation { // Using withAnimation to trigger the transition
+                if currentImageIndex < imagesForSlideshow.count - 1 {
+                    currentImageIndex += 1
+                } else {
+                    timer?.invalidate()
+                    timer = nil
+                    currentImageIndex = 0
+                    playButtonPressed = false
+                }
             }
             
         }
-        
     }
-    
     
     
     // Function to stop the slideshow
@@ -92,11 +93,14 @@ struct AlbumSlideshowView: View {
                 
                 // Slideshow images
                 if playButtonPressed, imagesForSlideshow.indices.contains(currentImageIndex) {
-                    Image(uiImage: imagesForSlideshow[currentImageIndex])
+                    AnyView(Image(uiImage: imagesForSlideshow[currentImageIndex])
                         .resizable()
                         .scaledToFill()
-                        .edgesIgnoringSafeArea(.all)
+                        .edgesIgnoringSafeArea(.all))
+                    //.transition(.move(edge: .trailing)) // Applying opacity transition
+                    
                 }
+
                 
                 
                 VStack {
@@ -211,6 +215,7 @@ struct PhotoGridView: View {
     @State private var selectButtonPressed: Bool = false
     @State private var selectedImageUrls: [String] = []
     @State private var progress: CGFloat = 0
+    @State var showingPopup = false
     
     var body: some View {
         ZStack {
@@ -283,46 +288,189 @@ struct PhotoGridView: View {
             
             //End of Nav
             if selectButtonPressed {
-                VStack {
-                    Spacer()
-                    Button(action: {
-                        
-                        imageModel.requestPhotoLibraryPermission { granted in
-                            if granted {
-                                imageModel.saveImagesToLibrary(urls: selectedImageUrls)
-                                isSaved = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                                    withAnimation {
-                                        isSaved = false
-                                    }
-                                }} else {
-                                    isSaved = false
-                                    // Handle error: permission not granted
-                                    print("Didn't have permission, needs to accept. Create prompt")
-                                }
-                        }
-                        
-                        
-                        
-                        
-                    }) {
-                        
-                        HStack {
-                            Text(isSaved ? "Saved" : "Save Images")
-                                .foregroundColor(.white)
+                ZStack {
+                    VStack {
+                        Spacer()
+                        Button(action: {
                             
-                            Group{
-                                Image(systemName: "arrow.down.to.line")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.white)
+                            imageModel.requestPhotoLibraryPermission { granted in
+                                if granted {
+                                    imageModel.saveImagesToLibrary(urls: selectedImageUrls)
+                                    isSaved = true
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                        withAnimation {
+                                            isSaved = false
+                                        }
+                                    }} else {
+                                        showingPopup = true
+                                        isSaved = false
+                                        
+                                        // Handle error: permission not granted
+                                        // CREATE POPUP HERE
+                                        print("Didn't have permission, needs to accept. Create prompt")
+                                    }
                             }
+                            
+                            
+                            
+                            
+                        }) {
+                            
+                            HStack {
+                                Text("Download Images")
+                                    .foregroundColor(.white)
+                                
+                        Spacer()
+                                    Image(systemName: "arrow.down.to.line")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.white)
+                                        
+                                
+                            }
+                            .padding(.bottom, 10)
+                            .padding(.horizontal, 10)
+                            .padding()
+                            .frame(width: UIScreen.main.bounds.width, alignment: .center)
+                            .background(Color.purple)
                         }
-                        .padding()
-                        .frame(width: UIScreen.main.bounds.width, alignment: .center)
-                        .background(isSaved ? .green : Color.purple)
                     }
+                    .edgesIgnoringSafeArea(.bottom)
+                    .popup(isPresented: $showingPopup) {
+                        VStack{
+                            ZStack { // 4
+                                
+                                VStack{
+                                    HStack{
+                                        Spacer()
+                                        Image(systemName: "xmark")
+                                            .font(.system(size: 18))
+                                            .foregroundColor(.black)
+                                            .padding(10)
+                                    }
+                                    Spacer()
+                                }
+                                
+                                VStack {
+                                    ZStack{
+                                        Image(systemName: "exclamationmark.circle") // SF Symbol for checkmark
+                                            .font(.system(size: 80))
+                                            .foregroundColor(.white)
+                                        
+                                            .zIndex(1) // Ensure it's above the background
+                                        Image(systemName: "exclamationmark.circle.fill") // SF Symbol for checkmark
+                                            .font(.system(size: 80))
+                                            .foregroundColor(.red)
+                                        
+                                            .zIndex(1) // Ensure it's above the background
+                                        
+                                    }
+                                    
+                                    Text("Permissions not granted")
+                                        .font(.system(size: 22))
+                                        .bold()
+                                        .padding(.bottom, 5)
+                                        .padding(.top, 2)
+                                    
+                                    Text("To save images you need to allow access to images in settings.")
+                                        .font(.system(size: 16))
+                                        .padding(.top, 10)
+                                        .padding(.horizontal, 20)
+                                        .multilineTextAlignment(.center)
+                                        
+                                    Spacer()
+                                    
+                                }
+                                .padding(.top, -40) // Make space for the checkmark at the top
+                                
+                            }
+                            .frame(width: 300, height: 200, alignment: .center)
+                            //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                            
+                            .background(
+                                // Clipped background
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color.white)
+                                    .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                            )
+                            
+                            
+                        }
+                        .frame(width: 300, height: 300, alignment: .center)
+                        //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+                        .background(.clear)
+                       
+                
+               
                 }
-                .edgesIgnoringSafeArea(.bottom)
+                .popup(isPresented: $isSaved) {
+                    VStack{
+                        ZStack { // 4
+                            
+                            VStack{
+                                HStack{
+                                    Spacer()
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: 18))
+                                        .foregroundColor(.black)
+                                        .padding(10)
+                                }
+                                Spacer()
+                            }
+                            
+                            VStack {
+                                ZStack{
+                                    Image(systemName: "arrow.down.circle") // SF Symbol for checkmark
+                                        .font(.system(size: 80))
+                                        .foregroundColor(.white)
+                                    
+                                        .zIndex(1) // Ensure it's above the background
+                                    Image(systemName: "arrow.down.circle.fill") // SF Symbol for checkmark
+                                        .font(.system(size: 80))
+                                        .foregroundColor(.blue)
+                                    
+                                        .zIndex(1) // Ensure it's above the background
+                                    
+                                }
+                                
+                                Text("Images saved")
+                                    .font(.system(size: 22))
+                                    .bold()
+                                    .padding(.bottom, 5)
+                                    .padding(.top, 2)
+                                
+                                Text("The images you selected have successfully been downloaded.")
+                                    .font(.system(size: 16))
+                                    .padding(.top, 10)
+                                    .padding(.horizontal, 20)
+                                    .multilineTextAlignment(.center)
+                                    
+                                Spacer()
+                                
+                            }
+                            .padding(.top, -40) // Make space for the checkmark at the top
+                            
+                        }
+                        .frame(width: 300, height: 200, alignment: .center)
+                        //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                        
+                        .background(
+                            // Clipped background
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.white)
+                                .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                        )
+                        
+                        
+                    }
+                    .frame(width: 300, height: 300, alignment: .center)
+                    //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+                    .background(.clear)
+                   
+                
+               
+                }
+
+                }
             }
         }
         .onAppear {
@@ -340,6 +488,19 @@ struct PhotoGridView: View {
     }
     
     
+}
+
+extension View {
+
+    public func popup<PopupContent: View>(
+        isPresented: Binding<Bool>,
+        view: @escaping () -> PopupContent) -> some View {
+        self.modifier(
+            Popup(
+                isPresented: isPresented,
+                view: view)
+        )
+    }
 }
 
 
@@ -408,7 +569,8 @@ struct ImageDetailView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var isSaved : Bool = false
     @State private var bounceAmount: CGFloat = 1.0
-    
+    @State var showingErrorPopup = false
+   
     
     var body: some View {
         ZStack {
@@ -483,6 +645,7 @@ struct ImageDetailView: View {
                                 } else {
                                     // This won't display a Text view, but will print in the console.
                                     // You might need a different mechanism to inform the user, like an alert.
+                                    showingErrorPopup = true
                                     print("Without accepting access to your images, you can't save the image")
                                 }
                             }
@@ -507,6 +670,74 @@ struct ImageDetailView: View {
                 }
             }
         }
+        .popup(isPresented: $showingErrorPopup) {
+            VStack{
+                ZStack { // 4
+                    
+                    VStack{
+                        HStack{
+                            Spacer()
+                            Image(systemName: "xmark")
+                                .font(.system(size: 18))
+                                .foregroundColor(.black)
+                                .padding(10)
+                        }
+                        Spacer()
+                    }
+                    
+                    VStack {
+                        ZStack{
+                            Image(systemName: "exclamationmark.circle") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.white)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            Image(systemName: "exclamationmark.circle.fill") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.red)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            
+                        }
+                        
+                        Text("Permissions not granted")
+                            .font(.system(size: 22))
+                            .bold()
+                            .padding(.bottom, 5)
+                            .padding(.top, 2)
+                        
+                        Text("To save images you need to allow access to images in settings.")
+                            .font(.system(size: 16))
+                            .padding(.top, 10)
+                            .padding(.horizontal, 20)
+                            .multilineTextAlignment(.center)
+                            
+                        Spacer()
+                        
+                    }
+                    .padding(.top, -40) // Make space for the checkmark at the top
+                    
+                }
+                .frame(width: 300, height: 200, alignment: .center)
+                //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                
+                .background(
+                    // Clipped background
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.white)
+                        .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                )
+                
+                
+            }
+            .frame(width: 300, height: 300, alignment: .center)
+            //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+            .background(.clear)
+           
+    
+   
+    }
+        
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
                                 Button(action: { self.presentationMode.wrappedValue.dismiss() }) {

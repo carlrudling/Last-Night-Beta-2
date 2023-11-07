@@ -20,6 +20,7 @@ struct createAlbumView: View {
     @Binding var isTabBarHidden: Bool
     @Binding var rootIsActive : Bool
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
 
     // add creator to members array
     var body: some View {

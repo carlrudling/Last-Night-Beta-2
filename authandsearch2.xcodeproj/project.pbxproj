@@ -34,6 +34,8 @@
 		D38DF04B2AA7167F0001EADD /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04A2AA7167F0001EADD /* Post.swift */; };
 		D38DF04D2AAAF2510001EADD /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04C2AAAF2510001EADD /* CameraViewModel.swift */; };
 		D38DF04F2AAAF37C0001EADD /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04E2AAAF37C0001EADD /* CameraView.swift */; };
+		D3A096DE2AF36D6600859604 /* PopupViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A096DD2AF36D6600859604 /* PopupViewModifier.swift */; };
+		D3A096E92AF96A3400859604 /* EditAlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A096E82AF96A3300859604 /* EditAlbumView.swift */; };
 		D3F5B0CD2AC7C544007CCC0E /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0CC2AC7C544007CCC0E /* EditProfileView.swift */; };
 		D3F5B0CF2AC7C575007CCC0E /* MainTabbedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */; };
 		D3F5B0D12AC7F7CD007CCC0E /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0D02AC7F7CD007CCC0E /* ImagePicker.swift */; };
@@ -68,6 +70,8 @@
 		D38DF04A2AA7167F0001EADD /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		D38DF04C2AAAF2510001EADD /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		D38DF04E2AAAF37C0001EADD /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		D3A096DD2AF36D6600859604 /* PopupViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewModifier.swift; sourceTree = "<group>"; };
+		D3A096E82AF96A3300859604 /* EditAlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAlbumView.swift; sourceTree = "<group>"; };
 		D3F5B0CC2AC7C544007CCC0E /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
 		D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbedView.swift; sourceTree = "<group>"; };
 		D3F5B0D02AC7F7CD007CCC0E /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -180,6 +184,7 @@
 				D33D9F682AA2BE2500498EA2 /* HomeView.swift */,
 				D300B39B2AC6BA2900CA7F3B /* AlbumInfoView.swift */,
 				D3F5B0D42ACA3DDD007CCC0E /* AlbumSlideshowView.swift */,
+				D3A096E82AF96A3300859604 /* EditAlbumView.swift */,
 			);
 			path = Album;
 			sourceTree = "<group>";
@@ -194,11 +199,20 @@
 		D3539BE52AABF938008FB64B /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				D3A096DC2AF36D3800859604 /* Popup */,
 				D3F5B0E92AE37DFE007CCC0E /* Utils */,
 				D3F5B0E02AE37558007CCC0E /* animations */,
 				D3539BE62AABF955008FB64B /* FirebaseImageView.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		D3A096DC2AF36D3800859604 /* Popup */ = {
+			isa = PBXGroup;
+			children = (
+				D3A096DD2AF36D6600859604 /* PopupViewModifier.swift */,
+			);
+			path = Popup;
 			sourceTree = "<group>";
 		};
 		D3F5B0E02AE37558007CCC0E /* animations */ = {
@@ -315,6 +329,7 @@
 				D33D9F512A9D2AE300498EA2 /* AuthenticationView.swift in Sources */,
 				D38DF04D2AAAF2510001EADD /* CameraViewModel.swift in Sources */,
 				D3F5B0D12AC7F7CD007CCC0E /* ImagePicker.swift in Sources */,
+				D3A096DE2AF36D6600859604 /* PopupViewModifier.swift in Sources */,
 				D33D9F672AA08B2A00498EA2 /* addMembersView.swift in Sources */,
 				D33D9F4F2A9D2ABB00498EA2 /* ProfileSearchView.swift in Sources */,
 				D3F5B0D32AC81373007CCC0E /* ProfileView.swift in Sources */,
@@ -322,6 +337,7 @@
 				D33D9F692AA2BE2500498EA2 /* HomeView.swift in Sources */,
 				D33D9F4B2A9D2A4600498EA2 /* User.swift in Sources */,
 				D33D9F602AA072FB00498EA2 /* Album.swift in Sources */,
+				D3A096E92AF96A3400859604 /* EditAlbumView.swift in Sources */,
 				D3F5B0CD2AC7C544007CCC0E /* EditProfileView.swift in Sources */,
 				D38DF04F2AAAF37C0001EADD /* CameraView.swift in Sources */,
 				D3F5B0CF2AC7C575007CCC0E /* MainTabbedView.swift in Sources */,

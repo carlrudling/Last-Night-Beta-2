@@ -11,8 +11,18 @@ import Kingfisher
 struct ProfileView: View {
     @EnvironmentObject var user: UserViewModel
     
+    
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
+                NavigationLink(destination: EditProfileView()) {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 25))
+                        .foregroundColor(.black)
+                        .padding(20)
+                }
+            }
             if let userProfile = user.user, let profileImageURL = userProfile.profileImageURL, profileImageURL != "" {
                 
                 KFImage(URL(string: profileImageURL))

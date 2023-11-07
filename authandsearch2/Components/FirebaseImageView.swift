@@ -4,7 +4,7 @@
 //
 //  Created by Carl Rudling on 2023-09-08.
 //
-
+/*
 import SwiftUI
 
 struct FirebaseImageView: View {
@@ -24,3 +24,4 @@ struct FirebaseImageView: View {
         }
     }
 }
+*/

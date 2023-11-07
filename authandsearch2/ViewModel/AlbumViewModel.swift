@@ -10,6 +10,7 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import FirebaseStorage
 
 
 class AlbumViewModel: ObservableObject {
@@ -58,16 +59,22 @@ class AlbumViewModel: ObservableObject {
         }
     }
     
+   
     
     // ADD_MEMBERS
-    func addMembers(documentID: String, member: String) {
-        guard userIsAuthenticated else {return}
+    func addMembers(documentID: String, member: String, completion: @escaping (Bool) -> Void) {
+        guard userIsAuthenticated else {
+            completion(false)
+            return
+        }
         let document = db.collection("albums").document(documentID)
         document.updateData(["members": FieldValue.arrayUnion([member])]) { error in
             if let error = error {
                 print("Error adding member: \(error.localizedDescription)")
+                completion(false)
             } else {
                 print("Member added successfully")
+                completion(true)
             }
         }
     }
@@ -102,7 +109,29 @@ class AlbumViewModel: ObservableObject {
     }
 
 
-    
+    // EDIT_ALBUM
+    func editAlbum(album: Album) {
+        guard let documentID = album.documentID else {
+            print("Error: Cannot edit album without a documentID")
+            return
+        }
+
+        // Convert album to dictionary as Firestore needs [String: Any] to update data
+        do {
+            let albumData = try Firestore.Encoder().encode(album)
+            db.collection("albums").document(documentID).updateData(albumData) { error in
+                if let error = error {
+                    print("Error updating album: \(error.localizedDescription)")
+                } else {
+                    print("Album successfully updated")
+                    // Optionally, refresh local data or post a notification to update the UI
+                    self.fetchAlbums(forUserWithID: album.creator) // assuming the creator ID is the one used to fetch albums
+                }
+            }
+        } catch let error {
+            print("Error encoding album: \(error.localizedDescription)")
+        }
+    }
     
     
     
@@ -143,6 +172,63 @@ class AlbumViewModel: ObservableObject {
             completion(fetchedUsers) // Returning the fetched users in the completion handler
         }
     }
+    
+    
+    // LEAVE_ALBUM
+    func leaveAlbum(albumDocumentID: String) {
+        guard let userUUID = uuid, userIsAuthenticated else { return }
+
+        let albumDocument = db.collection("albums").document(albumDocumentID)
+        
+        albumDocument.updateData([
+            "members": FieldValue.arrayRemove([userUUID])
+        ]) { error in
+            if let error = error {
+                print("Error leaving album: \(error.localizedDescription)")
+            } else {
+                print("Successfully left the album")
+            }
+        }
+    }
+    
+    // REMOVE_USER_POSTS_IMAGES
+    func removeUserPosts(userUUID: String, albumDocumentID: String) {
+        // Step 1: Find all posts made by the user in the album
+        db.collection("posts").whereField("userUuid", isEqualTo: userUUID).getDocuments { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                // Step 2: For each post document
+                for document in querySnapshot!.documents {
+                    guard let post = try? document.data(as: Post.self) else {
+                        print("Error serializing document")
+                        continue
+                    }
+
+                    // Step 3: Delete the image from Firebase Storage
+                    let storageRef = Storage.storage().reference(withPath: post.imagePath)
+                    storageRef.delete { error in
+                        if let error = error {
+                            print("Error removing image from storage: \(error)")
+                        } else {
+                            print("Image successfully removed from storage")
+                        }
+                    }
+
+                    // Step 4: Delete the post from Firestore
+                    self.db.collection("posts").document(document.documentID).delete() { err in
+                        if let err = err {
+                            print("Error removing document: \(err)")
+                        } else {
+                            print("Document successfully removed!")
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
 
 }
 
