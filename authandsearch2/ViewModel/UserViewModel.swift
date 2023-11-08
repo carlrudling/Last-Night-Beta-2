@@ -98,7 +98,7 @@ class UserViewModel: ObservableObject {
         }
     }
     
-    
+    // FETCH_USER
     func fetchUser(by uuid: String, completion: @escaping (User?) -> Void) {
         db.collection("users").document(uuid).getDocument { (document, error) in
             if let document = document, document.exists, let data = document.data() {
@@ -209,6 +209,56 @@ class UserViewModel: ObservableObject {
             
             
         }
+    
+    // UPDATE_USER_PROFILE
+    func updateUserProfile(firstName: String, lastName: String, username: String, completion: @escaping (Error?) -> Void) {
+        guard let uuid = uuid else {
+            completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "UUID is missing"]))
+            return
+        }
+        
+        // Prepare the data dictionary with the updates
+        var updates = [String: Any]()
+        if !firstName.isEmpty {
+            updates["firstName"] = firstName
+        }
+        if !lastName.isEmpty {
+            updates["lastName"] = lastName
+        }
+        if !username.isEmpty {
+            updates["username"] = username
+        }
+        
+        // Update Firestore document
+        db.collection("users").document(uuid).updateData(updates) { error in
+            if let error = error {
+                print("Error updating user: \(error.localizedDescription)")
+                completion(error)
+                return
+            }
+            
+            // Optionally, if you want to update the local 'user' object after a successful Firestore update:
+            if let user = self.user {
+                if !firstName.isEmpty {
+                    self.user?.firstName = firstName
+                }
+                if !lastName.isEmpty {
+                    self.user?.lastName = lastName
+                }
+                if !username.isEmpty {
+                    self.user?.username = username
+                }
+                // Publish the changes to subscribers of the 'user' object
+                DispatchQueue.main.async {
+                    self.objectWillChange.send()
+                }
+            }
+            
+            // No error, pass nil to the completion handler
+            completion(nil)
+        }
+    }
+
         
         
     }
