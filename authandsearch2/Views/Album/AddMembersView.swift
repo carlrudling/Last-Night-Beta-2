@@ -1,15 +1,18 @@
 //
-//  addMembersView.swift
+//  AddMembersView.swift
 //  authandsearch2
 //
-//  Created by Carl Rudling on 2023-08-30.
+//  Created by Carl Rudling on 2023-11-08.
 //
 
 import SwiftUI
 
+
+import SwiftUI
+
 struct AddMembersView: View {
-    @EnvironmentObject var user: UserViewModel
-    @EnvironmentObject var album : AlbumViewModel
+    @EnvironmentObject var userService: UserService
+    @EnvironmentObject var albumService : AlbumService
     @StateObject var usersLookup = UsersLookupViewModel()
     @State var keyword = ""
     @State private  var members : [String] = []
@@ -49,10 +52,10 @@ struct AddMembersView: View {
         VStack {
             
             
-            SearchBarView2(keyword: keywordBinding)
+            SearchUserBarView(keyword: keywordBinding)
             ScrollView {
                 ForEach(usersLookup.queryResultUsers, id: \.uuid) { user in
-                    ProfileBarView2(user: user, members: $members)
+                    ProfileDisplayView(user: user, members: $members)
                     
                 }
             }
@@ -60,7 +63,7 @@ struct AddMembersView: View {
        
                 Button {
                     buttonPressed = true
-                    album.createAlbum(albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator)
+                    albumService.createAlbum(albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator)
                     self.shouldPopToRootView = false
                     
                 } label: {
@@ -98,7 +101,7 @@ struct AddMembersView: View {
                 )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear{
-            members.append(self.user.uuid!)
+            members.append(self.userService.uuid!)
             isTabBarHidden = true
             
         }
@@ -109,76 +112,11 @@ struct AddMembersView: View {
     
 }
 
-struct SearchBarView2: View {
-    @Binding var keyword: String
-    
-    var body: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(Color.gray.opacity(0.5))
-            HStack {
-                Image(systemName: "magnifyingglass")
-                TextField("Searching for...", text: $keyword)
-                    .autocapitalization(.none)
-            }
-            .padding(.leading, 13)
-        }
-        .frame(height: 40)
-        .cornerRadius(13)
-        .padding()
-    }
-}
-
 
 // Propably you need to create another struct and call it when onTapgesture that displays the member (as selected)
 
 
-struct ProfileBarView2: View {
-    var user: User
-    @Binding var members : [String]
-    @State private var isTapped: Bool = false
-    
-    init(user: User, members: Binding<[String]>) {
-        self.user = user
-        _members = members
-    }
-    
-    
-    var body: some View {
-        
-        ZStack {
-        
-            Rectangle()
-                .foregroundColor(isTapped ? Color.green : Color.gray.opacity(0.2))
-                .onTapGesture {
-                    if members.contains( user.uuid) {
-                        // Member is already in the array, so remove them
-                        //  members.remove(user.uuid)
-                        isTapped = false
-                    } else {
-                        // Member is not in the array, so add them
-                        members.append(user.uuid)
-                        isTapped = true
-                    }
-                }
-            HStack {
-                Text("\(user.username)")
-                Spacer()
-                Text("\(user.firstName) \(user.lastName)")
-            }
-            .padding(.horizontal, 10)
-        }
-        .frame(maxWidth: .infinity, minHeight: 100)
-        .cornerRadius(13)
-        .padding()
-        
-        
-        
-    }
-}
-
-
-struct addMembersView_Previews: PreviewProvider {
+struct AddMembersView_Previews: PreviewProvider {
     static var previews: some View {
         let albumName = Binding<String>(get: { "Sample Album" }, set: { _ in })
         let endDate = Binding<Date>(get: { Date() }, set: { _ in })

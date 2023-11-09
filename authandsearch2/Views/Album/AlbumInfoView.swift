@@ -7,8 +7,8 @@ import Kingfisher
 struct AlbumInfoView: View {
     @EnvironmentObject var imageModel : ImageViewModel
     @Binding var isTabBarHidden: Bool
-    @EnvironmentObject var albumViewModel: AlbumViewModel
-    @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject var albumService: AlbumService
+    @EnvironmentObject var userService: UserService
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var users: [User] = []
     @State private var leaveAlbum: Bool = false
@@ -164,9 +164,9 @@ struct AlbumInfoView: View {
                             
                             Button {
                                 guard let albumdocID = album.documentID else {return}
-                                guard let userUUID = userViewModel.uuid else {return}
-                                albumViewModel.leaveAlbum(albumDocumentID: albumdocID)
-                                albumViewModel.removeUserPosts(userUUID: userUUID, albumDocumentID: albumdocID)
+                                guard let userUUID = userService.uuid else {return}
+                                albumService.leaveAlbum(albumDocumentID: albumdocID)
+                                albumService.removeUserPosts(userUUID: userUUID, albumDocumentID: albumdocID)
                                 // NAVIGATE TO HOME SCREEN, Pop the stack?
                                 
                             } label: {
@@ -228,7 +228,7 @@ struct AlbumInfoView: View {
         )
         .onAppear{
             isTabBarHidden = false
-            albumViewModel.fetchUsersFromAlbum(album: album, userViewModel: userViewModel) { fetchedUsers in
+            albumService.fetchUsersFromAlbum(album: album, userService: userService) { fetchedUsers in
                 users = fetchedUsers // Updating the state with fetched users
             }
         }
@@ -236,62 +236,9 @@ struct AlbumInfoView: View {
         
 }
 
-/*
-
-struct AlbumInfoView_Previews: PreviewProvider {
-    static var previews: some View {
-        // Create a dummy Album instance for preview purposes
-        let dummyAlbum = Album(uuid: "dummy", albumName: "dummy", photoLimit: 0, creator: "dummy")
-        let isTabBarHidden = Binding<Bool>(get: { true }, set: { _ in })
-        // Pass the dummy Album instance to AlbumInfoView
-        return AlbumInfoView(isTabBarHidden: isTabBarHidden, album: dummyAlbum)
-    }
-}
-*/
-struct QRCodeView: View {
-    var data: String
-    
-    var body: some View {
-        Image(uiImage: generateQRCode(from: data))
-            .interpolation(.none)
-            .resizable()
-            .scaledToFit()
-            .frame(width: 200, height: 200)
-    }
-    
-    func generateQRCode(from string: String) -> UIImage {
-        let context = CIContext()
-        let filter = CIFilter.qrCodeGenerator()
-        
-        let data = Data(string.utf8)
-        filter.setValue(data, forKey: "inputMessage")
-        
-        if let outputImage = filter.outputImage,
-           let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
-            return UIImage(cgImage: cgImage)
-        } else {
-            return UIImage(systemName: "xmark.circle") ?? UIImage()
-        }
-    }
-}
 
 
-// CREATES CORNER RADIUS ON SELECTED CORNER
 
-struct RoundedCorner: Shape {
 
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
 
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
-    }
-}
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape( RoundedCorner(radius: radius, corners: corners) )
-    }
-}
 

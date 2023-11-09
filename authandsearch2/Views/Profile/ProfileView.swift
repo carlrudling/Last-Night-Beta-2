@@ -9,21 +9,23 @@ import SwiftUI
 import Kingfisher
 
 struct ProfileView: View {
-    @EnvironmentObject var user: UserViewModel
+    @EnvironmentObject var userService: UserService
     
     
     var body: some View {
         VStack {
             HStack {
                 Spacer()
+                /*
                 NavigationLink(destination: EditProfileView()) {
                     Image(systemName: "gearshape")
                         .font(.system(size: 25))
                         .foregroundColor(.black)
                         .padding(20)
                 }
+                 */ 
             }
-            if let userProfile = user.user, let profileImageURL = userProfile.profileImageURL, profileImageURL != "" {
+            if let userProfile = userService.user, let profileImageURL = userProfile.profileImageURL, profileImageURL != "" {
                 
                 KFImage(URL(string: profileImageURL))
                     .resizable()
@@ -43,18 +45,18 @@ struct ProfileView: View {
             }
             
             HStack {
-                Text(user.user?.firstName ?? "Name")
-                Text(user.user?.lastName ?? "")
+                Text(userService.user?.firstName ?? "Name")
+                Text(userService.user?.lastName ?? "")
             }
             .font(.system(size: 20))
             
-            Text(user.user?.username ?? "Unknown")
+            Text(userService.user?.username ?? "Unknown")
                 .font(.system(size: 16))
             
             Spacer()
             
             Button(action: {
-                user.signOut()
+                userService.signOut()
             }) {
                 Text("Sign Out")
                     .font(.system(size: 25))

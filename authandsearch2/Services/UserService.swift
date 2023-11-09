@@ -4,7 +4,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseStorage
 
-class UserViewModel: ObservableObject {
+class UserService: ObservableObject {
     @Published var user: User?
     @Published var queryResultUsers: [User] = []
     @Published var fetchedUser: User?
@@ -263,75 +263,3 @@ class UserViewModel: ObservableObject {
         
     }
 
-
-
-/*
- func uploadProfileImage(_ image: UIImage, completion: @escaping (Error?) -> Void) {
-     // ... (your existing code)
-     
-     guard userIsAuthenticated, let uuid = uuid else {
-         print("user is not auth or UUID is missing")
-         return
-     }
-     
-     // Create a unique identifier for the image
-     let imageUUID = UUID().uuidString
-     
-     // Create a reference to Firebase Storage where the image will be uploaded
-     let storageRef = Storage.storage().reference().child("profile_images/\(imageUUID).jpg")
-     
-     // Resize the image to a thumbnail size
-     guard let resizedImage = resizeImage(image: image, targetSize: CGSize(width: 200, height: 200)),
-           let imageData = resizedImage.jpegData(compressionQuality: 0.8) else {
-         completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "Image resizing or compression failed"]))
-         return
-     }
-     
-     
-     // Get the download URL of the uploaded image
-     storageRef.downloadURL { (url, error) in
-         if let error = error {
-             print("Error 1")
-             completion(error)
-             return
-         }
-         
-         guard let urlString = url?.absoluteString else { return }
-         
-         // Update the user's document with the URL of the profile image
-         self.db.collection("users").document(uuid).updateData([
-             "profileImageURL": urlString
-         ]) { error in
-             print("Error 2")
-             completion(error)
-         }
-     }
-     
-     // Upload the image data to Firebase Storage
-     storageRef.putData(imageData, metadata: nil) { (metadata, error) in
-         print("putData callback called")  // Debug line
-         if let error = error {
-             print("Error in putData: \(error)")  // Debug li
-             completion(error)
-             return
-         }
-             
-             
-             
-             
-             // Get the full path of the uploaded image
-             let imagePath = storageRef.fullPath
-             
-             // Update the user's document in Firestore with the path of the profile image
-             self.db.collection("users").document(uuid).updateData([
-                 "profileImage": imagePath
-             ]) { error in
-                 completion(error)
-                 print(error ?? "")
-             }
-             
-             // Update the user's document with the URL of the profile image
-            
-         }
-     }
- */

@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct EditProfileView: View {
-    @EnvironmentObject var user: UserViewModel
+    @EnvironmentObject var userService: UserService
     @State private var isImagePickerPresented: Bool = false
     @State private var selectedImage: UIImage?
     @State private var uploadError: Error?
@@ -14,7 +14,7 @@ struct EditProfileView: View {
     
     // MARK: FUNCTIONS
     private func updateUserProfile() {
-        user.updateUserProfile(firstName: firstName, lastName: lastName, username: "@\(username)") { error in
+        userService.updateUserProfile(firstName: firstName, lastName: lastName, username: "@\(username)") { error in
             if let error = error {
                 print("Failed to update user: \(error.localizedDescription)")
             } else {
@@ -50,19 +50,19 @@ struct EditProfileView: View {
             
             
             // Maybe create the ability to change email aswell
-            Text(user.user? ? "Current Firstname: \(user.user?.firstName)" : "")
+            Text("Current Firstname: \(userService.user?.firstName ?? "Unknown")")
                 .font(Font.custom("Chillax", size: 18))
             TextField("New Firstname", text: $firstName)
                 .disableAutocorrection(true)
                 .font(Font.custom("Chillax", size: 16))
                 .padding(.bottom, 25)
-            Text(user.user? ? "Current Lastname: \(user.user!.lastName)" : "")
+            Text("Current Lastname: \(userService.user?.firstName ?? "Unknown")")
                 .font(Font.custom("Chillax", size: 18))
             TextField("New Lastname", text: $lastName)
                 .disableAutocorrection(true)
                 .font(Font.custom("Chillax", size: 16))
                 .padding(.bottom, 25)
-            Text(user.user? ? "Current username: \(user.user!.username)" : "")
+            Text("Current Username: \(userService.user?.firstName ?? "Unknown")")
                 .font(Font.custom("Chillax", size: 18))
             TextField("New username", text: $username)
                 .disableAutocorrection(true)
@@ -74,7 +74,7 @@ struct EditProfileView: View {
                 Button {
                     isSaving = true
                     if let selectedImage = selectedImage {
-                        user.uploadProfileImage(selectedImage) { error in
+                        userService.uploadProfileImage(selectedImage) { error in
                             if let error = error {
                                 self.uploadError = error
                                 print("Error uploading image: \(error.localizedDescription)")
@@ -99,7 +99,7 @@ struct EditProfileView: View {
                 
                 
                 Button {
-                    user.signOut()
+                    userService.signOut()
                 } label: {
                     Text("Sign Out")
                         .font(.system(size: 25))
@@ -117,7 +117,6 @@ struct EditProfileView: View {
     
     
 }
-
 
 /*
  struct EditProfileView_Previews: PreviewProvider {

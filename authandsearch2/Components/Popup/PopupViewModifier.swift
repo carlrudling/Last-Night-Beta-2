@@ -82,11 +82,6 @@ public struct Popup<PopupContent>: ViewModifier where PopupContent: View {
     }
 }
 
-extension View {
-    func frameGetter(_ frame: Binding<CGRect>) -> some View {
-        modifier(FrameGetter(frame: frame))
-    }
-}
   
 struct FrameGetter: ViewModifier {
   

@@ -13,7 +13,7 @@ import FirebaseFirestoreSwift
 import FirebaseStorage
 
 
-class AlbumViewModel: ObservableObject {
+class AlbumService: ObservableObject {
     @Published var user: User?
     @Published var album: Album?
     @Published var queryResultAlbums: [Album] = []
@@ -147,7 +147,7 @@ class AlbumViewModel: ObservableObject {
     }
     
     
-    func fetchUsersFromAlbum(album: Album, userViewModel: UserViewModel, completion: @escaping ([User]) -> Void) {
+    func fetchUsersFromAlbum(album: Album, userService: UserService, completion: @escaping ([User]) -> Void) {
         // An array to hold the fetched User objects
         var fetchedUsers: [User] = []
         
@@ -159,7 +159,7 @@ class AlbumViewModel: ObservableObject {
             dispatchGroup.enter() // Entering the group before each async call
             
             // Fetching each user by UUID
-            userViewModel.fetchUser(by: memberUuid) { user in
+            userService.fetchUser(by: memberUuid) { user in
                 if let user = user {
                     fetchedUsers.append(user) // Adding the fetched user to the array
                 }

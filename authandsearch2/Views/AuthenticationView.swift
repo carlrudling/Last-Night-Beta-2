@@ -10,7 +10,7 @@ struct AuthenticationView: View {
 }
 
 struct SignInView: View {
-    @EnvironmentObject var user: UserViewModel
+    @EnvironmentObject var userService: UserService
     @State private var email = "hi@boy.com"
     @State private var password = "123456"
     
@@ -23,7 +23,7 @@ struct SignInView: View {
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
             Button(action: {
-                user.signIn(email: email, password: password)
+                userService.signIn(email: email, password: password)
             }) {
                 Text("Sign In")
             }
@@ -32,7 +32,7 @@ struct SignInView: View {
 }
 
 struct SignUpView: View {
-    @EnvironmentObject var user: UserViewModel
+    @EnvironmentObject var userService: UserService
     @State private var email = ""
     @State private var password = ""
     @State private var firstName = ""
@@ -55,7 +55,7 @@ struct SignUpView: View {
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
             Button(action: {
-                user.signUp(username: "\(username)", email: email, firstName: firstName, lastName: lastName, password: password, profileImage: profileImage, profileImageURL: profileImageURL)
+                userService.signUp(username: "\(username)", email: email, firstName: firstName, lastName: lastName, password: password, profileImage: profileImage, profileImageURL: profileImageURL)
             }) {
                 Text("Sign Up")
             }

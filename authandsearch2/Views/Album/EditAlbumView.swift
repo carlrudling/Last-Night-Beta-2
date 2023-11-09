@@ -10,8 +10,8 @@ import SwiftUI
 
 
 struct EditAlbumView: View {
-    @EnvironmentObject var albumViewModel : AlbumViewModel
-    @EnvironmentObject var userViewModel : UserViewModel
+    @EnvironmentObject var albumService : AlbumService
+    @EnvironmentObject var userService : UserService
     @State private var albumName = ""
     @State private var  endDate = Date()
     @State private var photoLimit = 0
@@ -33,7 +33,7 @@ struct EditAlbumView: View {
            updatedAlbum.photoLimit = self.photoLimit
            
            // Now call the editAlbum function
-           albumViewModel.editAlbum(album: updatedAlbum)
+        albumService.editAlbum(album: updatedAlbum)
            // Dismiss the view or show a confirmation of the update
            self.presentationMode.wrappedValue.dismiss()
        }
@@ -60,10 +60,10 @@ struct EditAlbumView: View {
                 Text("Current photolimit: \(album.photoLimit)")
                     .font(Font.custom("Chillax", size: 18))
                     .padding(.bottom, -25)
-                photoLimitSelector2(photoLimit: $photoLimit)
+                PhotoLimitSelector(photoLimit: $photoLimit, pickerText: "New photolimit")
                 Text("Current enddate: \(dateFormatter.string(from: album.endDate))")
                     .font(Font.custom("Chillax", size: 18))
-                datePicker2(endDate: $endDate)
+                DatepickerView(endDate: $endDate, pickerText: "New enddate")
                 Spacer()
                 
                 
@@ -209,9 +209,9 @@ struct EditAlbumView: View {
                             }
                     )
             .onAppear {
-                creator = self.userViewModel.uuid ?? ""
+                creator = self.userService.uuid ?? ""
                 isTabBarHidden = true
-                albumViewModel.fetchUsersFromAlbum(album: album, userViewModel: userViewModel) { fetchedUsers in
+                albumService.fetchUsersFromAlbum(album: album, userService: userService) { fetchedUsers in
                     users = fetchedUsers // Updating the state with fetched users
                 }
             }
@@ -225,56 +225,3 @@ struct EditAlbumView: View {
         }
     }
 
-
-
-
-struct photoLimitSelector2: View {
-    @Binding var photoLimit: Int
-    @State private var selectedOption: photoLimity = .None
-    
-    
-    
-    var body: some View {
-        Picker("PhotoLimit per user per 24h", selection: $selectedOption) {
-            // 1
-            ForEach(photoLimity.allCases) { option in
-                
-                // 2
-                Text(String(describing: option))
-                    .tag(option.intValue)
-                
-            }
-        }
-        .pickerStyle(.wheel)
-        .frame(maxHeight: 120)
-        .onChange(of: selectedOption) { newValue in
-            photoLimit = newValue.intValue // Update photoLimit with the selected intValue
-        }
-        
-        
-    }
-}
-
-
-struct datePicker2: View {
-    @Binding var endDate: Date
-    
-    var body: some View {
-        VStack {
-            DatePicker("Select new date", selection: $endDate, in: Date.now...)
-                .font(Font.custom("Chillax", size: 16))
-            
-        }
-    }
-}
-
-/*
-struct EditAlbumView_PreviewProvider {
-    @State static private var isTabBarHidden = false
-    @State static private var rootIsActive = false
-    static var previews: some View {
-        EditAlbumView(isTabBarHidden: $isTabBarHidden, rootIsActive: $rootIsActive, album: album)
-    }
-}
-
-*/

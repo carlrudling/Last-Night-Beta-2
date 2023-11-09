@@ -34,8 +34,8 @@ struct authandsearch2App: App {
     
     var body: some Scene {
         WindowGroup {
-            let user = UserViewModel()
-            let album = AlbumViewModel()
+            let user = UserService()
+            let album = AlbumService()
             let post = PostViewModel()
             let fetchAlbum = FetchAlbums()
             let imageViewModel = ImageViewModel(imagePath: "")

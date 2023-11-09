@@ -9,21 +9,21 @@ import SwiftUI
 
 
 struct ContentView: View {
-    @EnvironmentObject var user: UserViewModel
-    @EnvironmentObject var album: AlbumViewModel
+    @EnvironmentObject var userService: UserService
+    @EnvironmentObject var albumService: AlbumService
     @EnvironmentObject var post: PostViewModel
     @EnvironmentObject var fetchAlbumModel: FetchAlbums
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     var body: some View {
         NavigationStack {
-            if user.userIsAuthenticatedAndSynced {
+            if userService.userIsAuthenticatedAndSynced {
                 MainTabbedView()
             } else {
                 AuthenticationView()
             }
         }
-        .onAppear(perform: user.checkAuthenticationStatus)  // call checkAuthenticationStatus when ContentView appears
+        .onAppear(perform: userService.checkAuthenticationStatus)  // call checkAuthenticationStatus when ContentView appears
     }
 }
 

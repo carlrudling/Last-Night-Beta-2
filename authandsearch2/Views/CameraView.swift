@@ -18,14 +18,14 @@ struct CameraView: View {
     
     @StateObject var camera = CameraModel()
     @EnvironmentObject var post: PostViewModel
-    @EnvironmentObject var user: UserViewModel
-    @EnvironmentObject var album: AlbumViewModel
+    @EnvironmentObject var userService: UserService
+    @EnvironmentObject var album: AlbumService
     
   
     
     
     func handleQRCode(_ qrCode: String) {
-        album.addMembers(documentID: qrCode, member: user.uuid!) { success in
+        album.addMembers(documentID: qrCode, member: userService.uuid!) { success in
             if success {
                 // Update UI to show success message
                 print("The user was successfully added to the album.")
@@ -102,7 +102,7 @@ struct CameraView: View {
                                                 camera.reTake() // UI-related task, should be on the main thread
                                             }
                                             
-                                            post.createPost(albumId: selectedAlbumID, imagePath: camera.uuidGlobal, imageURL: imageURL, userUUID: user.uuid!)
+                                            post.createPost(albumId: selectedAlbumID, imagePath: camera.uuidGlobal, imageURL: imageURL, userUUID: userService.uuid!)
                                         }
                                         camera.isSaving = false
                                     }
@@ -458,8 +458,8 @@ struct RotatingDotAnimation: View {
 
 struct AlbumPickerView: View {
    // @StateObject var fetchAlbums = FetchAlbums()
-    @EnvironmentObject var album: AlbumViewModel
-    @EnvironmentObject var user: UserViewModel
+    @EnvironmentObject var album: AlbumService
+    @EnvironmentObject var user: UserService
     @State var albumName: String = ""
     @Binding var selectedAlbumID: String
     

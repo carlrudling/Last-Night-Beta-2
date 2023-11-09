@@ -9,9 +9,8 @@ import SwiftUI
 import FirebaseAuth
 
 struct HomeView: View {
-    //@StateObject private var fetchAlbums = FetchAlbums() // Create an instance of FetchAlbums
-    @EnvironmentObject var album: AlbumViewModel
-    @EnvironmentObject var user: UserViewModel
+    @EnvironmentObject var albumService: AlbumService
+    @EnvironmentObject var userService: UserService
     @Binding var isTabBarHidden: Bool
     @State var isActive : Bool = false
     
@@ -30,7 +29,7 @@ struct HomeView: View {
                     Spacer()
                     // Your SwiftUI content here
                     
-                    NavigationLink(destination: createAlbumView(isTabBarHidden: $isTabBarHidden, rootIsActive: self.$isActive),isActive: self.$isActive, label: {
+                    NavigationLink(destination: CreateAlbumView(isTabBarHidden: $isTabBarHidden, rootIsActive: self.$isActive),isActive: self.$isActive, label: {
                         Text("Create Album")
                             .font(Font.custom("Chillax", size: 20))
                             .frame(width: 240, height: 60) // Align the button to center horizontally
@@ -51,7 +50,7 @@ struct HomeView: View {
                                 }
                     ScrollView {
                         VStack {
-                            ForEach(album.queryResultAlbums, id: \.uuid) { album in
+                            ForEach(albumService.queryResultAlbums, id: \.uuid) { album in
                                 NavigationLink(
                                     destination: Group {
                                         if album.isActive {
@@ -83,7 +82,7 @@ struct HomeView: View {
         
         
         .onAppear{
-            album.fetchAlbums(forUserWithID: user.uuid ?? "")
+            albumService.fetchAlbums(forUserWithID: userService.uuid ?? "")
             isTabBarHidden = false
         }
     }
@@ -99,3 +98,4 @@ struct FetchAlbumsView_Previews: PreviewProvider {
 
 // Maybe it is a carusell to make it look better
 // SwiftUIWheelPicker?
+

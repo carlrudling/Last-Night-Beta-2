@@ -28,7 +28,7 @@ enum TabbedItems: Int, CaseIterable{
 import SwiftUI
 
 struct MainTabbedView: View {
-    @ObservedObject var user = UserViewModel()
+    @ObservedObject var userService = UserService()
     @State private var isTabBarHidden: Bool = false
     
     @State var selectedTab = 0
@@ -41,7 +41,7 @@ struct MainTabbedView: View {
                     HomeView(isTabBarHidden: $isTabBarHidden)
                         .tag(0)
                     
-                    CameraView(albumuuid: self.user.uuid!)
+                    CameraView(albumuuid: self.userService.uuid!)
                         .tag(1)
                     
                     ProfileView()
