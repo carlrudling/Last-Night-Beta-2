@@ -1,32 +1,3 @@
-//
-//  CameraViewModel.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-09-07.
-//
-
-//import Foundation
-
-
-
-
-/*
- 
- struct CamerVIEW2Kavsoft: View {
- var body: some View {
- CameraView2()
- }
- }
- 
- struct CamerVIEW2Kavsoft_Previews: PreviewProvider {
- static var previews: some View {
- CameraView2()
- }
- }
- */
-
-//Camera Model...
-
 import SwiftUI
 import AVFoundation
 import FirebaseFirestoreSwift
@@ -35,7 +6,7 @@ import FirebaseAuth
 import FirebaseStorage
 
 
-class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate, AVCaptureMetadataOutputObjectsDelegate {
+class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate, AVCaptureMetadataOutputObjectsDelegate {
     @Published var isTaken = false
     @Published var session = AVCaptureSession()
     @Published var alert = false
@@ -324,8 +295,8 @@ class CameraModel: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate, A
 
 
 struct CameraPreview: UIViewRepresentable {
-    @EnvironmentObject var post: PostViewModel
-    @ObservedObject var camera : CameraModel
+    @EnvironmentObject var postService: PostService
+    @ObservedObject var camera : CameraService
     func makeUIView(context: Context) -> UIView {
         
         let view = UIView(frame: UIScreen.main.bounds)

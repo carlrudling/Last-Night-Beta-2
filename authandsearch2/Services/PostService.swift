@@ -4,7 +4,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseStorage
 
-class PostViewModel: ObservableObject {
+class PostService: ObservableObject {
     @Published var post: Post?
     
     private let db = Firestore.firestore()

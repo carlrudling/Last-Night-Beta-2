@@ -4,7 +4,7 @@
 //
 //  Created by Carl Rudling on 2023-09-03.
 //
-
+/*
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
@@ -31,6 +31,8 @@ class FetchAlbums: ObservableObject {
         }
     }
 }
+ 
+ */
 
 // WAS ONLY USED IN THE HOMEVIEW & AlbumPickerView (in cameraview)!!
 

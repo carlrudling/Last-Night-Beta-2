@@ -10,7 +10,7 @@ import Kingfisher
 
 struct ImageDetailView: View {
     var post : Post
-    @EnvironmentObject var postVM: PostViewModel
+    @EnvironmentObject var postService: PostService
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var imageModel: ImageViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>

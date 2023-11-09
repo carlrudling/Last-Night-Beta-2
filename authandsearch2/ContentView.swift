@@ -11,8 +11,8 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var albumService: AlbumService
-    @EnvironmentObject var post: PostViewModel
-    @EnvironmentObject var fetchAlbumModel: FetchAlbums
+    @EnvironmentObject var postService: PostService
+  //  @EnvironmentObject var fetchAlbumModel: FetchAlbums
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     var body: some View {

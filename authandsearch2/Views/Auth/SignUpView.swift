@@ -1,35 +1,11 @@
+//
+//  SignUpView.swift
+//  authandsearch2
+//
+//  Created by Carl Rudling on 2023-11-08.
+//
+
 import SwiftUI
-
-struct AuthenticationView: View {
-    var body: some View {
-        VStack {
-            SignInView()
-            NavigationLink("Sign Up!", destination: SignUpView())
-        }
-    }
-}
-
-struct SignInView: View {
-    @EnvironmentObject var userService: UserService
-    @State private var email = "hi@boy.com"
-    @State private var password = "123456"
-    
-    var body: some View {
-        VStack {
-            TextField("Email", text: $email)
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
-             SecureField("Password", text: $password)
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
-            Button(action: {
-                userService.signIn(email: email, password: password)
-            }) {
-                Text("Sign In")
-            }
-        }
-    }
-}
 
 struct SignUpView: View {
     @EnvironmentObject var userService: UserService
@@ -62,13 +38,3 @@ struct SignUpView: View {
         }
     }
 }
-
-
-/*
-
-struct AuthenticationView_Previews: PreviewProvider {
-    static var previews: some View {
-        AuthenticationView()
-    }
-}
-*/

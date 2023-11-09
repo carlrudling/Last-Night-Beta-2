@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct PhotoGridView: View {
-    @EnvironmentObject var post: PostViewModel
+    @EnvironmentObject var postService: PostService
     @EnvironmentObject var imageModel: ImageViewModel
     @Binding var selectedDetent: PresentationDetent
     @EnvironmentObject var fetchAlbum: FetchAlbums
