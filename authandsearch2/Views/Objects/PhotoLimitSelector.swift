@@ -34,7 +34,7 @@ struct PhotoLimitSelector: View {
     }
 }
 
-
+/*
 enum photoLimity: CaseIterable, Identifiable {
     
     case None, ten, fifteen, twenty
@@ -70,3 +70,4 @@ enum photoLimity: CaseIterable, Identifiable {
         
     }
 }
+*/

@@ -13,11 +13,14 @@ struct SearchUserBarView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .foregroundColor(Color.gray.opacity(0.5))
+                .foregroundColor(.white)
             HStack {
                 Image(systemName: "magnifyingglass")
+                    .foregroundColor(.black)
                 TextField("Searching for...", text: $keyword)
                 .autocapitalization(.none)
+                .foregroundColor(.black)
+
             }
             .padding(.leading, 13)
         }

@@ -13,7 +13,7 @@ struct EditAlbumView: View {
     @EnvironmentObject var albumService : AlbumService
     @EnvironmentObject var userService : UserService
     @State private var albumName = ""
-    @State private var  endDate = Date()
+    @State private var endDate = Date()
     @State private var photoLimit = 0
     @State private var members : [String] = []
     @State private var creator : String = ""
@@ -25,6 +25,10 @@ struct EditAlbumView: View {
     
     var album: Album
     
+    
+    var isAlbumNameValid: Bool {
+            !albumName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
 
     func handleUpdate() {
            var updatedAlbum = album
@@ -78,7 +82,7 @@ struct EditAlbumView: View {
                         .foregroundColor(.white)
                         .clipShape(Capsule())
                 }
-                
+                .disabled(!isAlbumNameValid) // Disable the button if album name is not valid
                 
             }
         

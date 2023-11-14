@@ -9,12 +9,12 @@ import SwiftUI
 
 struct ProfileDisplayView: View {
     var user: User
-    @Binding var members : [String]
+    @EnvironmentObject var albumViewModel: AlbumViewModel
+   // @Binding var members : [String]
     @State private var isTapped: Bool = false
     
-    init(user: User, members: Binding<[String]>) {
+    init(user: User) {
         self.user = user
-        _members = members
     }
     
     
@@ -23,28 +23,49 @@ struct ProfileDisplayView: View {
         ZStack {
         
             Rectangle()
-                .foregroundColor(isTapped ? Color.green : Color.gray.opacity(0.2))
+                .foregroundColor(.white)
                 .onTapGesture {
-                    if members.contains( user.uuid) {
+                    if albumViewModel.members.contains( user.uuid) {
                         // Member is already in the array, so remove them
-                        //  members.remove(user.uuid)
-                        isTapped = false
+                        if let index = albumViewModel.members.firstIndex(of: user.uuid) {
+                            albumViewModel.members.remove(at: index)
+                        }
+                      //  albumViewModel.members.remove(user.uuid)
+                        isTapped.toggle()
                     } else {
                         // Member is not in the array, so add them
-                        members.append(user.uuid)
-                        isTapped = true
+                        albumViewModel.members.append(user.uuid)
+                        isTapped.toggle()
                     }
+                    
                 }
+                .cornerRadius(13)
+                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 5)
             HStack {
-                Text("\(user.username)")
+                Image(systemName: "person.fill")
+                    .font(.system(size: 25))
+                    .padding(.horizontal, 10)
+                    .foregroundColor(.black)
+                VStack(alignment: .leading){
+                    Text("\(user.firstName) \(user.lastName)")
+                        .font(.system(size: 20))
+                        .foregroundColor(.black)
+                    Text("\(user.username)")
+                        .font(.system(size: 14))
+                        .foregroundColor(.black)
+
+                    
+                }
                 Spacer()
-                Text("\(user.firstName) \(user.lastName)")
+                Image(systemName: isTapped ? "checkmark.circle.fill" : "")
+                    .font(.system(size: 25))
+                    .foregroundColor(.green)
+                    .padding(.horizontal, 10)
+                
             }
             .padding(.horizontal, 10)
         }
-        .frame(maxWidth: .infinity, minHeight: 100)
-        .cornerRadius(13)
-        .padding()
+        .frame(width: UIScreen.main.bounds.width - 52, height: 80)
         
         
         

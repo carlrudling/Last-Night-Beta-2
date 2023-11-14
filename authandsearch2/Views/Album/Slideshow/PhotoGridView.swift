@@ -12,7 +12,6 @@ struct PhotoGridView: View {
     @EnvironmentObject var postService: PostService
     @EnvironmentObject var imageModel: ImageViewModel
     @Binding var selectedDetent: PresentationDetent
-    @EnvironmentObject var fetchAlbum: FetchAlbums
     var posts: [Post]
     let spacing: CGFloat = 1  // Change this to the spacing you want
     @State private var isSaved: Bool = false
@@ -108,9 +107,6 @@ struct PhotoGridView: View {
                                     }} else {
                                         showingPopup = true
                                         isSaved = false
-                                        
-                                        // Handle error: permission not granted
-                                        // CREATE POPUP HERE
                                         print("Didn't have permission, needs to accept. Create prompt")
                                     }
                             }

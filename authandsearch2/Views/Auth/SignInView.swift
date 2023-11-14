@@ -1,31 +1,26 @@
 //
-//  SignUpView.swift
+//  SignInView.swift
 //  authandsearch2
 //
-//  Created by Carl Rudling on 2023-11-08.
+//  Created by Carl Rudling on 2023-11-12.
 //
-
 import SwiftUI
 
-struct SignUpView: View {
+struct SignInView: View {
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var authViewModel: AuthViewModel
     
+    
     var body: some View {
         VStack {
-            Text("Sign Up")
+            Text("Sign In")
                 .font(.system(size: 25))
                 .foregroundColor(.black)
                 .padding(.top, 40)
                 .padding(.bottom, 40)
             
-            Form{
+            Form {
                 Section(header: Text("Using Email & Password")){
-                    TextField("Username", text: $authViewModel.username)
-                        .autocapitalization(.none)
-                        .disableAutocorrection(true)
-                    TextField("First Name", text: $authViewModel.firstName)
-                    TextField("Last Name", text: $authViewModel.lastName)
                     TextField("Email", text: $authViewModel.email)
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
@@ -39,14 +34,15 @@ struct SignUpView: View {
                                 .font(.system(size: 12))
                         }
                     }
+                    
                     Button(action: {
-                        authViewModel.validateInputs()
-                        if authViewModel.signUpisValid {
-                            userService.signUp(username: "@\(authViewModel.username)", email: authViewModel.email, firstName: authViewModel.firstName, lastName: authViewModel.lastName, password: authViewModel.password, profileImage: authViewModel.profileImage, profileImageURL: authViewModel.profileImageURL)
+                        authViewModel.validateSignInInputs()
+                        if authViewModel.signInValid {
+                            userService.signIn(email: authViewModel.email, password: authViewModel.password)
                         }
                     }) {
                         HStack{
-                            Text("SIGN UP")
+                            Text("SIGN IN")
                                 .fontWeight(.semibold)
                             Image(systemName: "arrow.right")
                         }
@@ -56,16 +52,15 @@ struct SignUpView: View {
                     .background(.blue)
                     .cornerRadius(8)
                     .foregroundColor(.white)
-                    .opacity(!authViewModel.signUpisValid ? 0.5 : 1)
-                    
+                    .opacity(!authViewModel.signInValid ? 0.5 : 1)
                 }
             }
-            .frame(height: 500)
+            .frame(height: 300)
             .scrollContentBackground(.hidden)
             Spacer()
-            NavigationLink(destination: SignInView()) {
+            NavigationLink(destination: SignUpView()) {
                 HStack(spacing: 3) {
-                    Text("Don't have an account?")
+                    Text("Already have an account?")
                         .foregroundColor(.white)
                     Text("Sign in")
                         .fontWeight(.bold)
@@ -85,13 +80,3 @@ struct SignUpView: View {
     }
 }
 
-
-
-struct SignUpView_Previews: PreviewProvider {
-   
-    static var previews: some View {
-        let sampleAuthViewModel = AuthViewModel()
-        SignUpView()
-            .environmentObject(sampleAuthViewModel)
-    }
-}

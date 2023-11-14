@@ -7,19 +7,11 @@
 
 import SwiftUI
 
-
-import SwiftUI
-
 struct AddMembersView: View {
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var albumService : AlbumService
+    @EnvironmentObject var albumViewModel: AlbumViewModel
     @StateObject var usersLookup = UsersLookupViewModel()
-    @State var keyword = ""
-    @State private  var members : [String] = []
-    @Binding private var albumName : String
-    @Binding private var  endDate : Date
-    @Binding private var photoLimit : Int
-    @Binding private var creator : String
     @Binding var isTabBarHidden: Bool
     @State private var buttonPressed = false
     @State private var isActive: Bool = false
@@ -28,11 +20,7 @@ struct AddMembersView: View {
 
     
     
-    init(albumName: Binding<String>, endDate: Binding<Date>, photoLimit: Binding<Int>, creator: Binding<String>, isTabBarHidden: Binding<Bool>, shouldPopToRootView : Binding<Bool>) {
-        _albumName = albumName
-        _endDate = endDate
-        _photoLimit = photoLimit
-        _creator = creator
+    init(isTabBarHidden: Binding<Bool>, shouldPopToRootView : Binding<Bool>) {
         _isTabBarHidden = isTabBarHidden
         _shouldPopToRootView = shouldPopToRootView
         
@@ -42,11 +30,11 @@ struct AddMembersView: View {
     var body: some View {
         let keywordBinding = Binding<String>(
             get: {
-                keyword
+                albumViewModel.keyword
             },
             set: {
-                keyword = $0
-                usersLookup.fetchUsers(with: keyword)
+                albumViewModel.keyword = $0
+                usersLookup.fetchUsers(with: albumViewModel.keyword)
             }
         )
         VStack {
@@ -55,7 +43,7 @@ struct AddMembersView: View {
             SearchUserBarView(keyword: keywordBinding)
             ScrollView {
                 ForEach(usersLookup.queryResultUsers, id: \.uuid) { user in
-                    ProfileDisplayView(user: user, members: $members)
+                    ProfileDisplayView(user: user)
                     
                 }
             }
@@ -63,7 +51,7 @@ struct AddMembersView: View {
        
                 Button {
                     buttonPressed = true
-                    albumService.createAlbum(albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator)
+                    albumService.createAlbum(albumName: albumViewModel.albumName, endDate: albumViewModel.endDate, photoLimit: albumViewModel.photoLimit, members: albumViewModel.members, creator: albumViewModel.creator)
                     self.shouldPopToRootView = false
                     
                 } label: {
@@ -101,7 +89,7 @@ struct AddMembersView: View {
                 )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear{
-            members.append(self.userService.uuid!)
+            albumViewModel.members.append(self.userService.uuid!)
             isTabBarHidden = true
             
         }
@@ -114,7 +102,7 @@ struct AddMembersView: View {
 
 
 // Propably you need to create another struct and call it when onTapgesture that displays the member (as selected)
-
+/*
 
 struct AddMembersView_Previews: PreviewProvider {
     static var previews: some View {
@@ -128,3 +116,4 @@ struct AddMembersView_Previews: PreviewProvider {
         return AddMembersView(albumName: albumName, endDate: endDate, photoLimit: photoLimit, creator: creator, isTabBarHidden: isTabBarHidden, shouldPopToRootView: shouldPopToRootView)
     }
 }
+*/
