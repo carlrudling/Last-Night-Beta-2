@@ -43,6 +43,7 @@
 		D3A096E92AF96A3400859604 /* EditAlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A096E82AF96A3300859604 /* EditAlbumView.swift */; };
 		D3B4CF4A2B02A57C003C66DD /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B4CF492B02A57B003C66DD /* AuthViewModel.swift */; };
 		D3B4CF5D2B035A12003C66DD /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B4CF5C2B035A12003C66DD /* AlbumViewModel.swift */; };
+		D3B4CF622B042BAC003C66DD /* CheckMembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B4CF612B042BAC003C66DD /* CheckMembersView.swift */; };
 		D3DF7B262AFC0692008A292E /* View+Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF7B252AFC0692008A292E /* View+Modifiers.swift */; };
 		D3DF7B2A2AFC2D9D008A292E /* PhotoGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF7B292AFC2D9D008A292E /* PhotoGridView.swift */; };
 		D3DF7B2C2AFC2E00008A292E /* UserGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF7B2B2AFC2E00008A292E /* UserGridView.swift */; };
@@ -95,6 +96,7 @@
 		D3A096E82AF96A3300859604 /* EditAlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAlbumView.swift; sourceTree = "<group>"; };
 		D3B4CF492B02A57B003C66DD /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		D3B4CF5C2B035A12003C66DD /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
+		D3B4CF612B042BAC003C66DD /* CheckMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckMembersView.swift; sourceTree = "<group>"; };
 		D3DF7B252AFC0692008A292E /* View+Modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Modifiers.swift"; sourceTree = "<group>"; };
 		D3DF7B292AFC2D9D008A292E /* PhotoGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGridView.swift; sourceTree = "<group>"; };
 		D3DF7B2B2AFC2E00008A292E /* UserGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserGridView.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 			children = (
 				D32665512AFCAEF100A098A6 /* AddMembersView.swift */,
 				D32665532AFCAF3C00A098A6 /* CreateAlbumView.swift */,
+				D3B4CF612B042BAC003C66DD /* CheckMembersView.swift */,
 			);
 			path = CreateAlbum;
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				D3F5B0D32AC81373007CCC0E /* ProfileView.swift in Sources */,
 				D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */,
 				D3DF7B382AFC3808008A292E /* PhotoLimitSelector.swift in Sources */,
+				D3B4CF622B042BAC003C66DD /* CheckMembersView.swift in Sources */,
 				D33D9F692AA2BE2500498EA2 /* HomeView.swift in Sources */,
 				D3DF7B342AFC30C8008A292E /* RoundedCorner.swift in Sources */,
 				D32665522AFCAEF100A098A6 /* AddMembersView.swift in Sources */,

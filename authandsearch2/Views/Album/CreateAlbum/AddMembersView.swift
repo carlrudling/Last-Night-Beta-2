@@ -15,14 +15,14 @@ struct AddMembersView: View {
     @Binding var isTabBarHidden: Bool
     @State private var buttonPressed = false
     @State private var isActive: Bool = false
-    @Binding var shouldPopToRootView : Bool
+    @Binding var rootIsActive : Bool
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     
     
-    init(isTabBarHidden: Binding<Bool>, shouldPopToRootView : Binding<Bool>) {
+    init(isTabBarHidden: Binding<Bool>, rootIsActive : Binding<Bool>) {
         _isTabBarHidden = isTabBarHidden
-        _shouldPopToRootView = shouldPopToRootView
+        _rootIsActive = rootIsActive
         
     }
     
@@ -48,34 +48,37 @@ struct AddMembersView: View {
                 }
             }
             
-       
-                Button {
-                    buttonPressed = true
-                    albumService.createAlbum(albumName: albumViewModel.albumName, endDate: albumViewModel.endDate, photoLimit: albumViewModel.photoLimit, members: albumViewModel.members, creator: albumViewModel.creator)
-                    self.shouldPopToRootView = false
-                    
-                } label: {
-                    Text("Create Album")
-                        .font(Font.custom("Chillax", size: 20))
-                        .frame(maxWidth: .infinity) // Align the button to center horizontally
-                        .padding()
-                        .background(buttonPressed ? Color.green : Color.blue)
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
-                    
-
+            NavigationLink(destination: CheckMembersView(shouldPopToRootView: $rootIsActive), label: {
+                HStack{
+                    Text("Next")
+                        .fontWeight(.semibold)
+                    Image(systemName: "arrow.right")
                 }
+                .frame(width: UIScreen.main.bounds.width - 52, height: 28)
+                .padding(15)
+                .background(.green)
+                .cornerRadius(8)
+                .foregroundColor(.white)
+                .disabled(!albumViewModel.albumValid)
+                .opacity(!albumViewModel.albumValid ? 0.5 : 1)
+               // .onTapGesture {
+              //      albumViewModel.validateInputs()
+               // }
                 
-              
-                
-                
-            
-            
-            
-            
+            })
+            .isDetailLink(false)
             
         }
         .padding(.horizontal, 20)
+        .background(
+            Rectangle()
+                .fill(Color.blue)
+                .frame(width: 600, height: 1500)
+                .rotationEffect(.degrees(-50))
+                .offset(y: 300)
+                .cornerRadius(10), alignment: .center
+        )
+        
       
         .navigationBarBackButtonHidden(true)
                     .navigationBarItems(leading:
@@ -89,7 +92,6 @@ struct AddMembersView: View {
                 )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear{
-            albumViewModel.members.append(self.userService.uuid!)
             isTabBarHidden = true
             
         }

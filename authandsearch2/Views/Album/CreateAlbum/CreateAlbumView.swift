@@ -10,7 +10,6 @@ import SwiftUI
 
 
 struct CreateAlbumView: View {
-
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var albumViewModel: AlbumViewModel
     @Binding var isTabBarHidden: Bool
@@ -35,7 +34,7 @@ struct CreateAlbumView: View {
                                                                     
                     }
                 
-                    Section{
+                    Section(footer: Text("Swipe to change")){
                         Text("Photo limit")
                         Picker("Photo limit", selection: $albumViewModel.photoLimit) {
                             ForEach(photoLimity.allCases) { option in
@@ -58,7 +57,7 @@ struct CreateAlbumView: View {
                 Spacer()
                 
                 
-                NavigationLink(destination: AddMembersView(isTabBarHidden: $isTabBarHidden, shouldPopToRootView: $rootIsActive), label: {
+                NavigationLink(destination: AddMembersView(isTabBarHidden: $isTabBarHidden, rootIsActive: $rootIsActive), label: {
                     HStack{
                         Text("Next")
                             .fontWeight(.semibold)
@@ -76,6 +75,7 @@ struct CreateAlbumView: View {
                    // }
                     
                 })
+                .isDetailLink(false)
             }
             .background(
                 Rectangle()

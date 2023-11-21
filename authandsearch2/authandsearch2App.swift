@@ -13,8 +13,7 @@ import FirebaseAuth
 @main
 struct authandsearch2App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-  
-    
+
 
     
     init() {
@@ -34,16 +33,16 @@ struct authandsearch2App: App {
     
     var body: some Scene {
         WindowGroup {
-            let user = UserService()
-            let album = AlbumService()
-            let post = PostService()
+            let userService = UserService()
+            let albumService = AlbumService()
+            let postService = PostService()
             let imageViewModel = ImageViewModel(imagePath: "")
             let authViewModel = AuthViewModel()
-            let albumViewModel = AlbumViewModel()
+            let albumViewModel = AlbumViewModel(userService: userService)
             ContentView()
-                .environmentObject(user)
-                .environmentObject(album)
-                .environmentObject(post)
+                .environmentObject(userService)
+                .environmentObject(albumService)
+                .environmentObject(postService)
                 .environmentObject(imageViewModel)
                 .environmentObject(authViewModel)
                 .environmentObject(albumViewModel)

@@ -12,11 +12,12 @@ class PostService: ObservableObject {
     func createPost(albumId: String, imagePath: String, imageURL: String, userUUID: String) {
         DispatchQueue.global().async {
             let startDate = Date()
+            let uploadTime = Date()
             // Step 1: Generate a UUID for the new post
             let newPostUUID = UUID().uuidString
             print("This is the imagePath in craetePost func \(imagePath)")
             // Step 2: Create a Post object
-            let newPost = Post(Postuuid: newPostUUID, userUuid: userUUID, imagePath: imagePath, imageURL: imageURL)
+            let newPost = Post(Postuuid: newPostUUID, userUuid: userUUID, imagePath: imagePath, imageURL: imageURL, uploadTime: uploadTime)
             
             
             

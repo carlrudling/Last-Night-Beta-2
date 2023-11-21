@@ -12,7 +12,7 @@ struct HomeView: View {
     @EnvironmentObject var albumService: AlbumService
     @EnvironmentObject var userService: UserService
     @Binding var isTabBarHidden: Bool
-    @State var isActive : Bool = false
+    @State private var isActive : Bool = false
     
     
     // Remove button and fetch onAppear
@@ -29,7 +29,7 @@ struct HomeView: View {
                     Spacer()
                     // Your SwiftUI content here
                     
-                    NavigationLink(destination: CreateAlbumView(isTabBarHidden: $isTabBarHidden, rootIsActive: self.$isActive),isActive: self.$isActive, label: {
+                    NavigationLink(destination: CreateAlbumView(isTabBarHidden: $isTabBarHidden, rootIsActive: $isActive), isActive: $isActive) {
                         Text("Create Album")
                             .font(Font.custom("Chillax", size: 20))
                             .frame(width: 240, height: 60) // Align the button to center horizontally
@@ -37,9 +37,9 @@ struct HomeView: View {
                             .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
                             .foregroundColor(.white)
                             .contentShape(Rectangle())
-                        
-                        
-                    })
+                                            // ... styling ...
+                                    }
+                    .isDetailLink(false)
                     .navigationBarTitleDisplayMode(.inline)
                     .padding()
                     .toolbar {
