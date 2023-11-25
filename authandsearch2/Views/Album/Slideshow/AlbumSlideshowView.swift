@@ -1,52 +1,27 @@
-//
-//  AlbumSlideshowView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-10-01.
-//
 import SwiftUI
 import Kingfisher
 
 
 struct AlbumSlideshowView: View {
     @EnvironmentObject var imageModel: ImageViewModel
-    @Binding var isTabBarHidden: Bool
-    var album: Album
-    @State private var currentImageIndex: Int = 0
-    @State private var timer: Timer? = nil
-    @State private var imagesForSlideshow: [UIImage] = []
-    @State private var showPhotoGrid = false
-    @State private var showUserGrid = false
-    @State private var playButtonPressed: Bool = false  // New state variable
-    @State private var isLoading: Bool = true
+    @EnvironmentObject var slideShowViewModel: SlideShowViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @State private var isNavigationLinkActive: Bool = false
-    @State var selectedDetent: PresentationDetent = .medium
+    @Binding var isTabBarHidden: Bool
     private let availableDetents: [PresentationDetent] = [.medium, .large]
-    
-    
-    // Function to format the image path
-    func formattedImagePath(from imagePath: String) -> String {
-        let imagePath = "\(imagePath).jpg"
-        print(imagePath)
-        return imagePath
-    }
-    
-   
-    
+    var album: Album
      
     // Function to start the slideshow
     func startSlideshow() {
-        playButtonPressed = true  // Set to true when play button is pressed
-        timer = Timer.scheduledTimer(withTimeInterval: 1.2, repeats: true) { _ in
+        slideShowViewModel.playButtonPressed = true  // Set to true when play button is pressed
+        slideShowViewModel.timer = Timer.scheduledTimer(withTimeInterval: 1.2, repeats: true) { _ in
             withAnimation { // Using withAnimation to trigger the transition
-                if currentImageIndex < imagesForSlideshow.count - 1 {
-                    currentImageIndex += 1
+                if slideShowViewModel.currentImageIndex < slideShowViewModel.imagesForSlideshow.count - 1 {
+                    slideShowViewModel.currentImageIndex += 1
                 } else {
-                    timer?.invalidate()
-                    timer = nil
-                    currentImageIndex = 0
-                    playButtonPressed = false
+                    slideShowViewModel.timer?.invalidate()
+                    slideShowViewModel.timer = nil
+                    slideShowViewModel.currentImageIndex = 0
+                    slideShowViewModel.playButtonPressed = false
                 }
             }
             
@@ -56,19 +31,27 @@ struct AlbumSlideshowView: View {
     
     // Function to stop the slideshow
     func stopSlideshow() {
-        timer?.invalidate()
-        timer = nil
+        slideShowViewModel.timer?.invalidate()
+        slideShowViewModel.timer = nil
         
     }
     
     // Function to preload all images
     func preloadImages() {
-        let imagePaths = album.posts.map { formattedImagePath(from: $0.imagePath) }
+        // Sort the posts by upload time
+        let sortedPosts = album.posts.sorted { $0.uploadTime < $1.uploadTime }
+
+        // Then map them to image paths
+        let imagePaths = sortedPosts.map { slideShowViewModel.formattedImagePath(from: $0.imagePath) }
+
+        // Continue with image preloading as before
         ImageViewModel.preloadImages(paths: imagePaths) { images in
-            imagesForSlideshow = images
-            isLoading = false  // Done loading
+            slideShowViewModel.imagesForSlideshow = images
+            slideShowViewModel.isLoading = false  // Done loading
         }
     }
+    
+    
     
     var body: some View {
         VStack {
@@ -77,7 +60,7 @@ struct AlbumSlideshowView: View {
             ZStack {
                 
                 // Loading until all Images are fetched
-                if isLoading {
+                if slideShowViewModel.isLoading {
                     ProgressView()
                         .scaleEffect(2) // Optional: Increase the size of the loader
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
@@ -87,13 +70,13 @@ struct AlbumSlideshowView: View {
                 
                 
                 // Black background before slideshow starts
-                if !playButtonPressed {
+                if !slideShowViewModel.playButtonPressed {
                     Color.black.edgesIgnoringSafeArea(.all)
                 }
                 
                 // Slideshow images
-                if playButtonPressed, imagesForSlideshow.indices.contains(currentImageIndex) {
-                    AnyView(Image(uiImage: imagesForSlideshow[currentImageIndex])
+                if slideShowViewModel.playButtonPressed, slideShowViewModel.imagesForSlideshow.indices.contains(slideShowViewModel.currentImageIndex) {
+                    AnyView(Image(uiImage: slideShowViewModel.imagesForSlideshow[slideShowViewModel.currentImageIndex])
                         .resizable()
                         .scaledToFill()
                         .edgesIgnoringSafeArea(.all))
@@ -108,13 +91,13 @@ struct AlbumSlideshowView: View {
                     
                     // Play button to start slideShow
                     Button {
-                        if timer == nil {
-                            startSlideshow()
+                        if slideShowViewModel.timer == nil {
+                           startSlideshow()
                         } else {
-                            stopSlideshow()
+                           stopSlideshow()
                         }
                     } label: {
-                        if timer == nil {
+                        if slideShowViewModel.timer == nil {
                             Image(systemName: "play.circle" )
                                 .resizable()
                                 .scaledToFit()
@@ -132,10 +115,26 @@ struct AlbumSlideshowView: View {
                     Spacer()
                     VStack {
                         
-                        if timer == nil || currentImageIndex == 0  {
+                        if slideShowViewModel.timer == nil || slideShowViewModel.currentImageIndex == 0  {
+                            
+                            
+                            Button {
+                                let watermarkImage = UIImage(named: "watermark")! // Replace with your watermark image
+                                // INSTEAD I SHOULD CREATE A WATERMARK AND EQUAL THAT TO WATERMARKIMAGE
+                                   slideShowViewModel.createAndWatermarkVideo(images: slideShowViewModel.imagesForSlideshow, watermarkImage: watermarkImage)
+                            } label: {
+                                Image(systemName: "arrow.down.to.line")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 30)
+                                    .foregroundColor(.white)
+                                    .padding(.vertical)
+                            }
+
+                            
                             
                             Button(action: {
-                                showPhotoGrid.toggle()
+                                slideShowViewModel.showPhotoGrid.toggle()
                             }) {
                                 Image(systemName: "photo")
                                     .resizable()
@@ -144,9 +143,9 @@ struct AlbumSlideshowView: View {
                                     .foregroundColor(.white)
                                     .padding(.vertical)
                             }
-                            .sheet(isPresented: $showPhotoGrid) {
-                                PhotoGridView(selectedDetent: $selectedDetent, posts: album.posts)
-                                    .presentationDetents([.medium, .large], selection: $selectedDetent)
+                            .sheet(isPresented: $slideShowViewModel.showPhotoGrid) {
+                                PhotoGridView(selectedDetent: $slideShowViewModel.selectedDetent, posts: album.posts)
+                                    .presentationDetents([.medium, .large], selection: $slideShowViewModel.selectedDetent)
                                     .presentationDragIndicator(.hidden)
                                     .presentationBackground(.white
                                     )
@@ -154,7 +153,7 @@ struct AlbumSlideshowView: View {
                             
                             
                             Button(action: {
-                                showUserGrid.toggle()
+                                slideShowViewModel.showUserGrid.toggle()
                             }) {
                                 Image(systemName: "person.2.fill")
                                     .resizable()
@@ -163,9 +162,9 @@ struct AlbumSlideshowView: View {
                                     .foregroundColor(.white)
                                     .padding(.vertical)
                             }
-                            .sheet(isPresented: $showUserGrid) {
-                                UserGridView(selectedDetent: $selectedDetent, album: album)
-                                    .presentationDetents([.medium, .large], selection: $selectedDetent)
+                            .sheet(isPresented: $slideShowViewModel.showUserGrid) {
+                                UserGridView(selectedDetent: $slideShowViewModel.selectedDetent, album: album)
+                                    .presentationDetents([.medium, .large], selection: $slideShowViewModel.selectedDetent)
                                     .presentationDragIndicator(.hidden)
                                     .presentationBackground(.white
                                     )
@@ -180,7 +179,7 @@ struct AlbumSlideshowView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
                                 Group {
-            if !playButtonPressed {
+            if !slideShowViewModel.playButtonPressed {
                 Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                     Image(systemName: "chevron.backward")
                         .foregroundColor(.white)
@@ -190,10 +189,80 @@ struct AlbumSlideshowView: View {
             }
         }
         )
+        .popup(isPresented: $slideShowViewModel.slideShowCreatePopUp) {
+            VStack{
+                ZStack { // 4
+                    
+                    VStack{
+                        HStack{
+                            Spacer()
+                            Image(systemName: "xmark")
+                                .font(.system(size: 18))
+                                .foregroundColor(.black)
+                                .padding(10)
+                        }
+                        Spacer()
+                    }
+                    
+                    VStack {
+                        ZStack{
+                            Image(systemName: "play.circle") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.white)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            Image(systemName: "play.circle.fill") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.purple)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            
+                        }
+                        
+                        Text("New Slideshow Created")
+                            .font(.system(size: 22))
+                            .bold()
+                            .padding(.bottom, 5)
+                            .padding(.top, 2)
+                        
+                        Text("New slideshow has been created with selected images.")
+                            .font(.system(size: 16))
+                            .padding(.top, 10)
+                            .padding(.horizontal, 20)
+                            .multilineTextAlignment(.center)
+                            
+                        Spacer()
+                        
+                    }
+                    .padding(.top, -40) // Make space for the checkmark at the top
+                    
+                }
+                .frame(width: 300, height: 200, alignment: .center)
+                //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                
+                .background(
+                    // Clipped background
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.white)
+                        .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                )
+                
+                
+            }
+            .frame(width: 300, height: 300, alignment: .center)
+            //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+            .background(.clear)
+           
+        
+       
+        }
         
         .onAppear {
             isTabBarHidden = true
+            slideShowViewModel.posts = album.posts  // Update posts in the ViewModel
+
             preloadImages()
+            
         }
         .onDisappear {
             stopSlideshow()

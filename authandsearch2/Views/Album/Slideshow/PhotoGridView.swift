@@ -11,12 +11,14 @@ import Kingfisher
 struct PhotoGridView: View {
     @EnvironmentObject var postService: PostService
     @EnvironmentObject var imageModel: ImageViewModel
+    @EnvironmentObject var slideShowViewModel: SlideShowViewModel
     @Binding var selectedDetent: PresentationDetent
     var posts: [Post]
     let spacing: CGFloat = 1  // Change this to the spacing you want
     @State private var isSaved: Bool = false
     @State private var selectButtonPressed: Bool = false
     @State private var selectedImageUrls: [String] = []
+    @State private var selectedImagePaths: [String] = []
     @State private var progress: CGFloat = 0
     @State var showingPopup = false
     
@@ -56,6 +58,15 @@ struct PhotoGridView: View {
                                             selectedImageUrls.append(post.imageURL)
                                             print("The array: \(selectedImageUrls)")
                                         }
+                                        let imagePathWithExtension = post.imagePath + ".jpg"  // Append .jpg extension here
+                                        if let index = selectedImagePaths.firstIndex(of: imagePathWithExtension) {
+                                            selectedImagePaths.remove(at: index)
+                                        } else {
+                                            selectedImagePaths.append(imagePathWithExtension)
+                                        }
+                                        
+                                        print("Selected image URLs: \(selectedImageUrls)")
+                                        print("Selected image paths: \(selectedImagePaths)")
                                     }) {
                                         image(for: post)
                                     }
@@ -95,6 +106,41 @@ struct PhotoGridView: View {
                     VStack {
                         Spacer()
                         Button(action: {
+                            print("Selected image Paths: \(selectedImagePaths)")
+                            // Assuming you have a way to access the AlbumSlideshowView's updateSlideshow function
+                            slideShowViewModel.updateSlideshow(with: selectedImagePaths)
+                            
+                            // Add this line to programmatically dismiss the sheet
+                            slideShowViewModel.showPhotoGrid = false
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                withAnimation {
+                                    slideShowViewModel.slideShowCreatePopUp = true                                }}
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                withAnimation {
+                                    slideShowViewModel.slideShowCreatePopUp = false                                }}
+                        }) {
+                            HStack {
+                                Text("Create New SlideShow")
+                                    .foregroundColor(.white)
+                                    .padding(.leading, 10)
+                                
+                                
+                                Spacer()
+                                Image(systemName: "play.circle")
+                                    .font(.system(size: 25))
+                                    .foregroundColor(.white)
+                                    .padding(.trailing, 5)
+                                
+                                
+                            }
+                            .padding()
+                            .frame(width: UIScreen.main.bounds.width, alignment: .center)
+                            .background(Color.purple) // Button background color
+                            .padding(.bottom, -10)
+                        }
+                        
+                        
+                        Button(action: {
                             
                             imageModel.requestPhotoLibraryPermission { granted in
                                 if granted {
@@ -120,11 +166,11 @@ struct PhotoGridView: View {
                                 Text("Download Images")
                                     .foregroundColor(.white)
                                 
-                        Spacer()
-                                    Image(systemName: "arrow.down.to.line")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.white)
-                                        
+                                Spacer()
+                                Image(systemName: "arrow.down.to.line")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                                
                                 
                             }
                             .padding(.bottom, 10)
@@ -132,7 +178,17 @@ struct PhotoGridView: View {
                             .padding()
                             .frame(width: UIScreen.main.bounds.width, alignment: .center)
                             .background(Color.purple)
+                            .overlay(
+                                VStack {
+                                    Rectangle()
+                                        .frame(height: 0.5)
+                                        .foregroundColor(.white)
+                                    Spacer()
+                                }
+                            )
+                            
                         }
+                        
                     }
                     .edgesIgnoringSafeArea(.bottom)
                     .popup(isPresented: $showingPopup) {
@@ -176,7 +232,7 @@ struct PhotoGridView: View {
                                         .padding(.top, 10)
                                         .padding(.horizontal, 20)
                                         .multilineTextAlignment(.center)
-                                        
+                                    
                                     Spacer()
                                     
                                 }
@@ -198,78 +254,79 @@ struct PhotoGridView: View {
                         .frame(width: 300, height: 300, alignment: .center)
                         //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
                         .background(.clear)
-                       
-                
-               
-                }
-                .popup(isPresented: $isSaved) {
-                    VStack{
-                        ZStack { // 4
-                            
-                            VStack{
-                                HStack{
-                                    Spacer()
-                                    Image(systemName: "xmark")
-                                        .font(.system(size: 18))
-                                        .foregroundColor(.black)
-                                        .padding(10)
-                                }
-                                Spacer()
-                            }
-                            
-                            VStack {
-                                ZStack{
-                                    Image(systemName: "arrow.down.circle") // SF Symbol for checkmark
-                                        .font(.system(size: 80))
-                                        .foregroundColor(.white)
-                                    
-                                        .zIndex(1) // Ensure it's above the background
-                                    Image(systemName: "arrow.down.circle.fill") // SF Symbol for checkmark
-                                        .font(.system(size: 80))
-                                        .foregroundColor(.blue)
-                                    
-                                        .zIndex(1) // Ensure it's above the background
-                                    
-                                }
-                                
-                                Text("Images saved")
-                                    .font(.system(size: 22))
-                                    .bold()
-                                    .padding(.bottom, 5)
-                                    .padding(.top, 2)
-                                
-                                Text("The images you selected have successfully been downloaded.")
-                                    .font(.system(size: 16))
-                                    .padding(.top, 10)
-                                    .padding(.horizontal, 20)
-                                    .multilineTextAlignment(.center)
-                                    
-                                Spacer()
-                                
-                            }
-                            .padding(.top, -40) // Make space for the checkmark at the top
-                            
-                        }
-                        .frame(width: 300, height: 200, alignment: .center)
-                        //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
                         
-                        .background(
-                            // Clipped background
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.white)
-                                .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
-                        )
                         
                         
                     }
-                    .frame(width: 300, height: 300, alignment: .center)
-                    //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
-                    .background(.clear)
-                   
-                
-               
-                }
-
+                    .popup(isPresented: $isSaved) {
+                        VStack{
+                            ZStack { // 4
+                                
+                                VStack{
+                                    HStack{
+                                        Spacer()
+                                        Image(systemName: "xmark")
+                                            .font(.system(size: 18))
+                                            .foregroundColor(.black)
+                                            .padding(10)
+                                    }
+                                    Spacer()
+                                }
+                                
+                                VStack {
+                                    ZStack{
+                                        Image(systemName: "arrow.down.circle") // SF Symbol for checkmark
+                                            .font(.system(size: 80))
+                                            .foregroundColor(.white)
+                                        
+                                            .zIndex(1) // Ensure it's above the background
+                                        Image(systemName: "arrow.down.circle.fill") // SF Symbol for checkmark
+                                            .font(.system(size: 80))
+                                            .foregroundColor(.blue)
+                                        
+                                            .zIndex(1) // Ensure it's above the background
+                                        
+                                    }
+                                    
+                                    Text("Images saved")
+                                        .font(.system(size: 22))
+                                        .bold()
+                                        .padding(.bottom, 5)
+                                        .padding(.top, 2)
+                                    
+                                    Text("The images you selected have successfully been downloaded.")
+                                        .font(.system(size: 16))
+                                        .padding(.top, 10)
+                                        .padding(.horizontal, 20)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    Spacer()
+                                    
+                                }
+                                .padding(.top, -40) // Make space for the checkmark at the top
+                                
+                            }
+                            .frame(width: 300, height: 200, alignment: .center)
+                            //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                            
+                            .background(
+                                // Clipped background
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color.white)
+                                    .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                            )
+                            
+                            
+                        }
+                        .frame(width: 300, height: 300, alignment: .center)
+                        //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+                        .background(.clear)
+                        
+                        
+                        
+                    }
+                    
+                    
                 }
             }
         }

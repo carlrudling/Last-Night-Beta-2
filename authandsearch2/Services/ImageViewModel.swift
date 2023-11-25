@@ -87,14 +87,14 @@
 extension ImageViewModel {
     static func preloadImages(paths: [String], completion: @escaping ([UIImage]) -> Void) {
         let dispatchGroup = DispatchGroup()
-        var images: [UIImage] = []
+        var imagesDict: [String: UIImage] = [:]  // Dictionary to store images with their paths
 
         for path in paths {
             dispatchGroup.enter()
             let storageRef = Storage.storage().reference(withPath: path)
             storageRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
                 if let data = data, let image = UIImage(data: data) {
-                    images.append(image)
+                    imagesDict[path] = image  // Store image in the dictionary
                 } else {
                     print("Failed to preload image from path \(path): \(error?.localizedDescription ?? "Unknown error")")
                 }
@@ -103,19 +103,10 @@ extension ImageViewModel {
         }
 
         dispatchGroup.notify(queue: .main) {
-            completion(images)
+            let sortedImages = paths.compactMap { imagesDict[$0] }  // Create the final array based on the original paths order
+            completion(sortedImages)
         }
     }
 }
 
 
-/*
- // BluePrint for deleting Images
- func deleteItem(item: StorageReference) {
-         item.delete { error in
-             if let error = error {
-                     print("Error deleting item", error)
-             }
-         }
- }
- */
