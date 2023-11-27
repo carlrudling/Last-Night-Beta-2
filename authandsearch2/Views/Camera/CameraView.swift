@@ -112,7 +112,7 @@ struct CameraView: View {
                                    , label: {
                                 
                                 if camera.isSaving {
-                                    RotatingDotAnimationView()
+                                    RotatingDotAnimationView(outerCircleSize: 65, innerCircleSize: 16, offset: -23)
                                     
                                 } else if camera.isSaved {
                                     ZStack {
@@ -251,12 +251,14 @@ struct CameraView: View {
                             
                             Text("Permissions not granted")
                                 .font(.system(size: 22))
+                                .foregroundColor(.black)
                                 .bold()
                                 .padding(.bottom, 5)
                                 .padding(.top, 2)
                             
                             Text("To use the camera, you need to allow camera usage in settings.")
                                 .font(.system(size: 16))
+                                .foregroundColor(.black)
                                 .padding(.top, 10)
                                 .padding(.horizontal, 20)
                                 .multilineTextAlignment(.center)
@@ -318,12 +320,14 @@ struct CameraView: View {
                             
                             Text("Success")
                                 .font(.system(size: 25))
+                                .foregroundColor(.black)
                                 .bold()
                                 .padding(.bottom, 5)
                                 .padding(.top, 2)
                             
                             Text("You've just joined a new album")
                                 .font(.system(size: 18))
+                                .foregroundColor(.black)
                                 .padding(.top, 10)
                                 .padding(.horizontal, 20)
                                 .multilineTextAlignment(.center)
@@ -385,12 +389,14 @@ struct CameraView: View {
                             
                             Text("Error")
                                 .font(.system(size: 25))
+                                .foregroundColor(.black)
                                 .bold()
                                 .padding(.bottom, 5)
                                 .padding(.top, 2)
                             
                             Text("Something went wrong.")
                                 .font(.system(size: 18))
+                                .foregroundColor(.black)
                                 .padding(.top, 10)
                                 .padding(.horizontal, 20)
                                 .multilineTextAlignment(.center)

@@ -119,9 +119,17 @@ struct AlbumSlideshowView: View {
                             
                             
                             Button {
+                                // START A ANIMATION HERE
+                           //     $slideShowViewModel.animationIsActive.toggle()
                                 let watermarkImage = UIImage(named: "watermark")! // Replace with your watermark image
                                 // INSTEAD I SHOULD CREATE A WATERMARK AND EQUAL THAT TO WATERMARKIMAGE
-                                   slideShowViewModel.createAndWatermarkVideo(images: slideShowViewModel.imagesForSlideshow, watermarkImage: watermarkImage)
+                                slideShowViewModel.createAndWatermarkVideo(images: slideShowViewModel.imagesForSlideshow, watermarkImage: watermarkImage) { result in
+                                        DispatchQueue.main.async {
+                                          //  FIMNISH ANIMATION HERE
+                                            // MAYBE JUST DO A PULSE ANIMATION
+                                            // Handle the result here, maybe show a success or failure message
+                                        }
+                                    }
                             } label: {
                                 Image(systemName: "arrow.down.to.line")
                                     .resizable()
@@ -129,6 +137,10 @@ struct AlbumSlideshowView: View {
                                     .frame(height: 30)
                                     .foregroundColor(.white)
                                     .padding(.vertical)
+                                 //   .symbolEffect(
+                                   //                .variableColor,
+                                     //              isActive: slideShowViewModel.animationIsActive
+                                       //        )
                             }
 
                             
@@ -221,12 +233,14 @@ struct AlbumSlideshowView: View {
                         
                         Text("New Slideshow Created")
                             .font(.system(size: 22))
+                            .foregroundColor(.black)
                             .bold()
                             .padding(.bottom, 5)
                             .padding(.top, 2)
                         
                         Text("New slideshow has been created with selected images.")
                             .font(.system(size: 16))
+                            .foregroundColor(.black)
                             .padding(.top, 10)
                             .padding(.horizontal, 20)
                             .multilineTextAlignment(.center)

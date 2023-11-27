@@ -149,12 +149,14 @@ struct ImageDetailView: View {
                         
                         Text("Permissions not granted")
                             .font(.system(size: 22))
+                            .foregroundColor(.black)
                             .bold()
                             .padding(.bottom, 5)
                             .padding(.top, 2)
                         
                         Text("To save images you need to allow access to images in settings.")
                             .font(.system(size: 16))
+                            .foregroundColor(.black)
                             .padding(.top, 10)
                             .padding(.horizontal, 20)
                             .multilineTextAlignment(.center)

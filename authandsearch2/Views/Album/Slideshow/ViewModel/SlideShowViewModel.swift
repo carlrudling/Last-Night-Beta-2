@@ -17,6 +17,9 @@ class SlideShowViewModel: ObservableObject {
     @Published var isNavigationLinkActive: Bool = false
     @Published var selectedDetent: PresentationDetent = .medium
     @Published var slideShowCreatePopUp = false
+    @Published var isProcessingVideo = false
+    @Published var animationIsActive = false
+
     
     var posts: [Post] = [] // Array of Post objects
     
@@ -225,24 +228,26 @@ class SlideShowViewModel: ObservableObject {
     
     
     func rotateImage(cgImage: CGImage, angle: CGFloat) -> UIImage {
-        let size = CGSize(width: cgImage.width, height: cgImage.height)
-        let rotatedViewBox = UIView(frame: CGRect(origin: .zero, size: size))
-        rotatedViewBox.transform = CGAffineTransform(rotationAngle: angle)
-        let rotatedSize = rotatedViewBox.frame.size
-        
-        UIGraphicsBeginImageContext(rotatedSize)
-        guard let bitmap = UIGraphicsGetCurrentContext() else { return UIImage(cgImage: cgImage) }
-        
-        bitmap.translateBy(x: rotatedSize.width / 2, y: rotatedSize.height / 2)
-        bitmap.rotate(by: angle)
-        bitmap.scaleBy(x: 1.0, y: -1.0)
-        bitmap.draw(cgImage, in: CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height))
-        
-        guard let newImage = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage(cgImage: cgImage) }
-        UIGraphicsEndImageContext()
-        
+        var newImage = UIImage(cgImage: cgImage)
+        DispatchQueue.main.sync {
+            let size = CGSize(width: cgImage.width, height: cgImage.height)
+            let rotatedViewBox = UIView(frame: CGRect(origin: .zero, size: size))
+            rotatedViewBox.transform = CGAffineTransform(rotationAngle: angle)
+            let rotatedSize = rotatedViewBox.frame.size
+
+            UIGraphicsBeginImageContext(rotatedSize)
+            if let bitmap = UIGraphicsGetCurrentContext() {
+                bitmap.translateBy(x: rotatedSize.width / 2, y: rotatedSize.height / 2)
+                bitmap.rotate(by: angle)
+                bitmap.scaleBy(x: 1.0, y: -1.0)
+                bitmap.draw(cgImage, in: CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height))
+                newImage = UIGraphicsGetImageFromCurrentImageContext() ?? newImage
+            }
+            UIGraphicsEndImageContext()
+        }
         return newImage
     }
+
     
     func flipImageHorizontally(image: UIImage) -> UIImage {
         UIGraphicsBeginImageContext(image.size)
@@ -270,11 +275,22 @@ class SlideShowViewModel: ObservableObject {
         // Add the video track to the composition
         try? compositionTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: asset.duration), of: assetTrack, at: CMTime.zero)
 
+        
+        let watermarkSize = CGSize(width: watermarkImage.size.width, height: watermarkImage.size.height)
+        let videoSize = CGSize(width: assetTrack.naturalSize.width, height: assetTrack.naturalSize.height)
+        let marginRight = 20.0 // Margin from the right edge
+        let marginTop = 20.0 // Margin from the top
+
+        let watermarkPosition = CGPoint(
+            x: videoSize.width - watermarkSize.width - marginRight,
+            y: videoSize.height - watermarkSize.height - marginTop
+        )
+        
         // Create a layer for the watermark
         let watermarkLayer = CALayer()
         watermarkLayer.contents = watermarkImage.cgImage
-        watermarkLayer.frame = CGRect(x: 20, y: 20, width: watermarkImage.size.width, height: watermarkImage.size.height) // Position the watermark
-        watermarkLayer.opacity = 0.7 // Adjust as needed
+        watermarkLayer.frame = CGRect(origin: watermarkPosition, size: watermarkSize)
+        watermarkLayer.opacity = 0.7
 
         // Create a layer for the video
         let videoLayer = CALayer()
@@ -286,25 +302,35 @@ class SlideShowViewModel: ObservableObject {
         parentLayer.addSublayer(videoLayer)
         parentLayer.addSublayer(watermarkLayer)
 
-        // Create a video composition and apply the layer instructions
+        // Create a video composition
         let videoComposition = AVMutableVideoComposition()
         videoComposition.renderSize = assetTrack.naturalSize
         videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
         videoComposition.animationTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videoLayer, in: parentLayer)
 
+        // Create and add instruction
+        let instruction = AVMutableVideoCompositionInstruction()
+        instruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: asset.duration)
+        let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionTrack)
+        instruction.layerInstructions = [layerInstruction]
+        videoComposition.instructions = [instruction]
+        
         // Define the output URL for the watermarked video
         let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("watermarkedVideo.mp4")
         if FileManager.default.fileExists(atPath: outputURL.path) {
             try? FileManager.default.removeItem(at: outputURL)
         }
 
+        
+
         // Export the video
-        guard let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality) else {
+        guard let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) else {
             completion(.failure(CustomError.videoExportFailed))
             return
         }
 
         exporter.videoComposition = videoComposition
+
         exporter.outputURL = outputURL
         exporter.outputFileType = .mp4
 
@@ -322,8 +348,8 @@ class SlideShowViewModel: ObservableObject {
         }
     }
 
-    
-    func createAndWatermarkVideo(images: [UIImage], watermarkImage: UIImage) {
+
+    func createAndWatermarkVideo(images: [UIImage], watermarkImage: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
         createVideoFromImages(images: images, fps: 30) { result in
             switch result {
             case .success(let videoURL):
@@ -333,15 +359,19 @@ class SlideShowViewModel: ObservableObject {
                     case .success(let watermarkedVideoURL):
                         print("Watermarked video saved at: \(watermarkedVideoURL)")
                         self.saveVideoToPhotos(url: watermarkedVideoURL)
+                        completion(.success(watermarkedVideoURL)) // Call completion with success
                     case .failure(let error):
                         print("Error adding watermark: \(error)")
+                        completion(.failure(error)) // Call completion with error
                     }
                 }
             case .failure(let error):
                 print("Error creating video: \(error)")
+                completion(.failure(error)) // Call completion with error
             }
         }
     }
+
 
     
     

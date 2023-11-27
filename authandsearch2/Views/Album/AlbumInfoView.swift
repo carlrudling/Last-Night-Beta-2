@@ -130,12 +130,14 @@ struct AlbumInfoView: View {
                         
                         Text("Sure you want to leave?")
                             .font(.system(size: 22))
+                            .foregroundColor(.black)
                             .bold()
                             .padding(.bottom, 5)
                             .padding(.top, 2)
                         
                         Text("If you leave the album all your posts will be deleted.")
                             .font(.system(size: 16))
+                            .foregroundColor(.black)
                             .padding(.top, 5)
                             .padding(.horizontal, 20)
                             .multilineTextAlignment(.center)

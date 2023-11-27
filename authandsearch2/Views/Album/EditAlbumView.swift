@@ -120,6 +120,7 @@ struct EditAlbumView: View {
                             
                             Text("Sure you want to change?")
                                 .font(.system(size: 20))
+                                .foregroundColor(.black)
                                 .bold()
                                 .padding(.bottom, 5)
                                 .padding(.top, 2)
@@ -127,6 +128,7 @@ struct EditAlbumView: View {
                             
                             Text("If you press 'yes', the settings you've set here will become the new default.")
                                 .font(.system(size: 16))
+                                .foregroundColor(.black)
                                 .padding(.top, 5)
                                 .padding(.horizontal, 20)
                                 .multilineTextAlignment(.center)
