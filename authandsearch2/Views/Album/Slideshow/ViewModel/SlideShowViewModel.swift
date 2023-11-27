@@ -18,7 +18,10 @@ class SlideShowViewModel: ObservableObject {
     @Published var selectedDetent: PresentationDetent = .medium
     @Published var slideShowCreatePopUp = false
     @Published var isProcessingVideo = false
-    @Published var animationIsActive = false
+    @Published var successMessage = false
+    @Published var errorMessage = false
+    @Published var isAnimating = false
+    
 
     
     var posts: [Post] = [] // Array of Post objects
@@ -355,22 +358,38 @@ class SlideShowViewModel: ObservableObject {
             case .success(let videoURL):
                 print("Video created at: \(videoURL)")
                 self.addWatermark(to: videoURL, watermarkImage: watermarkImage) { watermarkResult in
-                    switch watermarkResult {
-                    case .success(let watermarkedVideoURL):
-                        print("Watermarked video saved at: \(watermarkedVideoURL)")
-                        self.saveVideoToPhotos(url: watermarkedVideoURL)
-                        completion(.success(watermarkedVideoURL)) // Call completion with success
-                    case .failure(let error):
-                        print("Error adding watermark: \(error)")
-                        completion(.failure(error)) // Call completion with error
+                    DispatchQueue.main.async {
+                        self.isAnimating = false // Stop animation in both success and failure cases
+                        switch watermarkResult {
+                        case .success(let watermarkedVideoURL):
+                            print("Watermarked video saved at: \(watermarkedVideoURL)")
+                            self.saveVideoToPhotos(url: watermarkedVideoURL)
+                            withAnimation{
+                                self.successMessage = true
+                                self.isAnimating = false
+                            }
+                            completion(.success(watermarkedVideoURL))
+                        case .failure(let error):
+                            print("Error adding watermark: \(error)")
+                            withAnimation{
+                                self.errorMessage = true
+                                self.isAnimating = false
+                            }
+                            completion(.failure(error))
+                        }
                     }
                 }
             case .failure(let error):
+                DispatchQueue.main.async {
+                    self.isAnimating = false // Stop animation here as well
+                    self.errorMessage = true
+                    completion(.failure(error))
+                }
                 print("Error creating video: \(error)")
-                completion(.failure(error)) // Call completion with error
             }
         }
     }
+
 
 
     

@@ -119,15 +119,12 @@ struct AlbumSlideshowView: View {
                             
                             
                             Button {
-                                // START A ANIMATION HERE
-                           //     $slideShowViewModel.animationIsActive.toggle()
-                                let watermarkImage = UIImage(named: "watermark")! // Replace with your watermark image
-                                // INSTEAD I SHOULD CREATE A WATERMARK AND EQUAL THAT TO WATERMARKIMAGE
+                                slideShowViewModel.isAnimating = true
+                                let watermarkImage = UIImage(named: "watermark")!
                                 slideShowViewModel.createAndWatermarkVideo(images: slideShowViewModel.imagesForSlideshow, watermarkImage: watermarkImage) { result in
                                         DispatchQueue.main.async {
-                                          //  FIMNISH ANIMATION HERE
-                                            // MAYBE JUST DO A PULSE ANIMATION
-                                            // Handle the result here, maybe show a success or failure message
+                                            slideShowViewModel.isAnimating = false
+
                                         }
                                     }
                             } label: {
@@ -135,12 +132,43 @@ struct AlbumSlideshowView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: 30)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(slideShowViewModel.successMessage ? .green :
+                                                         slideShowViewModel.errorMessage ? .red : .white)
                                     .padding(.vertical)
-                                 //   .symbolEffect(
-                                   //                .variableColor,
-                                     //              isActive: slideShowViewModel.animationIsActive
-                                       //        )
+                                    .scaleEffect(slideShowViewModel.isAnimating ? 1.1 : 1.0)
+                                    .opacity(slideShowViewModel.isAnimating ? 0.3 : 1.0)
+                                    .animation(slideShowViewModel.isAnimating ? Animation.easeInOut(duration: 0.6).repeatForever(autoreverses: true) : .default, value: slideShowViewModel.isAnimating)
+
+                            }
+                            if slideShowViewModel.successMessage {
+                                Text("Saved")
+                                    .foregroundColor(.green)
+                                    .font(.system(size: 12))
+                                    .offset(y: slideShowViewModel.successMessage ? -15 : -30)
+                                    .opacity(slideShowViewModel.successMessage ? 1.0 : 0.0)
+                                    //.animation(.easeOut(duration: 0.5), value: slideShowViewModel.successMessage)
+                                    .onAppear {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                            withAnimation{
+                                                slideShowViewModel.successMessage = false
+                                            }
+                                        }
+                                    }
+                            }
+                            if slideShowViewModel.errorMessage {
+                                Text("Try again")
+                                    .foregroundColor(.red)
+                                    .font(.system(size: 12))
+                                    .offset(y: slideShowViewModel.errorMessage ? -15 : -30)
+                                    .opacity(slideShowViewModel.errorMessage ? 1.0 : 0.0)
+                                    //.animation(.easeOut(duration: 0.5), value: slideShowViewModel.errorMessage)
+                                    .onAppear {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                            withAnimation{
+                                                slideShowViewModel.errorMessage = false
+                                            }
+                                        }
+                                    }
                             }
 
                             
@@ -274,7 +302,7 @@ struct AlbumSlideshowView: View {
         .onAppear {
             isTabBarHidden = true
             slideShowViewModel.posts = album.posts  // Update posts in the ViewModel
-
+            slideShowViewModel.isAnimating = false
             preloadImages()
             
         }
