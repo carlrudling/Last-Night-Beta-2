@@ -18,10 +18,11 @@ class AlbumService: ObservableObject {
     @Published var album: Album?
     @Published var queryResultAlbums: [Album] = []
     @Published var fetchedUsers: [User] = []
-
+    @Published var finishedAlbumsWithThumbnails: [Album] = []
     
-@DocumentID var id: String? = UUID().uuidString
-
+    
+    @DocumentID var id: String? = UUID().uuidString
+    
     
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
@@ -35,10 +36,10 @@ class AlbumService: ObservableObject {
     var userIsAuthenticatedAndSynced: Bool {
         user != nil && userIsAuthenticated
     }
-  
+    
     var albumUUid = UUID().uuidString
     
-
+    
     // ADD_ALBUM
     private func addAlbum(_ album: Album) {
         guard userIsAuthenticated else {return}
@@ -49,7 +50,7 @@ class AlbumService: ObservableObject {
         }
     }
     
-  
+    
     // CREATE_ALBUM
     func createAlbum(albumName: String, endDate: Date, photoLimit: Int, members: [String], creator: String) {
         DispatchQueue.main.async {
@@ -59,7 +60,7 @@ class AlbumService: ObservableObject {
         }
     }
     
-   
+    
     
     // ADD_MEMBERS
     func addMembers(documentID: String, member: String, completion: @escaping (Bool) -> Void) {
@@ -78,7 +79,7 @@ class AlbumService: ObservableObject {
             }
         }
     }
-
+    
     
     private func syncAlbums() {
         guard userIsAuthenticated else { return }
@@ -94,7 +95,7 @@ class AlbumService: ObservableObject {
             }
         }
     }
-
+    
     
     func fetchAlbums(forUserWithID uuid: String) {
         db.collection("albums").whereField("members", arrayContains: uuid).getDocuments { querySnapshot, error in
@@ -107,15 +108,15 @@ class AlbumService: ObservableObject {
             }
         }
     }
-
-
+    
+    
     // EDIT_ALBUM
     func editAlbum(album: Album) {
         guard let documentID = album.documentID else {
             print("Error: Cannot edit album without a documentID")
             return
         }
-
+        
         // Convert album to dictionary as Firestore needs [String: Any] to update data
         do {
             let albumData = try Firestore.Encoder().encode(album)
@@ -177,7 +178,7 @@ class AlbumService: ObservableObject {
     // LEAVE_ALBUM
     func leaveAlbum(albumDocumentID: String) {
         guard let userUUID = uuid, userIsAuthenticated else { return }
-
+        
         let albumDocument = db.collection("albums").document(albumDocumentID)
         
         albumDocument.updateData([
@@ -204,7 +205,7 @@ class AlbumService: ObservableObject {
                         print("Error serializing document")
                         continue
                     }
-
+                    
                     // Step 3: Delete the image from Firebase Storage
                     let storageRef = Storage.storage().reference(withPath: post.imagePath)
                     storageRef.delete { error in
@@ -214,7 +215,7 @@ class AlbumService: ObservableObject {
                             print("Image successfully removed from storage")
                         }
                     }
-
+                    
                     // Step 4: Delete the post from Firestore
                     self.db.collection("posts").document(document.documentID).delete() { err in
                         if let err = err {
@@ -226,8 +227,37 @@ class AlbumService: ObservableObject {
                 }
             }
         }
-
+        
     }
+    
+    
+    
+    // METHODS TESTED FOR PROFILEVIEW GRID
+    
+    func fetchFinishedAlbums(forUserWithID uuid: String, completion: @escaping ([Album]) -> Void) {
+        db.collection("albums").whereField("members", arrayContains: uuid).getDocuments { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                completion([])
+                return
+            }
+            
+            var albums: [Album] = []
+            
+            for document in documents {
+                if var album = try? document.data(as: Album.self) {
+                    // Check if a thumbnailURL exists for the album
+                    if let thumbnailURL = album.thumbnailURL {
+                        album.thumbnailURL = thumbnailURL // Set the thumbnailURL for the album
+                    }
+                    
+                    albums.append(album)
+                }
+            }
+            
+            completion(albums)
+        }
+    }
+
 
 
 }

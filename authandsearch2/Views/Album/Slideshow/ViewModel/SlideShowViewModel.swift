@@ -8,7 +8,7 @@ import Photos
 
 class SlideShowViewModel: ObservableObject {
     @Published var currentImageIndex: Int = 0
-    @Published var timer: Timer? = nil
+   // @Published var timer: Timer? = nil
     @Published var showPhotoGrid = false
     @Published var showUserGrid = false
     @Published var playButtonPressed: Bool = false  // New state variable
@@ -23,10 +23,30 @@ class SlideShowViewModel: ObservableObject {
     @Published var isAnimating = false
     
 
-    
+    var timer: Timer? = nil
     var posts: [Post] = [] // Array of Post objects
     
     // Other properties and methods as needed
+    
+    // Start automatic slideshow
+        func startSlideshow() {
+            timer = Timer.scheduledTimer(withTimeInterval: 1.2, repeats: true) { [weak self] _ in
+                guard let self = self else { return }
+                withAnimation {
+                    if self.currentImageIndex < self.imagesForSlideshow.count - 1 {
+                        self.currentImageIndex += 1
+                    } else {
+                        self.currentImageIndex = 0
+                    }
+                }
+            }
+        }
+
+        // Stop slideshow
+        func stopSlideshow() {
+            timer?.invalidate()
+            timer = nil
+        }
     
     // Function to format the image path
     func formattedImagePath(from imagePath: String) -> String {

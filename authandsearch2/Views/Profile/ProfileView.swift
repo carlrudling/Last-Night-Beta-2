@@ -1,75 +1,93 @@
-//
-//  ProfileView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-09-29.
-//
-
 import SwiftUI
 import Kingfisher
 
 struct ProfileView: View {
     @EnvironmentObject var userService: UserService
+    @EnvironmentObject var albumService: AlbumService
     
-    
+    let spacing = 2.0
     var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                /*
-                NavigationLink(destination: EditProfileView()) {
-                    Image(systemName: "gearshape")
-                        .font(.system(size: 25))
-                        .foregroundColor(.black)
-                        .padding(20)
+        NavigationView{
+            ZStack{
+                VStack{
+                    Color.purple
+                        .edgesIgnoringSafeArea(.all)
+                        .frame(width: UIScreen.main.bounds.width, height: 100 )
+                    Spacer()
                 }
-                 */ 
-            }
-            if let userProfile = userService.user, let profileImageURL = userProfile.profileImageURL, profileImageURL != "" {
-                
-                KFImage(URL(string: profileImageURL))
-                    .resizable()
-                    .placeholder {
-                        ProgressView() // Placeholder while loading
+                VStack {
+                    if let userProfile = userService.user, let profileImageURL = userProfile.profileImageURL, profileImageURL != "" {
+                        
+                        KFImage(URL(string: profileImageURL))
+                            .resizable()
+                            .placeholder {
+                                ProgressView() // Placeholder while loading
+                            }
+                            .scaledToFill() // The image will fill the frame and clip the excess parts
+                            .clipShape(Circle())  // This line makes the image circular
+                            .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
+                            .shadow(radius: 10)  // Optional: Adds a shadow
+                            .frame(width: 100, height: 100) // Set both width and height
+                            .padding(.top, 40)
+                        
+                        
+                        
+                        
                     }
-                    .scaledToFill() // The image will fill the frame and clip the excess parts
-                    .clipShape(Circle())  // This line makes the image circular
-                    .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
-                    .shadow(radius: 10)  // Optional: Adds a shadow
-                    .frame(width: 100, height: 100) // Set both width and height
-                    .padding(.top, 80)
-
-
                     
-                
+                    HStack {
+                        Text(userService.user?.firstName ?? "Name")
+                        Text(userService.user?.lastName ?? "")
+                    }
+                    .font(.system(size: 20))
+                    
+                    Text(userService.user?.username ?? "Unknown")
+                        .font(.system(size: 16))
+                        .padding(.bottom, 30)
+                    
+                    
+                    // Grid of albums with thumbnail images
+                    LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: spacing) {
+                        ForEach(albumService.finishedAlbumsWithThumbnails, id: \.uuid) { album in
+                            if let thumbnailURL = album.thumbnailURL, let url = URL(string: thumbnailURL) {
+                                NavigationLink(destination: AlbumSlideshowView(isTabBarHidden: .constant(false), album: album)) {
+                                    KFImage(url)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: UIScreen.main.bounds.width / 3, height: 180)
+                                        .clipped()
+                                        .overlay(
+                                            Image(systemName: "play.circle")
+                                                .resizable()
+                                                .frame(width: 50, height: 50)
+                                                .foregroundColor(.white)
+                                                .clipShape(Circle())
+                                                .opacity(0.8)
+                                        )
+                                }
+                            }
+                        }
+                        
+                    }
+                    Spacer()
+                }
             }
-            
-            HStack {
-                Text(userService.user?.firstName ?? "Name")
-                Text(userService.user?.lastName ?? "")
-            }
-            .font(.system(size: 20))
-            
-            Text(userService.user?.username ?? "Unknown")
-                .font(.system(size: 16))
-            
-            Spacer()
-            
-            Button(action: {
-                userService.signOut()
-            }) {
-                Text("Sign Out")
-                    .font(.system(size: 25))
-                    .frame(width: 150)
-                    .padding()
-                    .background(Color.red)
+            .navigationBarItems(trailing: NavigationLink(destination: EditProfileView()) {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 18))
                     .foregroundColor(.white)
-                    .clipShape(Capsule())
-                    .frame(width: 150)
-                    .padding(.bottom, 80)
+                    .padding(.top, 15)
+            })
+        }
+        .onAppear {
+            albumService.fetchFinishedAlbums(forUserWithID: userService.uuid ?? "") { [weak albumService] albums in
+                albumService?.finishedAlbumsWithThumbnails = albums
+                albums.forEach { album in
+                    print("Album in onAppear ProfileView: \(album.albumName), thumbnailURL: \(album.thumbnailURL ?? "nil")")
+                }
             }
         }
-     
+        
     }
 }
 
@@ -93,12 +111,3 @@ struct FirebaseProfileImageView: View {
     }
 }
 
-/*
-struct ProfileView_Previews: PreviewProvider {
-    @State var profileImage : UIImage
-    static var previews: some View {
-        ProfileView( profileImage: UIImage)
-    }
-}
-
-*/

@@ -3,6 +3,7 @@ import SwiftUI
 
 struct EditProfileView: View {
     @EnvironmentObject var userService: UserService
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var isImagePickerPresented: Bool = false
     @State private var selectedImage: UIImage?
     @State private var uploadError: Error?
@@ -11,6 +12,8 @@ struct EditProfileView: View {
     @State private var lastName = ""
     @State private var isSaving: Bool = false
     
+    // New State property for current profile image
+    @State private var currentProfileImage: UIImage?
     
     // MARK: FUNCTIONS
     private func updateUserProfile() {
@@ -28,49 +31,68 @@ struct EditProfileView: View {
     var body: some View {
         
         VStack{
-            
-            Image(uiImage: selectedImage ?? UIImage())
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 100)
-                .clipShape(Circle())
-                .padding()
-            
-            Button(action: {
-                isImagePickerPresented.toggle()
-            }) {
-                Image(systemName: "camera")
+            ZStack{
+                // Display current or selected profile image
+                Image(uiImage: selectedImage ?? currentProfileImage ?? UIImage())
                     .resizable()
-                    .frame(width: 40, height: 30)
-            }
-            .sheet(isPresented: $isImagePickerPresented) {
-                ImagePicker(selectedImage: $selectedImage)
-            }
-            .padding(.bottom, 30)
-            
-            
-            // Maybe create the ability to change email aswell
-            Text("Current Firstname: \(userService.user?.firstName ?? "Unknown")")
-                .font(Font.custom("Chillax", size: 18))
-            TextField("New Firstname", text: $firstName)
-                .disableAutocorrection(true)
-                .font(Font.custom("Chillax", size: 16))
-                .padding(.bottom, 25)
-            Text("Current Lastname: \(userService.user?.firstName ?? "Unknown")")
-                .font(Font.custom("Chillax", size: 18))
-            TextField("New Lastname", text: $lastName)
-                .disableAutocorrection(true)
-                .font(Font.custom("Chillax", size: 16))
-                .padding(.bottom, 25)
-            Text("Current Username: \(userService.user?.firstName ?? "Unknown")")
-                .font(Font.custom("Chillax", size: 18))
-            TextField("New username", text: $username)
-                .disableAutocorrection(true)
-                .font(Font.custom("Chillax", size: 16))
-                .padding(.bottom, 25)
-            
-            VStack{
+                    .scaledToFill()
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
+                    .frame(width: 100, height: 100)
+                    .padding()
+                    .onAppear {
+                        if let userProfile = userService.user,
+                           let profileImageURL = userProfile.profileImageURL,
+                           let url = URL(string: profileImageURL) {
+                            // Load current profile image
+                            URLSession.shared.dataTask(with: url) { data, _, _ in
+                                if let data = data {
+                                    DispatchQueue.main.async {
+                                        self.currentProfileImage = UIImage(data: data)
+                                    }
+                                }
+                            }.resume()
+                        }
+                    }
                 
+                // Button to open image picker
+                Button(action: {
+                    isImagePickerPresented.toggle()
+                }) {
+                    Image(systemName: "camera")
+                        .resizable()
+                        .frame(width: 40, height: 30)
+                        .foregroundColor(.white)
+                }
+                .sheet(isPresented: $isImagePickerPresented) {
+                    ImagePicker(selectedImage: $selectedImage)
+                }
+            }
+            
+            Form {
+                // Maybe create the ability to change email aswell
+                Text("Current Firstname: \(userService.user?.firstName ?? "Unknown")")
+                    .font(Font.custom("Chillax", size: 18))
+                TextField("New Firstname", text: $firstName)
+                    .disableAutocorrection(true)
+                    .font(Font.custom("Chillax", size: 16))
+                Text("Current Lastname: \(userService.user?.lastName ?? "Unknown")")
+                    .font(Font.custom("Chillax", size: 18))
+                TextField("New Lastname", text: $lastName)
+                    .disableAutocorrection(true)
+                    .font(Font.custom("Chillax", size: 16))
+                Text("Current Username: \(userService.user?.username ?? "Unknown")")
+                    .font(Font.custom("Chillax", size: 18))
+                TextField("New username", text: $username)
+                    .disableAutocorrection(true)
+                    .font(Font.custom("Chillax", size: 16))
+                
+            }
+            .frame(height: 300)
+            .scrollContentBackground(.hidden)
+            Spacer()
+            VStack{
+                Spacer()
                 Button {
                     isSaving = true
                     if let selectedImage = selectedImage {
@@ -91,37 +113,45 @@ struct EditProfileView: View {
                 } label: {
                     Text("Save Changes")
                         .font(.system(size: 20))
+                        .frame(width: 150)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .padding(.bottom, 40)
+                    
                     // Rest of your button styling
                 }
                 .disabled(isSaving) // Disable button while saving
-                
-                Spacer()
                 
                 
                 Button {
                     userService.signOut()
                 } label: {
                     Text("Sign Out")
-                        .font(.system(size: 25))
-                        .frame(width: 150)
+                        .font(.system(size: 18))
+                        .frame(width: 100)
                         .padding()
                         .background(Color.red)
                         .foregroundColor(.white)
                         .clipShape(Capsule())
-                        .padding(.bottom, 80)
+                        .padding(.bottom, 60)
                 }
             }
-
+            
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading:
+                                Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+            Image(systemName: "chevron.backward")
+                .foregroundColor(.white)
+                .padding(12)
+            
+            
+        }
+        )
+        
+        
     }
-    
-    
 }
 
-/*
- struct EditProfileView_Previews: PreviewProvider {
- static var previews: some View {
- EditProfileView(user: user)
- }
- }
- */
