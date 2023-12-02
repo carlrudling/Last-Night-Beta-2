@@ -21,10 +21,14 @@ class AlbumViewModel: ObservableObject {
     @Published var fetchedUsers: [User] = []
     
     private var userService: UserService // Assuming this is your service class
+    
+    private var albumService: AlbumService
 
-    init(userService: UserService) {
-          self.userService = userService
-      }
+        // Initialize viewModel with AlbumService
+        init(userService: UserService, albumService: AlbumService) {
+            self.userService = userService
+            self.albumService = albumService
+        }
     
 var albumValid: Bool {
     !albumName.isEmpty
@@ -43,6 +47,19 @@ var isActive: Bool {
         }
     }
     
+    // Update Album
+        func updateAlbum(originalAlbum: Album, completion: @escaping (Bool) -> Void) {
+            var updatedAlbum = originalAlbum
+            updatedAlbum.albumName = self.albumName
+            updatedAlbum.endDate = self.endDate
+            updatedAlbum.photoLimit = self.photoLimit
+            updatedAlbum.members = self.members
+
+            // Use AlbumService to update the album in Firestore
+            albumService.editAlbum(album: updatedAlbum)
+            completion(true) // Call completion handler
+        }
+    
     func fetchAllUsers() {
         // Clear current fetched users
         fetchedUsers = []
@@ -57,6 +74,8 @@ var isActive: Bool {
             }
         }
     }
+    
+    
     func resetValues() {
             albumName = ""
             photoLimit = 0

@@ -34,13 +34,22 @@ struct AlbumInfoView: View {
                 
                 Text(album.albumName)
                     .foregroundColor(.black)
-                Text(dateFormatter.string(from: album.endDate))
+                    .font(.system(size: 20))
+                Text("Ending: \(dateFormatter.string(from: album.endDate))")
                     .foregroundColor(.black)
-                
+                    .font(.system(size: 12))
+                Text("Scan to join!")
+                    .foregroundColor(.black)
+                    .font(.system(size: 12))
                 ZStack{
-                    openEndedShapeView(height: 110, width: 110)
+                    openEndedShapeView(height: 85, width: 85)
                     QRCodeView(data: album.documentID ?? "")
                 }
+                
+                Spacer()
+                Text("In the album")
+                    .foregroundColor(.black)
+                    .font(.system(size: 12))
             }
             LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
                 ForEach(users, id: \.uuid) { user in
@@ -53,12 +62,19 @@ struct AlbumInfoView: View {
                                 .clipShape(Circle())
                                 .overlay(Circle().stroke(Color.black, lineWidth: 2))
                         } else {
-                            Image(systemName: "person.crop.circle.fill")
-                                .resizable()
-                                .scaledToFill()
-                                .foregroundColor(.gray)
-                                .frame(width: 70, height: 70)
-                                .overlay(Circle().stroke(Color.black, lineWidth: 2))
+                            ZStack{
+                                Image(systemName: "person.crop.circle")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .foregroundColor(.white)
+                                    .frame(width: 70, height: 70)
+                                Image(systemName: "person.crop.circle.fill")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .foregroundColor(.gray)
+                                    .frame(width: 70, height: 70)
+                                    .overlay(Circle().stroke(Color.black, lineWidth: 2))
+                            }
                         }
                         Text(user.username)
                             .font(.caption)
@@ -84,6 +100,14 @@ struct AlbumInfoView: View {
             
             
         }
+        .background(
+            Rectangle()
+                .fill(Color.blue)
+                .frame(width: 600, height: 1500)
+                .rotationEffect(.degrees(-50))
+                .offset(y: 300)
+                .cornerRadius(10), alignment: .center
+        )
         .popup(isPresented: $leaveAlbum) {
             VStack{
                 ZStack { // 4
@@ -220,13 +244,15 @@ struct AlbumInfoView: View {
                         .padding(12)
                 }
             }
-            
-            ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: EditAlbumView(isTabBarHidden: $isTabBarHidden, album: album)) {
-                    Text("Edit")
-                        .font(.system(size: 18))
-                        .foregroundColor(.black)
-                        .padding(.top, 15)
+            if album.creator == userService.uuid {
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: EditAlbumView(isTabBarHidden: $isTabBarHidden, album: album)) {
+                        Text("Edit")
+                            .font(.system(size: 18))
+                            .foregroundColor(.black)
+                            .padding(.top, 15)
+                    }
                 }
             }
         }
@@ -251,13 +277,13 @@ struct openEndedShapeView: View {
             VStack{
                 RoundedRectangle(cornerRadius: 40)
                     .trim(from: 3/4, to: 1)
-                    .stroke(.black, lineWidth: 4)
+                    .stroke(.black, lineWidth: 2)
                     .frame(width: width, height: height)
                     .rotationEffect(.degrees(270))
                 
                 RoundedRectangle(cornerRadius: 40)
                     .trim(from: 3/4, to: 1)
-                    .stroke(.black, lineWidth: 4)
+                    .stroke(.black, lineWidth: 2)
                     .frame(width: width, height: height)
                     .rotationEffect(.degrees(180))
                 
@@ -266,14 +292,14 @@ struct openEndedShapeView: View {
                 
                 RoundedRectangle(cornerRadius: 40)
                     .trim(from: 3/4, to: 1)
-                    .stroke(.black, lineWidth: 4)
+                    .stroke(.black, lineWidth: 2)
                     .frame(width: width, height: height)
                 
                 
                 
                 RoundedRectangle(cornerRadius: 40)
                     .trim(from: 3/4, to: 1)
-                    .stroke(.black, lineWidth: 4)
+                    .stroke(.black, lineWidth: 2)
                     .frame(width: width, height: height)
                     .rotationEffect(.degrees(90))
                 

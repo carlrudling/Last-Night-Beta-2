@@ -1,10 +1,3 @@
-//
-//  QRCodeView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
-
 import SwiftUI
 
 struct QRCodeView: View {
@@ -15,23 +8,31 @@ struct QRCodeView: View {
             .interpolation(.none)
             .resizable()
             .scaledToFit()
-            .frame(width: 200, height: 200)
+            .frame(width: 150, height: 150)
     }
     
     func generateQRCode(from string: String) -> UIImage {
-        let context = CIContext()
-        let filter = CIFilter.qrCodeGenerator()
-        
+        // Get data from the string
         let data = Data(string.utf8)
-        filter.setValue(data, forKey: "inputMessage")
-        
-        if let outputImage = filter.outputImage,
-           let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
-            return UIImage(cgImage: cgImage)
-        } else {
-            return UIImage(systemName: "xmark.circle") ?? UIImage()
-        }
+        // Get a QR CIFilter
+        guard let qrFilter = CIFilter(name: "CIQRCodeGenerator") else { return UIImage() }
+        // Input the data
+        qrFilter.setValue(data, forKey: "inputMessage")
+        // Set the color of the QR code and the background to black and transparent respectively
+        let colorFilter = CIFilter(name: "CIFalseColor", parameters: ["inputImage": qrFilter.outputImage!, "inputColor0": CIColor.black, "inputColor1": CIColor.clear])
+        // Get the output image
+        guard let qrImage = colorFilter?.outputImage else { return UIImage() }
+        // Scale the image
+        let transform = CGAffineTransform(scaleX: 10, y: 10)
+        let scaledQrImage = qrImage.transformed(by: transform)
+        // Create a UIImage from the CIImage
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(scaledQrImage, from: scaledQrImage.extent) else { return UIImage() }
+        return UIImage(cgImage: cgImage)
     }
+
+    
+    
 }
 
 struct QRCodeView_Previews: PreviewProvider {
