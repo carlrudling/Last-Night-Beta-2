@@ -12,9 +12,9 @@ struct HomeView: View {
     @EnvironmentObject var albumService: AlbumService
     @EnvironmentObject var userService: UserService
     @Binding var isTabBarHidden: Bool
-    @State private var isActive : Bool = false
-    
-    
+    @State var createAlbumSheet = false
+    @State var selectedDetent: PresentationDetent = .medium
+
     // Remove button and fetch onAppear
     // Have button that navigates to create album
     // Make list of fetched albums and if pressed nav to view to display all info of that album
@@ -29,25 +29,21 @@ struct HomeView: View {
                     Spacer()
                     // Your SwiftUI content here
                     
-                    NavigationLink(destination: CreateAlbumView(isTabBarHidden: $isTabBarHidden, rootIsActive: $isActive), isActive: $isActive) {
-                        Text("Create Album")
-                            .font(Font.custom("Chillax", size: 20))
-                            .frame(width: 240, height: 60) // Align the button to center horizontally
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
-                            .foregroundColor(.white)
-                            .contentShape(Rectangle())
-                                            // ... styling ...
-                                    }
-                    .isDetailLink(false)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .padding()
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                                        // this sets the screen title in the navigation bar, when the screen is visible
-                            Text("Primary View")
-                                    }
-                                }
+                    Button(action: {
+                        createAlbumSheet.toggle()
+                               }) {
+                                   Text("Create Album")
+                                       .font(Font.custom("Chillax", size: 20))
+                                       .frame(width: 240, height: 60)
+                                       .padding()
+                                       .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
+                                       .foregroundColor(.white)
+                               }
+                               .sheet(isPresented: $createAlbumSheet) {
+                                   NavigationView {
+                                       CreateAlbumView(isTabBarHidden: $isTabBarHidden, createAlbumSheet: $createAlbumSheet)
+                                   }
+                               }
                     ScrollView {
                         VStack {
                             ForEach(albumService.queryResultAlbums, id: \.uuid) { album in
@@ -99,3 +95,23 @@ struct FetchAlbumsView_Previews: PreviewProvider {
 // Maybe it is a carusell to make it look better
 // SwiftUIWheelPicker?
 
+
+/*
+ Button(action: {
+     slideShowViewModel.showUserGrid.toggle()
+ }) {
+     Image(systemName: "person.2.fill")
+         .resizable()
+         .scaledToFit()
+         .frame(height: 30)
+         .foregroundColor(.white)
+         .padding(.vertical)
+ }
+ .sheet(isPresented: $slideShowViewModel.showUserGrid) {
+     UserGridView(selectedDetent: $slideShowViewModel.selectedDetent, album: album)
+         .presentationDetents([.medium, .large], selection: $slideShowViewModel.selectedDetent)
+         .presentationDragIndicator(.hidden)
+         .presentationBackground(.white
+         )
+ }
+*/

@@ -12,7 +12,7 @@ struct AlbumInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var users: [User] = []
     @State private var leaveAlbum: Bool = false
-
+    
     var album: Album
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -30,26 +30,17 @@ struct AlbumInfoView: View {
     var body: some View {
         
         ScrollView(.vertical) {
-            HStack{
-                Spacer()
-                NavigationLink(destination: EditAlbumView(isTabBarHidden: $isTabBarHidden, album: album)) {
-                    Image(systemName: "gearshape")
-                        .font(.system(size: 25))
-                        .foregroundColor(.black)
-                        .padding(20)
-                }
-                
-
-            }
-            Spacer()
             VStack {
-               
+                
                 Text(album.albumName)
                     .foregroundColor(.black)
                 Text(dateFormatter.string(from: album.endDate))
                     .foregroundColor(.black)
-                QRCodeView(data: album.documentID ?? "")
                 
+                ZStack{
+                    openEndedShapeView(height: 110, width: 110)
+                    QRCodeView(data: album.documentID ?? "")
+                }
             }
             LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
                 ForEach(users, id: \.uuid) { user in
@@ -82,20 +73,15 @@ struct AlbumInfoView: View {
                 leaveAlbum = true
             }) {
                 Text("Leave album")
-                    .font(.system(size: 25))
-                    .frame(width: 150)
-                    .padding()
-                    .background(
-                        // Clipped background
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.red)
-                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
-                    )
+                    .font(.system(size: 20))
                     .foregroundColor(.white)
-                    .frame(width: 150)
+                    .padding()
+                    .background(Color.red)
+                    .cornerRadius(8)
+                    .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
                     .padding(.bottom, 80)
             }
-
+            
             
         }
         .popup(isPresented: $leaveAlbum) {
@@ -141,7 +127,7 @@ struct AlbumInfoView: View {
                             .padding(.top, 5)
                             .padding(.horizontal, 20)
                             .multilineTextAlignment(.center)
-                            
+                        
                         Spacer()
                         HStack(spacing: 0) {
                             Button {
@@ -160,7 +146,7 @@ struct AlbumInfoView: View {
                                     .foregroundColor(.black)
                                     .padding(.bottom, 20)
                                     .padding(.horizontal, 10)
-                                   
+                                
                                 
                             }
                             
@@ -185,15 +171,15 @@ struct AlbumInfoView: View {
                                     .foregroundColor(.white)
                                     .padding(.bottom, 20)
                                     .padding(.trailing, 10)
-                                    
-                                    
-
-                                  
-                                    
+                                
+                                
+                                
+                                
+                                
                             }
-
+                            
                         }
-
+                        
                     }
                     .padding(.top, -40) // Make space for the checkmark at the top
                     
@@ -213,30 +199,41 @@ struct AlbumInfoView: View {
             .frame(width: 300, height: 300, alignment: .center)
             //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
             .background(.clear)
-           
-    
-           
-   
-    }
-        .background(.white)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading:
-                                Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
-            Image(systemName: "chevron.backward")
-                .foregroundColor(.black)
-                .padding(12)
+            
+            
+            
             
         }
-        )
         .onAppear{
             isTabBarHidden = false
             albumService.fetchUsersFromAlbum(album: album, userService: userService) { fetchedUsers in
                 users = fetchedUsers // Updating the state with fetched users
             }
         }
+        .background(.white)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                    Image(systemName: "chevron.backward")
+                        .foregroundColor(.black)
+                        .padding(12)
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: EditAlbumView(isTabBarHidden: $isTabBarHidden, album: album)) {
+                    Text("Edit")
+                        .font(.system(size: 18))
+                        .foregroundColor(.black)
+                        .padding(.top, 15)
+                }
+            }
+        }
+
     }
-        
 }
+        
 
 
 
@@ -244,3 +241,46 @@ struct AlbumInfoView: View {
 
 
 
+struct openEndedShapeView: View {
+    @State var height: CGFloat
+    @State var width: CGFloat
+
+    
+    var body: some View {
+        HStack{
+            VStack{
+                RoundedRectangle(cornerRadius: 40)
+                    .trim(from: 3/4, to: 1)
+                    .stroke(.black, lineWidth: 4)
+                    .frame(width: width, height: height)
+                    .rotationEffect(.degrees(270))
+                
+                RoundedRectangle(cornerRadius: 40)
+                    .trim(from: 3/4, to: 1)
+                    .stroke(.black, lineWidth: 4)
+                    .frame(width: width, height: height)
+                    .rotationEffect(.degrees(180))
+                
+            }
+            VStack {
+                
+                RoundedRectangle(cornerRadius: 40)
+                    .trim(from: 3/4, to: 1)
+                    .stroke(.black, lineWidth: 4)
+                    .frame(width: width, height: height)
+                
+                
+                
+                RoundedRectangle(cornerRadius: 40)
+                    .trim(from: 3/4, to: 1)
+                    .stroke(.black, lineWidth: 4)
+                    .frame(width: width, height: height)
+                    .rotationEffect(.degrees(90))
+                
+            }
+            
+            
+           
+        }
+    }
+}

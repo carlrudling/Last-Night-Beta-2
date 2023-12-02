@@ -11,6 +11,7 @@ struct EditProfileView: View {
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var isSaving: Bool = false
+    @Binding var editProfileSheet: Bool
     
     // New State property for current profile image
     @State private var currentProfileImage: UIImage?
@@ -92,7 +93,7 @@ struct EditProfileView: View {
             .scrollContentBackground(.hidden)
             Spacer()
             VStack{
-                Spacer()
+                
                 Button {
                     isSaving = true
                     if let selectedImage = selectedImage {
@@ -109,22 +110,22 @@ struct EditProfileView: View {
                     } else {
                         // If no image is selected, just update the profile
                         updateUserProfile()
+                        editProfileSheet = false
                     }
                 } label: {
                     Text("Save Changes")
-                        .font(.system(size: 20))
-                        .frame(width: 150)
+                        .font(.system(size: 14))
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(8)
-                        .padding(.bottom, 40)
+                        .padding(.top, 10)
                     
                     // Rest of your button styling
                 }
                 .disabled(isSaving) // Disable button while saving
                 
-                
+                Spacer()
                 Button {
                     userService.signOut()
                 } label: {
@@ -135,7 +136,7 @@ struct EditProfileView: View {
                         .background(Color.red)
                         .foregroundColor(.white)
                         .clipShape(Capsule())
-                        .padding(.bottom, 60)
+                        .padding(.bottom, 30)
                 }
             }
             

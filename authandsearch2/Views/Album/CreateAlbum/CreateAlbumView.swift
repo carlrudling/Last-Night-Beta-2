@@ -1,10 +1,3 @@
-//
-//  CreateAlbumView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
-
 import SwiftUI
 
 
@@ -13,27 +6,52 @@ struct CreateAlbumView: View {
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var albumViewModel: AlbumViewModel
     @Binding var isTabBarHidden: Bool
-    @Binding var rootIsActive : Bool
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
-       
-    // add creator to members array
+    @State var showUserGrid = false
+    @Binding var createAlbumSheet: Bool
+    @State private var keyboardIsShown: Bool = false
+    
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
     var body: some View {
-      
+        
+        ZStack {
+            // Invisible layer that will only react when the keyboard is shown
+            if keyboardIsShown {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        // Hide the keyboard when the clear area is tapped
+                        hideKeyboard()
+                        keyboardIsShown = false // Update the state
+                    }
+                    .zIndex(5) // Make sure this is above the form
+                    .frame(width: 300, height: 300)
+                
+            }
+            
+            
             VStack() {
                 Text("Create Album")
                     .font(.system(size: 25))
                     .foregroundColor(.black)
                     .padding(.top, 40)
                     .padding(.bottom, 40)
+                
                 Form {
                     Section(footer: albumViewModel.showErrorMessage ? Text("\(albumViewModel.errorMessage)").foregroundColor(.red) : Text("")){
                         TextField("Album name", text: $albumViewModel.albumName)
                             .disableAutocorrection(true)
                             .font(Font.custom("Chillax", size: 16))
-                                                                    
+                            .onTapGesture {
+                                // When tapping on the TextField, indicate that the keyboard is shown
+                                keyboardIsShown = true
+                            }
                     }
-                
+                    
                     Section(footer: Text("Swipe to change")){
                         Text("Photo limit")
                         Picker("Photo limit", selection: $albumViewModel.photoLimit) {
@@ -53,11 +71,13 @@ struct CreateAlbumView: View {
                 }
                 .frame(height: 500)
                 .scrollContentBackground(.hidden)
-
+                .zIndex(0) // Ensure the form is below the invisible layer
+                
+                
                 Spacer()
                 
                 
-                NavigationLink(destination: AddMembersView(isTabBarHidden: $isTabBarHidden, rootIsActive: $rootIsActive), label: {
+                NavigationLink(destination: AddMembersView(isTabBarHidden: $isTabBarHidden, createAlbumSheet: $createAlbumSheet), label: {
                     HStack{
                         Text("Next")
                             .fontWeight(.semibold)
@@ -70,13 +90,10 @@ struct CreateAlbumView: View {
                     .foregroundColor(.white)
                     .disabled(!albumViewModel.albumValid)
                     .opacity(!albumViewModel.albumValid ? 0.5 : 1)
-                   // .onTapGesture {
-                  //      albumViewModel.validateInputs()
-                   // }
                     
                 })
-                .isDetailLink(false)
             }
+        }
             .background(
                 Rectangle()
                     .fill(Color.blue)
@@ -87,33 +104,23 @@ struct CreateAlbumView: View {
             )
             .padding(.horizontal, 20)
             .navigationBarBackButtonHidden(true)
-                        .navigationBarItems(leading:
-                            Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
-                                Image(systemName: "chevron.backward")
-                                .foregroundColor(.black)
-                                .padding(12)
-                                
-                            }
-                    )
+            .navigationBarItems(leading:
+                                    Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
+                Image(systemName: "chevron.backward")
+                    .foregroundColor(.black)
+                    .padding(12)
+                
+            }
+            )
             .onAppear {
                 albumViewModel.creator = self.userService.uuid ?? ""
                 isTabBarHidden = true
             }
-            .gesture(
-                TapGesture().onEnded {
-                    UIApplication.shared.endEditing()
-                }
-            )
-        
-        
+            .onDisappear{
+                isTabBarHidden = false
+
+            }
+            
         }
     }
-
-
-struct CreateAlbumView_Previews: PreviewProvider {
-    @State static private var isTabBarHidden = false
-    @State static private var rootIsActive = false
-    static var previews: some View {
-        CreateAlbumView(isTabBarHidden: $isTabBarHidden, rootIsActive: $rootIsActive)
-    }
-}
+    

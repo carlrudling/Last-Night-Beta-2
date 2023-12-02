@@ -13,8 +13,11 @@ struct CheckMembersView: View {
     @EnvironmentObject var albumViewModel: AlbumViewModel
     @EnvironmentObject var albumService : AlbumService
     @State private var buttonPressed = false
-    @Binding var shouldPopToRootView : Bool
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Binding var createAlbumSheet: Bool
+    @Binding var isTabBarHidden: Bool
+    
+    
     
     var body: some View {
         VStack{
@@ -30,13 +33,15 @@ struct CheckMembersView: View {
             .scrollContentBackground(.hidden)
             .navigationTitle("Members")
             
-           Spacer()
+            Spacer()
             Button {
                 buttonPressed = true
                 albumViewModel.members.append(self.userService.uuid!)
                 albumService.createAlbum(albumName: albumViewModel.albumName, endDate: albumViewModel.endDate, photoLimit: albumViewModel.photoLimit, members: albumViewModel.members, creator: albumViewModel.creator)
                 albumViewModel.resetValues()
-                shouldPopToRootView = false
+                createAlbumSheet = false
+                isTabBarHidden = false
+                
                 
             } label: {
                 Text("Create Album")
@@ -47,9 +52,9 @@ struct CheckMembersView: View {
                     .foregroundColor(buttonPressed ? .white : Color.black)
                     .clipShape(Capsule())
                 
-
+                
             }
-
+            
         }
         .padding(.horizontal, 20)
         .onAppear {
@@ -65,21 +70,25 @@ struct CheckMembersView: View {
                 .cornerRadius(10), alignment: .center
         )
         .navigationBarBackButtonHidden(true)
-                    .navigationBarItems(leading:
-                        Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
-                            Image(systemName: "chevron.backward")
-                            .foregroundColor(.black)
-                            .padding(12)
-                            
-                        }
-                )
+        .navigationBarItems(leading:
+                                Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
+            Image(systemName: "chevron.backward")
+                .foregroundColor(.black)
+                .padding(12)
+            
+        }
+        )
+        .onDisappear{
+            isTabBarHidden = false
+            
+        }
     }
-
+    
     func delete(at offsets: IndexSet) {
         // Remove the user from fetchedUsers
         let idsToDelete = offsets.map { albumViewModel.fetchedUsers[$0].id }
         albumViewModel.fetchedUsers.remove(atOffsets: offsets)
-
+        
         // Also remove the corresponding UUIDs from members
         albumViewModel.members.removeAll { idsToDelete.contains($0) }
         print("The members: \(albumViewModel.members)")
@@ -87,10 +96,10 @@ struct CheckMembersView: View {
 }
 
 /*
-struct CheckMembersView_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleUserService = UserService()
-        CheckMembersView(shouldPopToRootView: <#Binding<Bool>#>).environmentObject(AlbumViewModel(userService: sampleUserService))
-    }
-}
-*/
+ struct CheckMembersView_Previews: PreviewProvider {
+ static var previews: some View {
+ let sampleUserService = UserService()
+ CheckMembersView().environmentObject(AlbumViewModel(userService: sampleUserService))
+ }
+ }
+ */

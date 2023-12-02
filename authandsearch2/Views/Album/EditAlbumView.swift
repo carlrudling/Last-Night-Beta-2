@@ -52,6 +52,7 @@ struct EditAlbumView: View {
     
     // add creator to members array
     var body: some View {
+        
       
             VStack(alignment: .leading, spacing: 20) {
                 Spacer()

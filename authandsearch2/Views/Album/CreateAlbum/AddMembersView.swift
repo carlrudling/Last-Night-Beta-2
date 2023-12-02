@@ -15,16 +15,8 @@ struct AddMembersView: View {
     @Binding var isTabBarHidden: Bool
     @State private var buttonPressed = false
     @State private var isActive: Bool = false
-    @Binding var rootIsActive : Bool
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
-    
-    
-    init(isTabBarHidden: Binding<Bool>, rootIsActive : Binding<Bool>) {
-        _isTabBarHidden = isTabBarHidden
-        _rootIsActive = rootIsActive
-        
-    }
+    @Binding var createAlbumSheet: Bool
     
     
     var body: some View {
@@ -48,7 +40,7 @@ struct AddMembersView: View {
                 }
             }
             
-            NavigationLink(destination: CheckMembersView(shouldPopToRootView: $rootIsActive), label: {
+            NavigationLink(destination: CheckMembersView(createAlbumSheet: $createAlbumSheet, isTabBarHidden: $isTabBarHidden), label: {
                 HStack{
                     Text("Next")
                         .fontWeight(.semibold)
@@ -61,12 +53,7 @@ struct AddMembersView: View {
                 .foregroundColor(.white)
                 .disabled(!albumViewModel.albumValid)
                 .opacity(!albumViewModel.albumValid ? 0.5 : 1)
-               // .onTapGesture {
-              //      albumViewModel.validateInputs()
-               // }
-                
             })
-            .isDetailLink(false)
             
         }
         .padding(.horizontal, 20)
@@ -104,18 +91,3 @@ struct AddMembersView: View {
 
 
 // Propably you need to create another struct and call it when onTapgesture that displays the member (as selected)
-/*
-
-struct AddMembersView_Previews: PreviewProvider {
-    static var previews: some View {
-        let albumName = Binding<String>(get: { "Sample Album" }, set: { _ in })
-        let endDate = Binding<Date>(get: { Date() }, set: { _ in })
-        let photoLimit = Binding<Int>(get: { 10 }, set: { _ in })
-        let creator = Binding<String>(get: {"Sample creator"}, set: { _ in})
-        let isTabBarHidden = Binding<Bool>(get: { true }, set: { _ in })
-        let shouldPopToRootView = Binding<Bool>(get: { true }, set: { _ in })
-        
-        return AddMembersView(albumName: albumName, endDate: endDate, photoLimit: photoLimit, creator: creator, isTabBarHidden: isTabBarHidden, shouldPopToRootView: shouldPopToRootView)
-    }
-}
-*/

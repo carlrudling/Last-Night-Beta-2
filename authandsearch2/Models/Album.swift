@@ -31,8 +31,3 @@ struct Album: Codable {
    
 }
 
-
-
-// Should Propably add a new variable saying isActive which if album.endDate < Date()  Bool = false
-// If isActive = true Can add posts, can add members, can change settings
-// Navigate to slideshoView if isActive = false

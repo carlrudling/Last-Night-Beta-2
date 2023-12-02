@@ -4,6 +4,7 @@ import Kingfisher
 struct ProfileView: View {
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var albumService: AlbumService
+    @State var editProfileSheet = false
     
     let spacing = 2.0
     var body: some View {
@@ -34,18 +35,32 @@ struct ProfileView: View {
                         
                         
                     }
-                    
+                    else {
+                        Circle()
+                               .frame(width: 100, height: 100)
+                               .foregroundColor(.gray) // You can set any color you like
+                               .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
+                               .shadow(radius: 10) 
+                               .overlay(
+                                   Image(systemName: "person.fill")
+                                       .resizable()
+                                       .frame(width: 50, height: 50)
+                                       .foregroundColor(.white) // You can set the icon color
+                               )
+                               .padding(.top, 40)
+                    }
                     HStack {
                         Text(userService.user?.firstName ?? "Name")
                         Text(userService.user?.lastName ?? "")
                     }
                     .font(.system(size: 20))
+                    .foregroundColor(.black)
                     
                     Text(userService.user?.username ?? "Unknown")
                         .font(.system(size: 16))
-                        .padding(.bottom, 30)
-                    
-                    
+                        .foregroundColor(.black)
+                        .padding(.bottom, 20)
+                                    
                     // Grid of albums with thumbnail images
                     LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: spacing) {
                         ForEach(albumService.finishedAlbumsWithThumbnails, id: \.uuid) { album in
@@ -72,12 +87,25 @@ struct ProfileView: View {
                     Spacer()
                 }
             }
-            .navigationBarItems(trailing: NavigationLink(destination: EditProfileView()) {
-                Image(systemName: "gearshape")
-                    .font(.system(size: 18))
-                    .foregroundColor(.white)
-                    .padding(.top, 15)
-            })
+            .background(Color.white) // Set the background color to white
+            .toolbar {
+                   ToolbarItem(placement: .navigationBarTrailing) {
+                       Button(action: {
+                           editProfileSheet.toggle()
+                       }) {
+                           Text("Edit")
+                               .font(.system(size: 18))
+                               .foregroundColor(.white)
+                               .padding(.top, 15)                       }
+                   }
+               }
+            .sheet(isPresented: $editProfileSheet) {
+                NavigationView {
+                    EditProfileView(editProfileSheet: $editProfileSheet)
+                }
+            }
+
+            
         }
         .onAppear {
             albumService.fetchFinishedAlbums(forUserWithID: userService.uuid ?? "") { [weak albumService] albums in
