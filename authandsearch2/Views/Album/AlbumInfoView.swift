@@ -12,7 +12,7 @@ struct AlbumInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var users: [User] = []
     @State private var leaveAlbum: Bool = false
-    
+    @State private var editAlbumSheeet = false
     var album: Album
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -228,6 +228,11 @@ struct AlbumInfoView: View {
             
             
         }
+        .sheet(isPresented: $editAlbumSheeet) {
+            NavigationView {
+                EditAlbumView(editAlbumSheeet: $editAlbumSheeet, isTabBarHidden: $isTabBarHidden, album: album)
+            }
+        }
         .onAppear{
             isTabBarHidden = false
             albumService.fetchUsersFromAlbum(album: album, userService: userService) { fetchedUsers in
@@ -247,12 +252,16 @@ struct AlbumInfoView: View {
             if album.creator == userService.uuid {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: EditAlbumView(isTabBarHidden: $isTabBarHidden, album: album)) {
+                    Button {
+                        editAlbumSheeet.toggle()
+                    } label: {
                         Text("Edit")
                             .font(.system(size: 18))
                             .foregroundColor(.black)
                             .padding(.top, 15)
                     }
+
+               
                 }
             }
         }

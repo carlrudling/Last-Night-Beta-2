@@ -14,6 +14,7 @@ struct EditAlbumView: View {
     @EnvironmentObject var userService : UserService
     @EnvironmentObject var albumViewModel : AlbumViewModel
     @State private var keyboardIsShown: Bool = false
+    @Binding var editAlbumSheeet: Bool
     
     /*
      @State private var albumName = ""
@@ -100,6 +101,7 @@ struct EditAlbumView: View {
             
             
             VStack() {
+                
                 Form {
                     Section(footer: albumViewModel.showErrorMessage ? Text("\(albumViewModel.errorMessage)").foregroundColor(.red) : Text("")){
                         TextField("Album name", text: $albumViewModel.albumName)
@@ -137,15 +139,16 @@ struct EditAlbumView: View {
                         }
                     }
                     .scrollContentBackground(.hidden)
-                    .navigationTitle("Members")
                 }
-                .frame(height: 500)
                 .scrollContentBackground(.hidden)
                 .zIndex(0) // Ensure the form is below the invisible layer
                 
                 
                 Spacer()
-                
+            }
+            VStack{
+                Spacer()
+
                 Button {
                     confirmationPopup = true
                 } label: {
@@ -153,17 +156,19 @@ struct EditAlbumView: View {
                         .font(Font.custom("Chillax", size: 20))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color.purple)
                         .foregroundColor(.white)
                         .clipShape(Capsule())
                 }
                 .disabled(!isAlbumNameValid) // Disable the button if album name is not valid
-                
-                
-                
-                
+                .zIndex(2) // Ensure the form is below the invisible layer
+                .padding(.bottom, 50)
                 
             }
+                
+                
+                
+           
         }
         .popup(isPresented: $confirmationPopup) {
             VStack{
@@ -235,6 +240,8 @@ struct EditAlbumView: View {
                             
                             Button {
                                 handleUpdate()
+                                albumViewModel.resetValues()
+                                
                             } label: {
                                 Text("Yes")
                                     .font(.system(size: 20))
