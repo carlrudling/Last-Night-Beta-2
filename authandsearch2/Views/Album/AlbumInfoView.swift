@@ -1,11 +1,9 @@
-
-
 import SwiftUI
 import CoreImage.CIFilterBuiltins
 import Kingfisher
 
 struct AlbumInfoView: View {
-    @EnvironmentObject var imageModel : ImageViewModel
+    @EnvironmentObject var imageModel: ImageViewModel
     @Binding var isTabBarHidden: Bool
     @EnvironmentObject var albumService: AlbumService
     @EnvironmentObject var userService: UserService
@@ -13,7 +11,9 @@ struct AlbumInfoView: View {
     @State private var users: [User] = []
     @State private var leaveAlbum: Bool = false
     @State private var editAlbumSheeet = false
+    
     var album: Album
+    
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
@@ -28,7 +28,24 @@ struct AlbumInfoView: View {
     }
     
     var body: some View {
-        
+        ZStack{
+            VStack{
+                HStack{
+                    Spacer()
+                    NavigationLink(
+                        destination: MessagesView(albumID: album.documentID ?? "", albumName: album.albumName) )  {
+                            Image(systemName: "message")
+                                .resizable()
+                                .scaledToFill()
+                                .foregroundColor(.black)
+                                .frame(width: 30, height: 30)
+                        }
+                }
+                Spacer()
+            }
+            .padding(.top, 20)
+            .padding(.trailing, 18)
+            .zIndex(2.0)
         ScrollView(.vertical) {
             VStack {
                 
@@ -97,9 +114,8 @@ struct AlbumInfoView: View {
                     .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
                     .padding(.bottom, 80)
             }
-            
-            
         }
+    }
         .background(
             Rectangle()
                 .fill(Color.blue)
@@ -133,9 +149,7 @@ struct AlbumInfoView: View {
                             Image(systemName: "exclamationmark.circle.fill") // SF Symbol for checkmark
                                 .font(.system(size: 80))
                                 .foregroundColor(.red)
-                            
                                 .zIndex(1) // Ensure it's above the background
-                            
                         }
                         
                         Text("Sure you want to leave?")
@@ -170,8 +184,6 @@ struct AlbumInfoView: View {
                                     .foregroundColor(.black)
                                     .padding(.bottom, 20)
                                     .padding(.horizontal, 10)
-                                
-                                
                             }
                             
                             Button {
@@ -195,11 +207,7 @@ struct AlbumInfoView: View {
                                     .foregroundColor(.white)
                                     .padding(.bottom, 20)
                                     .padding(.trailing, 10)
-                                
-                                
-                                
-                                
-                                
+                               
                             }
                             
                         }
@@ -217,15 +225,11 @@ struct AlbumInfoView: View {
                         .fill(Color.white)
                         .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
                 )
-                
-                
+             
             }
             .frame(width: 300, height: 300, alignment: .center)
             //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
             .background(.clear)
-            
-            
-            
             
         }
         .sheet(isPresented: $editAlbumSheeet) {
@@ -261,15 +265,11 @@ struct AlbumInfoView: View {
                             .padding(.top, 15)
                     }
                     
-                    
                 }
             }
         }
-        
     }
 }
-
-
 
 struct openEndedShapeView: View {
     @State var height: CGFloat
@@ -299,8 +299,6 @@ struct openEndedShapeView: View {
                     .stroke(.black, lineWidth: 2)
                     .frame(width: width, height: height)
                 
-                
-                
                 RoundedRectangle(cornerRadius: 40)
                     .trim(from: 3/4, to: 1)
                     .stroke(.black, lineWidth: 2)
@@ -308,9 +306,6 @@ struct openEndedShapeView: View {
                     .rotationEffect(.degrees(90))
                 
             }
-            
-            
-            
         }
     }
 }

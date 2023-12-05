@@ -19,6 +19,7 @@ struct Album: Codable {
     var creator : String
     var posts : [Post] = []
     var thumbnailURL: String? // Add this line
+    var messages: [Message] = []
 
     
     @DocumentID var documentID: String? // Adding a documentID property

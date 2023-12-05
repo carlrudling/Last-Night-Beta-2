@@ -12,6 +12,7 @@ class UserService: ObservableObject {
     
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
+    
     var uuid: String? {
         auth.currentUser?.uid
     }

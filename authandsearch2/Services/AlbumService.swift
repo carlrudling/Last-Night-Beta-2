@@ -99,6 +99,16 @@ class AlbumService: ObservableObject {
             self.queryResultAlbums = documents.compactMap { queryDocumentSnapshot in
                 try? queryDocumentSnapshot.data(as: Album.self)
             }
+            
+            for var album in self.queryResultAlbums {
+                self.db.collection("albums").document(album.uuid).collection("messages").getDocuments { (snapshot, error) in
+                    guard let documents = snapshot?.documents else {
+                        print("Error fetching messages: \(error?.localizedDescription ?? "")")
+                        return
+                    }
+                    album.messages = documents.compactMap { try? $0.data(as: Message.self) }
+                }
+            }
         }
     }
     
@@ -249,6 +259,25 @@ class AlbumService: ObservableObject {
             completion(albums)
         }
     }
+    
+    
+    // MARK: - Functions Regarding Messages
+    func addMessage(toAlbum albumID: String, message: Message) {
+        // Add the message to the album's messages array locally
+        if let index = queryResultAlbums.firstIndex(where: { $0.uuid == albumID }) {
+            queryResultAlbums[index].messages.append(message)
+        }
+        
+        // Update the album document in Firestore
+        let albumDocument = db.collection("albums").document(albumID)
+        do {
+            let messageData = try Firestore.Encoder().encode(message)
+            albumDocument.updateData(["messages": FieldValue.arrayUnion([messageData])])
+        } catch {
+            print("Error encoding message: \(error)")
+        }
+    }
+    
 }
 
 

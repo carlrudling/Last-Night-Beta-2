@@ -33,6 +33,7 @@ struct authandsearch2App: App {
             let authViewModel = AuthViewModel()
             let albumViewModel = AlbumViewModel(userService: userService, albumService: albumService)
             let slideShowViewModel = SlideShowViewModel()
+          
             ContentView()
                 .environmentObject(userService)
                 .environmentObject(albumService)
@@ -41,6 +42,7 @@ struct authandsearch2App: App {
                 .environmentObject(authViewModel)
                 .environmentObject(albumViewModel)
                 .environmentObject(slideShowViewModel)
+              
                
         }
     }

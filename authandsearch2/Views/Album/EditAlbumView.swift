@@ -65,8 +65,6 @@ struct EditAlbumView: View {
     // add creator to members array
     var body: some View {
         
-        
-        
         ZStack {
             // Invisible layer that will only react when the keyboard is shown
             if keyboardIsShown {
@@ -79,10 +77,8 @@ struct EditAlbumView: View {
                     }
                     .zIndex(5) // Make sure this is above the form
                     .frame(width: 300, height: 300)
-                
             }
-            
-            
+   
             VStack() {
                 
                 Form {
@@ -95,7 +91,6 @@ struct EditAlbumView: View {
                                 keyboardIsShown = true
                             }
                     }
-                    
                     Section(footer: Text("Swipe to change")){
                         Text("Photo limit")
                         Picker("Photo limit", selection: $albumViewModel.photoLimit) {
@@ -110,9 +105,7 @@ struct EditAlbumView: View {
                     }
                     Section{
                         DatePicker("End date", selection: $albumViewModel.endDate, in: Date.now...)
-                        
                     }
-                    
                     List {
                         Section(header: Text("Members"),footer: Text("Swipe left to remove a member")) {
                             ForEach(albumViewModel.fetchedUsers, id: \.id) { user in
@@ -148,10 +141,7 @@ struct EditAlbumView: View {
                 .padding(.bottom, 50)
                 
             }
-            
-            
-            
-            
+           
         }
         .popup(isPresented: $confirmationPopup) {
             VStack{
@@ -180,7 +170,6 @@ struct EditAlbumView: View {
                                 .foregroundColor(.yellow)
                             
                                 .zIndex(1) // Ensure it's above the background
-                            
                         }
                         
                         Text("Sure you want to change?")
@@ -217,8 +206,6 @@ struct EditAlbumView: View {
                                     .foregroundColor(.black)
                                     .padding(.bottom, 20)
                                     .padding(.horizontal, 10)
-                                
-                                
                             }
                             
                             Button {
@@ -239,11 +226,7 @@ struct EditAlbumView: View {
                                     .foregroundColor(.white)
                                     .padding(.bottom, 20)
                                     .padding(.trailing, 10)
-                                
-                                
-                                
-                                
-                                
+                               
                             }
                             
                         }
@@ -261,7 +244,6 @@ struct EditAlbumView: View {
                         .fill(Color.white)
                         .shadow(color: .gray, radius: 6, x: 0, y: 3)
                 )
-                
                 
             }
             .frame(width: 300, height: 300, alignment: .center)
@@ -283,7 +265,6 @@ struct EditAlbumView: View {
             Image(systemName: "chevron.backward")
                 .foregroundColor(.black)
                 .padding(12)
-            
         }
         )
         .onAppear {
@@ -299,7 +280,6 @@ struct EditAlbumView: View {
             
         }
     }
-    
     
 }
 
