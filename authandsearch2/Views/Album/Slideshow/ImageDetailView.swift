@@ -1,10 +1,3 @@
-//
-//  ImageDetailView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
-
 import SwiftUI
 import Kingfisher
 

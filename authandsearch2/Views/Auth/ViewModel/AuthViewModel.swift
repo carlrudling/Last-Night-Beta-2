@@ -1,9 +1,4 @@
-//
-//  AuthViewModel.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-13.
-//
+
 import Foundation
 import SwiftUI
 
@@ -27,7 +22,7 @@ class AuthViewModel: ObservableObject {
         password.count > 5
     }
     
-
+    
     var signInValid: Bool {
         !email.isEmpty &&
         email.contains("@") &&

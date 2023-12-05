@@ -1,10 +1,3 @@
-//
-//  DatePicker.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
-
 import SwiftUI
 
 struct DatepickerView: View {
@@ -19,11 +12,3 @@ struct DatepickerView: View {
         }
     }
 }
-
-/*
-struct DatePickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        DatePickerView()
-    }
-}
-*/

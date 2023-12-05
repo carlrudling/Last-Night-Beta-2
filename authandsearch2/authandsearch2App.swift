@@ -1,10 +1,3 @@
-//
-//  authandsearch2App.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-08-28.
-//
-
 import SwiftUI
 import UIKit
 import FirebaseCore
@@ -53,7 +46,7 @@ struct authandsearch2App: App {
     }
 }
 
-
+// SHOULD IT BE HERE?? THE FIREBASEAPP
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {

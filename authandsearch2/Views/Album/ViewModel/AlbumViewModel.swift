@@ -1,11 +1,3 @@
-//
-//  AlbumViewModel.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-13.
-//
-
-
 import Foundation
 import SwiftUI
 
@@ -14,7 +6,7 @@ class AlbumViewModel: ObservableObject {
     @Published var photoLimit: Int = 0
     @Published var endDate = Date()
     @Published var creator: String = ""
-    @Published var members : [String] = []
+    @Published var members: [String] = []
     @Published var showErrorMessage: Bool = false
     @Published var errorMessage: String = ""
     @Published var keyword = ""

@@ -1,9 +1,4 @@
-//
-//  SignInView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-12.
-//
+
 import SwiftUI
 
 struct SignInView: View {

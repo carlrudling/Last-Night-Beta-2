@@ -26,7 +26,7 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
     @Published var picData = Data(count: 0)
     var qrCodeFoundHandler: ((String) -> Void)?
     
-    
+    // MARK: - Check status, Setup Camera Session
     func Check() {
         let startDate = Date()
         //first checking cameras got permission..
@@ -52,44 +52,14 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
             
         }
         print("Setup: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
-
+        
         
     }
-    
-    func toggleCamera() {
-        session.beginConfiguration()
-        // Remove existing input
-        guard let currentInput = session.inputs.first else { return }
-        session.removeInput(currentInput)
-        
-        // Configure new input
-        let newCameraPosition: AVCaptureDevice.Position = isUsingFrontCamera ? .back : .front
-        guard let newDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: newCameraPosition) else { return }
-        do {
-            let newInput = try AVCaptureDeviceInput(device: newDevice)
-            if session.canAddInput(newInput) {
-                session.addInput(newInput)
-                isUsingFrontCamera.toggle()
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
-        session.commitConfiguration()
-    }
-    
-    func toggleFlash() {
-        isFlashOn.toggle()
-    }
-    
     
     func setUp() {
-        
         DispatchQueue.global(qos: .userInitiated).async {
-            
-            
             let startDate = Date()
             // setting up camera
-            
             do {
                 
                 // setting configs..
@@ -120,11 +90,11 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
                     }
                     
                     if self.session.canAddOutput(self.metadataOutput) {
-                                    self.session.addOutput(self.metadataOutput)
-                                    
-                                    self.metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-                                    self.metadataOutput.metadataObjectTypes = [.qr] // you can add other types you need like: .ean13, .ean8
-                            }
+                        self.session.addOutput(self.metadataOutput)
+                        
+                        self.metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+                        self.metadataOutput.metadataObjectTypes = [.qr] // you can add other types you need like: .ean13, .ean8
+                    }
                     
                     self.session.commitConfiguration()
                     print("Setup: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
@@ -135,12 +105,36 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
         }
         
     }
+    // MARK: - Camera Settings, (Front/Back Camera, Flash etc)
+    func toggleCamera() {
+        session.beginConfiguration()
+        // Remove existing input
+        guard let currentInput = session.inputs.first else { return }
+        session.removeInput(currentInput)
+        
+        // Configure new input
+        let newCameraPosition: AVCaptureDevice.Position = isUsingFrontCamera ? .back : .front
+        guard let newDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: newCameraPosition) else { return }
+        do {
+            let newInput = try AVCaptureDeviceInput(device: newDevice)
+            if session.canAddInput(newInput) {
+                session.addInput(newInput)
+                isUsingFrontCamera.toggle()
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+        session.commitConfiguration()
+    }
     
+    func toggleFlash() {
+        isFlashOn.toggle()
+    }
     
+    // MARK: - TAKE, RETAKE Picture, PhotoOutput, SAVE Image
     // take and retake functions...
-    
     func takePic() {
-   
+        
         DispatchQueue.global(qos: .userInitiated).async {
             let startDate = Date()
             let settings = AVCapturePhotoSettings()
@@ -151,14 +145,14 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
                 Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in
                     self.session.stopRunning()
                     print("TakePic, main Queue: \(Date().timeIntervalSince1970 - startDates.timeIntervalSince1970)")
-
+                    
                 }
             }
             DispatchQueue.main.async {
                 withAnimation { self.isTaken.toggle() }
             }
             print("TakePic, when finished: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
-
+            
         }
     }
     
@@ -167,7 +161,7 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
         DispatchQueue.global(qos: .userInitiated).async {
             self.session.startRunning()
             print("Retake, after starting session again: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
-
+            
             DispatchQueue.main.async {
                 withAnimation{self.isTaken.toggle()}
                 // clearing
@@ -176,7 +170,7 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
             
         }
         print("Retake, when finished: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
-
+        
     }
     
     
@@ -203,11 +197,11 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
     
     
     
-    func savePost(completion: @escaping (Bool, String?) -> Void) {
+    func saveImage(completion: @escaping (Bool, String?) -> Void) {
         let startDate = Date()
         DispatchQueue.global().async {
             
-         
+            
             print(" \(self.picData.count)")
             guard let image = UIImage(data: self.picData) else {
                 print("Failed to create UIImage from picData.")
@@ -232,8 +226,8 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
                         if let error = error {
                             print("Error uploading image: \(error)")
                             completion(false, nil)
-                            print("SavePost: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
-
+                            print("SaveImage: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
+                            
                         } else {
                             // Fetch the download URL
                             imageRef.downloadURL { (url, error) in
@@ -245,7 +239,7 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
                                     } else if let downloadURL = url {
                                         print("Image uploaded and download URL fetched!")
                                         completion(true, downloadURL.absoluteString) // Pass the URL string to the completion handler
-                                        print("SavePost: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
+                                        print("SaveImage: \(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)")
                                         withAnimation(.default) {
                                             self.isSaved = true
                                         }
@@ -261,39 +255,38 @@ class CameraService: NSObject, ObservableObject,  AVCapturePhotoCaptureDelegate,
                 }
             }
             
-        
+            
             
         }
-
+        
     }
     
     
     
     
+    //MARK: - Func for QR-Code Reader
     // FOR QR-Codes, and Metadata
-
+    
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-            if let metadataObject = metadataObjects.first {
-                guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
-                found(code: readableObject.stringValue!)
-            }
+        if let metadataObject = metadataObjects.first {
+            guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
+            found(code: readableObject.stringValue!)
         }
+    }
     
     
     func found(code: String) {
-           print("QR Code Detected: \(code)")
-            qrCodeFoundHandler?(code)
-           // You can add further actions that you want to perform when a QR code is found
-       }
+        print("QR Code Detected: \(code)")
+        qrCodeFoundHandler?(code)
+        // You can add further actions that you want to perform when a QR code is found
+    }
     
     
 }
 
 
-
-//Setting view for preview...
-
-
+//MARK: - Setting up Camera Preview
+//Setting view for preview
 struct CameraPreview: UIViewRepresentable {
     @EnvironmentObject var postService: PostService
     @ObservedObject var camera : CameraService

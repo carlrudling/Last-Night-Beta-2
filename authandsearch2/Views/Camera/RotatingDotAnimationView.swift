@@ -1,9 +1,3 @@
-//
-//  RotatingDotAnimationView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
 
 import SwiftUI
 
@@ -15,14 +9,14 @@ struct RotatingDotAnimationView: View {
     var outerCircleSize: CGFloat
     var innerCircleSize: CGFloat
     var offset: CGFloat
-
+    
     var body: some View {
         ZStack {
             Circle()
                 .stroke(lineWidth: 2)
                 .foregroundColor(.white.opacity(0.5))
                 .frame(width: outerCircleSize, height: outerCircleSize, alignment: .center)
-
+            
             Circle()
                 .fill(.white)
                 .frame(width: innerCircleSize, height: innerCircleSize, alignment: .center)

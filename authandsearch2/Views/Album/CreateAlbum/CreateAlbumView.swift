@@ -1,7 +1,5 @@
 import SwiftUI
 
-
-
 struct CreateAlbumView: View {
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var albumViewModel: AlbumViewModel
@@ -94,33 +92,33 @@ struct CreateAlbumView: View {
                 })
             }
         }
-            .background(
-                Rectangle()
-                    .fill(Color.blue)
-                    .frame(width: 600, height: 1500)
-                    .rotationEffect(.degrees(-50))
-                    .offset(y: 300)
-                    .cornerRadius(10), alignment: .center
-            )
-            .padding(.horizontal, 20)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading:
-                                    Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
-                Image(systemName: "chevron.backward")
-                    .foregroundColor(.black)
-                    .padding(12)
-                
-            }
-            )
-            .onAppear {
-                albumViewModel.creator = self.userService.uuid ?? ""
-                isTabBarHidden = true
-            }
-            .onDisappear{
-                isTabBarHidden = false
-
-            }
+        .background(
+            Rectangle()
+                .fill(Color.blue)
+                .frame(width: 600, height: 1500)
+                .rotationEffect(.degrees(-50))
+                .offset(y: 300)
+                .cornerRadius(10), alignment: .center
+        )
+        .padding(.horizontal, 20)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading:
+                                Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
+            Image(systemName: "chevron.backward")
+                .foregroundColor(.black)
+                .padding(12)
             
         }
+        )
+        .onAppear {
+            albumViewModel.creator = self.userService.uuid ?? ""
+            isTabBarHidden = true
+        }
+        .onDisappear{
+            isTabBarHidden = false
+            
+        }
+        
     }
-    
+}
+

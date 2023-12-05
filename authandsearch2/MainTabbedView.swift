@@ -1,30 +1,3 @@
-//
-//  MainTabbedView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-09-29.
-//
-
-
-enum TabbedItems: Int, CaseIterable{
-    case start = 0
-    case camera
-    case profile
-    
-    
-    var iconName: String{
-        switch self {
-        case .start:
-            return "party.popper"
-        case .camera:
-            return "camera"
-        case .profile:
-            return "person"
-        }
-    }
-}
-
-
 import SwiftUI
 
 struct MainTabbedView: View {
@@ -34,45 +7,45 @@ struct MainTabbedView: View {
     @State var selectedTab = 0
     
     var body: some View {
-
+        
+        
+        ZStack(alignment: .bottom){
+            TabView(selection: $selectedTab) {
+                HomeView(isTabBarHidden: $isTabBarHidden)
+                    .tag(0)
+                
+                CameraView(albumuuid: self.userService.uuid!)
+                    .tag(1)
+                
+                ProfileView()
+                    .tag(2)
+                
+            }
             
-            ZStack(alignment: .bottom){
-                TabView(selection: $selectedTab) {
-                    HomeView(isTabBarHidden: $isTabBarHidden)
-                        .tag(0)
-                    
-                    CameraView(albumuuid: self.userService.uuid!)
-                        .tag(1)
-                    
-                    ProfileView()
-                        .tag(2)
-                    
-                }
-                
-                
-                
-                if !isTabBarHidden {
-                    ZStack{
-                        HStack{
-                            ForEach((TabbedItems.allCases), id: \.self){ item in
-                                Button{
-                                    selectedTab = item.rawValue
-                                } label: {
-                                    CustomTabItem(imageName: item.iconName, isActive: (selectedTab == item.rawValue))
-                                }
+            
+            
+            if !isTabBarHidden {
+                ZStack{
+                    HStack{
+                        ForEach((TabbedItems.allCases), id: \.self){ item in
+                            Button{
+                                selectedTab = item.rawValue
+                            } label: {
+                                CustomTabItem(imageName: item.iconName, isActive: (selectedTab == item.rawValue))
                             }
                         }
-                        .padding(6)
                     }
-                    .frame(width: 190, height: 60)
-                    .background(.purple.opacity(0.2))
-                    .background(.white)
-                    .cornerRadius(30)
-                    .padding(.horizontal, 26)
+                    .padding(6)
                 }
+                .frame(width: 190, height: 60)
+                .background(.purple.opacity(0.2))
+                .background(.white)
+                .cornerRadius(30)
+                .padding(.horizontal, 26)
             }
         }
     }
+}
 
 
 
@@ -102,6 +75,25 @@ extension MainTabbedView{
         .background(isActive ? .purple.opacity(0.4) : .clear)
         .cornerRadius(30)
     }
-  
-
+    
+    
 }
+
+enum TabbedItems: Int, CaseIterable{
+    case start = 0
+    case camera
+    case profile
+    
+    
+    var iconName: String{
+        switch self {
+        case .start:
+            return "party.popper"
+        case .camera:
+            return "camera"
+        case .profile:
+            return "person"
+        }
+    }
+}
+

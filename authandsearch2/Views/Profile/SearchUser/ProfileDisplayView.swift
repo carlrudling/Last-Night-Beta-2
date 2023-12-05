@@ -1,27 +1,18 @@
-//
-//  ProfileBarView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
-
 import SwiftUI
 
 struct ProfileDisplayView: View {
     var user: User
     @EnvironmentObject var albumViewModel: AlbumViewModel
-   // @Binding var members : [String]
     @State private var isTapped: Bool = false
     
     init(user: User) {
         self.user = user
     }
     
-    
     var body: some View {
         
         ZStack {
-        
+            
             Rectangle()
                 .foregroundColor(.white)
                 .onTapGesture {
@@ -30,7 +21,7 @@ struct ProfileDisplayView: View {
                         if let index = albumViewModel.members.firstIndex(of: user.uuid) {
                             albumViewModel.members.remove(at: index)
                         }
-                      //  albumViewModel.members.remove(user.uuid)
+                        //  albumViewModel.members.remove(user.uuid)
                         isTapped.toggle()
                     } else {
                         // Member is not in the array, so add them
@@ -53,7 +44,7 @@ struct ProfileDisplayView: View {
                     Text("\(user.username)")
                         .font(.system(size: 14))
                         .foregroundColor(.black)
-
+                    
                     
                 }
                 Spacer()
@@ -66,8 +57,5 @@ struct ProfileDisplayView: View {
             .padding(.horizontal, 10)
         }
         .frame(width: UIScreen.main.bounds.width - 52, height: 80)
-        
-        
-        
     }
 }

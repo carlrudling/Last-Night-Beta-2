@@ -1,11 +1,3 @@
-//
-//  PopupViewModifier.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-01.
-//
-
-
 import SwiftUI
 
 public struct Popup<PopupContent>: ViewModifier where PopupContent: View {
@@ -16,25 +8,25 @@ public struct Popup<PopupContent>: ViewModifier where PopupContent: View {
         self.view = view
     }
     
-    /// Controls if the sheet should be presented or not
+    // Controls if the sheet should be presented or not
     @Binding var isPresented: Bool
     
-    /// The content to present
+    // The content to present
     var view: () -> PopupContent
     
     // MARK: - Private Properties
-    /// The rect of the hosting controller
+    // The rect of the hosting controller
     @State private var presenterContentRect: CGRect = .zero
     
-    /// The rect of popup content
+    // The rect of popup content
     @State private var sheetContentRect: CGRect = .zero
     
-    /// The offset when the popup is displayed
+    // The offset when the popup is displayed
     private var displayedOffset: CGFloat {
         -presenterContentRect.midY + screenHeight/2
     }
     
-    /// The offset when the popup is hidden
+    // The offset when the popup is hidden
     private var hiddenOffset: CGFloat {
         if presenterContentRect.isEmpty {
             return 1000
@@ -42,7 +34,7 @@ public struct Popup<PopupContent>: ViewModifier where PopupContent: View {
         return screenHeight - presenterContentRect.midY + sheetContentRect.height/2 + 5
     }
     
-    /// The current offset, based on the "presented" property
+    // The current offset, based on the "presented" property
     private var currentOffset: CGFloat {
         return isPresented ? displayedOffset : hiddenOffset
     }
@@ -82,9 +74,9 @@ public struct Popup<PopupContent>: ViewModifier where PopupContent: View {
     }
 }
 
-  
+
 struct FrameGetter: ViewModifier {
-  
+    
     @Binding var frame: CGRect
     
     func body(content: Content) -> some View {
@@ -98,7 +90,7 @@ struct FrameGetter: ViewModifier {
                             self.frame = rect
                         }
                     }
-                return AnyView(EmptyView())
-            })
+                    return AnyView(EmptyView())
+                })
     }
 }

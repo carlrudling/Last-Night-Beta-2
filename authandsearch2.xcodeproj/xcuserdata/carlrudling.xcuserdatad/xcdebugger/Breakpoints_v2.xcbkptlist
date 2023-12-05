@@ -78,10 +78,10 @@
             filePath = "authandsearch2/Views/Album/CreateAlbum/CheckMembersView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
-            landmarkName = "delete(at:)"
-            landmarkType = "7">
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "CheckMembersView"
+            landmarkType = "14">
             <Locations>
                <Location
                   uuid = "0147EF92-19BD-4823-B650-BEB3BD4A1CC4 - 3600cd328dbce956"

@@ -1,10 +1,3 @@
-//
-//  PhotogridView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
-
 import SwiftUI
 import Kingfisher
 
@@ -145,7 +138,7 @@ struct PhotoGridView: View {
                             
                             imageModel.requestPhotoLibraryPermission { granted in
                                 if granted {
-                                    imageModel.saveImagesToLibrary(urls: selectedImageUrls)
+                                    imageModel.saveMultipleImagesToLibrary(urls: selectedImageUrls)
                                     isSaved = true
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                                         withAnimation {

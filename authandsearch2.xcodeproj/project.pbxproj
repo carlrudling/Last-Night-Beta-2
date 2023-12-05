@@ -32,10 +32,8 @@
 		D33D9F602AA072FB00498EA2 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F5F2AA072FB00498EA2 /* Album.swift */; };
 		D33D9F622AA078E700498EA2 /* AlbumService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F612AA078E700498EA2 /* AlbumService.swift */; };
 		D33D9F692AA2BE2500498EA2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F682AA2BE2500498EA2 /* HomeView.swift */; };
-		D33D9F6B2AA5A48A00498EA2 /* FetchAlbumsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */; };
 		D3518C182AE74142007BBD56 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D30F307F2AE718D50015D649 /* GoogleService-Info.plist */; };
 		D3539BE42AABE43D008FB64B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D3539BE32AABE43D008FB64B /* FirebaseStorage */; };
-		D3539BE72AABF955008FB64B /* FirebaseImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3539BE62AABF955008FB64B /* FirebaseImageView.swift */; };
 		D3539BE92AAC0005008FB64B /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3539BE82AAC0005008FB64B /* PostService.swift */; };
 		D3601ECE2B01CC8E007DCCDB /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3601ECD2B01CC8E007DCCDB /* SignInView.swift */; };
 		D38DF04B2AA7167F0001EADD /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38DF04A2AA7167F0001EADD /* Post.swift */; };
@@ -52,8 +50,6 @@
 		D3DF7B2E2AFC2E52008A292E /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF7B2D2AFC2E52008A292E /* ImageDetailView.swift */; };
 		D3DF7B312AFC2F94008A292E /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF7B302AFC2F94008A292E /* QRCodeView.swift */; };
 		D3DF7B342AFC30C8008A292E /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF7B332AFC30C8008A292E /* RoundedCorner.swift */; };
-		D3DF7B362AFC3465008A292E /* DatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF7B352AFC3465008A292E /* DatePicker.swift */; };
-		D3DF7B382AFC3808008A292E /* PhotoLimitSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF7B372AFC3808008A292E /* PhotoLimitSelector.swift */; };
 		D3DF7B3A2AFC3B00008A292E /* CustomBackButton+Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF7B392AFC3B00008A292E /* CustomBackButton+Modifiers.swift */; };
 		D3F5B0CD2AC7C544007CCC0E /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0CC2AC7C544007CCC0E /* EditProfileView.swift */; };
 		D3F5B0CF2AC7C575007CCC0E /* MainTabbedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */; };
@@ -89,8 +85,6 @@
 		D33D9F5F2AA072FB00498EA2 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		D33D9F612AA078E700498EA2 /* AlbumService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumService.swift; sourceTree = "<group>"; };
 		D33D9F682AA2BE2500498EA2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAlbumsModel.swift; sourceTree = "<group>"; };
-		D3539BE62AABF955008FB64B /* FirebaseImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseImageView.swift; sourceTree = "<group>"; };
 		D3539BE82AAC0005008FB64B /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 		D3601ECD2B01CC8E007DCCDB /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		D38DF04A2AA7167F0001EADD /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -107,8 +101,6 @@
 		D3DF7B2D2AFC2E52008A292E /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
 		D3DF7B302AFC2F94008A292E /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		D3DF7B332AFC30C8008A292E /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
-		D3DF7B352AFC3465008A292E /* DatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePicker.swift; sourceTree = "<group>"; };
-		D3DF7B372AFC3808008A292E /* PhotoLimitSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLimitSelector.swift; sourceTree = "<group>"; };
 		D3DF7B392AFC3B00008A292E /* CustomBackButton+Modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomBackButton+Modifiers.swift"; sourceTree = "<group>"; };
 		D3F5B0CC2AC7C544007CCC0E /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
 		D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbedView.swift; sourceTree = "<group>"; };
@@ -234,7 +226,6 @@
 				D33D9F4C2A9D2A6200498EA2 /* UserService.swift */,
 				D33D9F5D2A9D3F4800498EA2 /* UsersLookupViewModel.swift */,
 				D33D9F612AA078E700498EA2 /* AlbumService.swift */,
-				D33D9F6A2AA5A48A00498EA2 /* FetchAlbumsModel.swift */,
 				D38DF04C2AAAF2510001EADD /* CameraService.swift */,
 				D3539BE82AAC0005008FB64B /* PostService.swift */,
 				D300B39D2AC76E1E00CA7F3B /* ImageViewModel.swift */,
@@ -277,8 +268,6 @@
 			children = (
 				D3A096DC2AF36D3800859604 /* Popup */,
 				D3F5B0E92AE37DFE007CCC0E /* Utils */,
-				D3F5B0E02AE37558007CCC0E /* animations */,
-				D3539BE62AABF955008FB64B /* FirebaseImageView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -354,8 +343,6 @@
 			children = (
 				D3F5B0D02AC7F7CD007CCC0E /* ImagePicker.swift */,
 				D3DF7B302AFC2F94008A292E /* QRCodeView.swift */,
-				D3DF7B352AFC3465008A292E /* DatePicker.swift */,
-				D3DF7B372AFC3808008A292E /* PhotoLimitSelector.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -366,13 +353,6 @@
 				D3DF7B332AFC30C8008A292E /* RoundedCorner.swift */,
 			);
 			path = Shapes;
-			sourceTree = "<group>";
-		};
-		D3F5B0E02AE37558007CCC0E /* animations */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = animations;
 			sourceTree = "<group>";
 		};
 		D3F5B0E92AE37DFE007CCC0E /* Utils */ = {
@@ -473,8 +453,6 @@
 				D3F5B0EB2AE37E0D007CCC0E /* Colors.swift in Sources */,
 				D3DF7B312AFC2F94008A292E /* QRCodeView.swift in Sources */,
 				D33D9F622AA078E700498EA2 /* AlbumService.swift in Sources */,
-				D33D9F6B2AA5A48A00498EA2 /* FetchAlbumsModel.swift in Sources */,
-				D3539BE72AABF955008FB64B /* FirebaseImageView.swift in Sources */,
 				D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */,
 				D3DF7B2C2AFC2E00008A292E /* UserGridView.swift in Sources */,
 				D300B39E2AC76E1E00CA7F3B /* ImageViewModel.swift in Sources */,
@@ -494,7 +472,6 @@
 				D3DF7B262AFC0692008A292E /* View+Modifiers.swift in Sources */,
 				D3F5B0D32AC81373007CCC0E /* ProfileView.swift in Sources */,
 				D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */,
-				D3DF7B382AFC3808008A292E /* PhotoLimitSelector.swift in Sources */,
 				D3B4CF622B042BAC003C66DD /* CheckMembersView.swift in Sources */,
 				D33D9F692AA2BE2500498EA2 /* HomeView.swift in Sources */,
 				D33287DC2B1831AD008D1F45 /* CarouselView.swift in Sources */,
@@ -502,7 +479,6 @@
 				D32665522AFCAEF100A098A6 /* AddMembersView.swift in Sources */,
 				D33D9F4B2A9D2A4600498EA2 /* User.swift in Sources */,
 				D33D9F602AA072FB00498EA2 /* Album.swift in Sources */,
-				D3DF7B362AFC3465008A292E /* DatePicker.swift in Sources */,
 				D3A096E92AF96A3400859604 /* EditAlbumView.swift in Sources */,
 				D3F5B0CD2AC7C544007CCC0E /* EditProfileView.swift in Sources */,
 				D326655E2AFCB15C00A098A6 /* AlbumPickerView.swift in Sources */,

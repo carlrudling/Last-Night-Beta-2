@@ -1,10 +1,3 @@
-//
-//  EditAlbumView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-06.
-//
-
 import SwiftUI
 
 
@@ -14,18 +7,8 @@ struct EditAlbumView: View {
     @EnvironmentObject var userService : UserService
     @EnvironmentObject var albumViewModel : AlbumViewModel
     @State private var keyboardIsShown: Bool = false
-    @Binding var editAlbumSheeet: Bool
-    
-    /*
-     @State private var albumName = ""
-     @State private var endDate = Date()
-     @State private var photoLimit = 0
-     @State private var members : [String] = []
-     @State private var creator : String = ""
-     @State private var users: [User] = []
-     */
     @State var confirmationPopup = false
-    
+    @Binding var editAlbumSheeet: Bool
     @Binding var isTabBarHidden: Bool
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
@@ -148,7 +131,7 @@ struct EditAlbumView: View {
             }
             VStack{
                 Spacer()
-
+                
                 Button {
                     confirmationPopup = true
                 } label: {
@@ -165,10 +148,10 @@ struct EditAlbumView: View {
                 .padding(.bottom, 50)
                 
             }
-                
-                
-                
-           
+            
+            
+            
+            
         }
         .popup(isPresented: $confirmationPopup) {
             VStack{
@@ -312,6 +295,7 @@ struct EditAlbumView: View {
         }
         .onDisappear{
             isTabBarHidden = false
+            albumViewModel.resetValues()
             
         }
     }

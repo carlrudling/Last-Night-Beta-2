@@ -1,9 +1,3 @@
-//
-//  AlbumPickerView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
 
 import SwiftUI
 
@@ -14,7 +8,7 @@ struct AlbumPickerView: View {
     @State private var showList = false  // State variable to control visibility of list
     @Binding var selectedAlbumID: String
     
-   
+    
     
     var body: some View {
         VStack {

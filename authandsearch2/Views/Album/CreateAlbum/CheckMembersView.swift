@@ -1,10 +1,3 @@
-//
-//  CheckMembersView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-14.
-//
-
 import Foundation
 import SwiftUI
 
@@ -94,12 +87,3 @@ struct CheckMembersView: View {
         print("The members: \(albumViewModel.members)")
     }
 }
-
-/*
- struct CheckMembersView_Previews: PreviewProvider {
- static var previews: some View {
- let sampleUserService = UserService()
- CheckMembersView().environmentObject(AlbumViewModel(userService: sampleUserService))
- }
- }
- */

@@ -1,10 +1,3 @@
-//
-//  PhotoLimitSelector.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
-
 import SwiftUI
 
 struct PhotoLimitSelector: View {
@@ -33,41 +26,3 @@ struct PhotoLimitSelector: View {
         
     }
 }
-
-/*
-enum photoLimity: CaseIterable, Identifiable {
-    
-    case None, ten, fifteen, twenty
-    
-    var id: Self { self }
-    
-    var description: String {
-        
-        switch self {
-        case .None:
-            return "0"
-        case .ten:
-            return "10"
-        case .fifteen:
-            return "15"
-        case .twenty:
-            return "20"
-        }
-    }
-    
-    var intValue: Int {
-        
-        switch self {
-        case .None:
-            return 0
-        case .ten:
-            return 10
-        case .fifteen:
-            return 15
-        case .twenty:
-            return 20
-        }
-        
-    }
-}
-*/

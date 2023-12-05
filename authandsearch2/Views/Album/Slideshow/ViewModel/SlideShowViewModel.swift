@@ -8,7 +8,7 @@ import Photos
 
 class SlideShowViewModel: ObservableObject {
     @Published var currentImageIndex: Int = 0
-   // @Published var timer: Timer? = nil
+    // @Published var timer: Timer? = nil
     @Published var showPhotoGrid = false
     @Published var showUserGrid = false
     @Published var playButtonPressed: Bool = false  // New state variable
@@ -22,31 +22,31 @@ class SlideShowViewModel: ObservableObject {
     @Published var errorMessage = false
     @Published var isAnimating = false
     
-
+    
     var timer: Timer? = nil
     var posts: [Post] = [] // Array of Post objects
     
     // Other properties and methods as needed
     
     // Start automatic slideshow
-        func startSlideshow() {
-            timer = Timer.scheduledTimer(withTimeInterval: 1.2, repeats: true) { [weak self] _ in
-                guard let self = self else { return }
-                withAnimation {
-                    if self.currentImageIndex < self.imagesForSlideshow.count - 1 {
-                        self.currentImageIndex += 1
-                    } else {
-                        self.currentImageIndex = 0
-                    }
+    func startSlideshow() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1.2, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            withAnimation {
+                if self.currentImageIndex < self.imagesForSlideshow.count - 1 {
+                    self.currentImageIndex += 1
+                } else {
+                    self.currentImageIndex = 0
                 }
             }
         }
-
-        // Stop slideshow
-        func stopSlideshow() {
-            timer?.invalidate()
-            timer = nil
-        }
+    }
+    
+    // Stop slideshow
+    func stopSlideshow() {
+        timer?.invalidate()
+        timer = nil
+    }
     
     // Function to format the image path
     func formattedImagePath(from imagePath: String) -> String {
@@ -257,7 +257,7 @@ class SlideShowViewModel: ObservableObject {
             let rotatedViewBox = UIView(frame: CGRect(origin: .zero, size: size))
             rotatedViewBox.transform = CGAffineTransform(rotationAngle: angle)
             let rotatedSize = rotatedViewBox.frame.size
-
+            
             UIGraphicsBeginImageContext(rotatedSize)
             if let bitmap = UIGraphicsGetCurrentContext() {
                 bitmap.translateBy(x: rotatedSize.width / 2, y: rotatedSize.height / 2)
@@ -270,7 +270,7 @@ class SlideShowViewModel: ObservableObject {
         }
         return newImage
     }
-
+    
     
     func flipImageHorizontally(image: UIImage) -> UIImage {
         UIGraphicsBeginImageContext(image.size)
@@ -294,16 +294,16 @@ class SlideShowViewModel: ObservableObject {
             completion(.failure(CustomError.videoProcessingFailed))
             return
         }
-
+        
         // Add the video track to the composition
         try? compositionTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: asset.duration), of: assetTrack, at: CMTime.zero)
-
+        
         
         let watermarkSize = CGSize(width: watermarkImage.size.width, height: watermarkImage.size.height)
         let videoSize = CGSize(width: assetTrack.naturalSize.width, height: assetTrack.naturalSize.height)
         let marginRight = 20.0 // Margin from the right edge
         let marginTop = 20.0 // Margin from the top
-
+        
         let watermarkPosition = CGPoint(
             x: videoSize.width - watermarkSize.width - marginRight,
             y: videoSize.height - watermarkSize.height - marginTop
@@ -314,23 +314,23 @@ class SlideShowViewModel: ObservableObject {
         watermarkLayer.contents = watermarkImage.cgImage
         watermarkLayer.frame = CGRect(origin: watermarkPosition, size: watermarkSize)
         watermarkLayer.opacity = 0.7
-
+        
         // Create a layer for the video
         let videoLayer = CALayer()
         videoLayer.frame = CGRect(x: 0, y: 0, width: assetTrack.naturalSize.width, height: assetTrack.naturalSize.height)
-
+        
         // Create a parent layer and add the video and watermark layers
         let parentLayer = CALayer()
         parentLayer.frame = CGRect(x: 0, y: 0, width: assetTrack.naturalSize.width, height: assetTrack.naturalSize.height)
         parentLayer.addSublayer(videoLayer)
         parentLayer.addSublayer(watermarkLayer)
-
+        
         // Create a video composition
         let videoComposition = AVMutableVideoComposition()
         videoComposition.renderSize = assetTrack.naturalSize
         videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
         videoComposition.animationTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videoLayer, in: parentLayer)
-
+        
         // Create and add instruction
         let instruction = AVMutableVideoCompositionInstruction()
         instruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: asset.duration)
@@ -343,20 +343,20 @@ class SlideShowViewModel: ObservableObject {
         if FileManager.default.fileExists(atPath: outputURL.path) {
             try? FileManager.default.removeItem(at: outputURL)
         }
-
         
-
+        
+        
         // Export the video
         guard let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) else {
             completion(.failure(CustomError.videoExportFailed))
             return
         }
-
+        
         exporter.videoComposition = videoComposition
-
+        
         exporter.outputURL = outputURL
         exporter.outputFileType = .mp4
-
+        
         exporter.exportAsynchronously {
             DispatchQueue.main.async {
                 switch exporter.status {
@@ -370,8 +370,8 @@ class SlideShowViewModel: ObservableObject {
             }
         }
     }
-
-
+    
+    
     func createAndWatermarkVideo(images: [UIImage], watermarkImage: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
         createVideoFromImages(images: images, fps: 30) { result in
             switch result {
@@ -409,9 +409,9 @@ class SlideShowViewModel: ObservableObject {
             }
         }
     }
-
-
-
+    
+    
+    
     
     
 }

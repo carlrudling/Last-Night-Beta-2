@@ -1,9 +1,3 @@
-//
-//  CarouselView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-29.
-//
 
 import SwiftUI
 

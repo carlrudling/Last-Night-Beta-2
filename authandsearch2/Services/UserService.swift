@@ -22,7 +22,8 @@ class UserService: ObservableObject {
         user != nil && userIsAuthenticated
     }
     
-    // Firebase Auth Functions
+    // MARK: - Firebase Auth Functions
+    // SIGN IN
     func signIn(email: String, password: String) {
         auth.signIn(withEmail: email, password: password) { [weak self] result, error in
             guard result != nil, error == nil else { return }
@@ -32,7 +33,7 @@ class UserService: ObservableObject {
             
         }
     }
-    
+    // SIGN UP
     func signUp(username: String, email: String, firstName: String, lastName: String, password: String, profileImage: String, profileImageURL: String) {
         auth.createUser(withEmail: email, password: password) { [weak self] result, error in
             guard result != nil, error == nil else { return }
@@ -42,7 +43,7 @@ class UserService: ObservableObject {
             }
         }
     }
-    
+    //SIGN OUT
     func signOut() {
         do {
             try auth.signOut()
@@ -52,7 +53,20 @@ class UserService: ObservableObject {
         }
     }
     
-    // Firestore Functions for User Data
+    //Check the user's authentication status
+    func checkAuthenticationStatus() {
+        if auth.currentUser != nil {
+            // User is signed in, sync their data
+            self.sync()
+        } else {
+            // No user is signed in
+            self.user = nil
+        }
+    }
+    
+    // MARK: - User Data Functions
+    
+    //Sync User Data from Firestore
     private func sync() {
         guard userIsAuthenticated else { return }
         db.collection("users").document(self.uuid!).getDocument { (document, error) in
@@ -64,7 +78,7 @@ class UserService: ObservableObject {
             }
         }
     }
-    
+    //Add a new user to Firestore
     private func add(_ user: User) {
         guard userIsAuthenticated else { return }
         do {
@@ -76,7 +90,7 @@ class UserService: ObservableObject {
             print("Error adding: \(error)")
         }
     }
-    
+    //Update the existing user's data in the Firestore
     private func update() {
         guard userIsAuthenticatedAndSynced else { return }
         do {
@@ -88,15 +102,6 @@ class UserService: ObservableObject {
         }
     }
     
-    func checkAuthenticationStatus() {
-        if auth.currentUser != nil {
-            // User is signed in, sync their data
-            self.sync()
-        } else {
-            // No user is signed in
-            self.user = nil
-        }
-    }
     
     // FETCH_USER
     func fetchUser(by uuid: String, completion: @escaping (User?) -> Void) {
@@ -106,16 +111,16 @@ class UserService: ObservableObject {
                 // These values might be optional, so it's okay to assign nil if they don't exist
                 let profileImage = data["profileImage"] as? String ?? ""
                 let profileImageURL = data["profileImageURL"] as? String ?? ""
-
+                
                 
                 self.fetchedUser = User(
-                                uuid: data["uuid"] as! String,
-                                username: data["username"] as! String,
-                                firstName: data["firstName"] as! String,
-                                lastName: data["lastName"] as! String,
-                                profileImage: profileImage,
-                                profileImageURL: profileImageURL
-                            )
+                    uuid: data["uuid"] as! String,
+                    username: data["username"] as! String,
+                    firstName: data["firstName"] as! String,
+                    lastName: data["lastName"] as! String,
+                    profileImage: profileImage,
+                    profileImageURL: profileImageURL
+                )
                 completion(self.fetchedUser) // Call the completion handler here
             } else {
                 print("User not found \(error?.localizedDescription ?? "")")
@@ -123,11 +128,10 @@ class UserService: ObservableObject {
             }
         }
     }
-
     
     
+    // MARK: - Profile Image & User Info update
     // RESIZE_IMAGES
-   
     func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage? {
         let size = image.size
         let widthRatio  = targetSize.width  / size.width
@@ -145,7 +149,6 @@ class UserService: ObservableObject {
     }
     
     
-    
     // UPLOAD_PROFILE_IMAGES
     func uploadProfileImage(_ image: UIImage, completion: @escaping (Error?) -> Void) {
         guard userIsAuthenticated, let uuid = uuid else {
@@ -153,19 +156,19 @@ class UserService: ObservableObject {
             completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "User is not authenticated or UUID is missing"]))
             return
         }
-
+        
         let imageUUID = UUID().uuidString
         let storageRef = Storage.storage().reference().child("profile_images/\(imageUUID).jpg")
-
+        
         guard let resizedImage = resizeImage(image: image, targetSize: CGSize(width: 200, height: 200)),
               let imageData = resizedImage.jpegData(compressionQuality: 0.8) else {
             completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "Image resizing or compression failed"]))
             return
         }
-
+        
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
-
+        
         // Upload the image data to Firebase Storage
         storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
             print("putData callback called")
@@ -174,7 +177,7 @@ class UserService: ObservableObject {
                 completion(error)
                 return
             }
-
+            
             // Image uploaded, now get the download URL
             storageRef.downloadURL { (url, error) in
                 if let error = error {
@@ -182,12 +185,12 @@ class UserService: ObservableObject {
                     completion(error)
                     return
                 }
-
+                
                 guard let downloadURL = url else {
                     completion(NSError(domain: "UserViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "Could not retrieve download URL"]))
                     return
                 }
-
+                
                 // Update the user's document in Firestore with the download URL
                 self.db.collection("users").document(uuid).updateData([
                     "profileImageURL": downloadURL.absoluteString
@@ -200,15 +203,13 @@ class UserService: ObservableObject {
             }
         }
     }
-        
-        func fetchImageDownloadURL(imagePath: String, completion: @escaping (URL?) -> Void) {
-            let storageRef = Storage.storage().reference().child(imagePath)
-            storageRef.downloadURL { (url, error) in
-                completion(url)
-            }
-            
-            
+    //Fetch the Image URL to display via KingFisher
+    func fetchImageDownloadURL(imagePath: String, completion: @escaping (URL?) -> Void) {
+        let storageRef = Storage.storage().reference().child(imagePath)
+        storageRef.downloadURL { (url, error) in
+            completion(url)
         }
+    }
     
     // UPDATE_USER_PROFILE
     func updateUserProfile(firstName: String, lastName: String, username: String, completion: @escaping (Error?) -> Void) {
@@ -258,8 +259,8 @@ class UserService: ObservableObject {
             completion(nil)
         }
     }
-
-        
-        
-    }
+    
+    
+    
+}
 

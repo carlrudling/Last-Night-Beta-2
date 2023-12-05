@@ -260,26 +260,21 @@ struct AlbumInfoView: View {
                             .foregroundColor(.black)
                             .padding(.top, 15)
                     }
-
-               
+                    
+                    
                 }
             }
         }
-
+        
     }
 }
-        
-
-
-
-
 
 
 
 struct openEndedShapeView: View {
     @State var height: CGFloat
     @State var width: CGFloat
-
+    
     
     var body: some View {
         HStack{
@@ -315,7 +310,7 @@ struct openEndedShapeView: View {
             }
             
             
-           
+            
         }
     }
 }

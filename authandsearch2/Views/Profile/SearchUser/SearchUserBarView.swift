@@ -1,10 +1,3 @@
-//
-//  SearchBarView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
-
 import SwiftUI
 
 struct SearchUserBarView: View {
@@ -30,10 +23,3 @@ struct SearchUserBarView: View {
     }
 }
 
-/*
-struct SearchBarView_Previews: PreviewProvider {
-    static var previews: some View {
-        SearchBarView()
-    }
-}
-*/

@@ -30,13 +30,7 @@ struct QRCodeView: View {
         guard let cgImage = context.createCGImage(scaledQrImage, from: scaledQrImage.extent) else { return UIImage() }
         return UIImage(cgImage: cgImage)
     }
-
     
     
-}
-
-struct QRCodeView_Previews: PreviewProvider {
-    static var previews: some View {
-        QRCodeView(data: "Hello")
-    }
+    
 }

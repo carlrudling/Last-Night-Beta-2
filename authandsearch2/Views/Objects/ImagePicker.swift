@@ -1,10 +1,3 @@
-//
-//  ImagePicker.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-09-29.
-//
-
 import Foundation
 import SwiftUI
 
@@ -22,7 +15,7 @@ class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerContro
         parent.presentationMode.wrappedValue.dismiss()
     }
 }
-
+// MARK: - Pick Images from photoLibrary
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var selectedImage: UIImage?
     @Environment(\.presentationMode) var presentationMode

@@ -1,10 +1,3 @@
-//
-//  CameraView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-09-07.
-//
-
 import SwiftUI
 import AVFoundation
 import FirebaseFirestoreSwift
@@ -21,7 +14,7 @@ struct CameraView: View {
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var albumService: AlbumService
     
-  
+    
     
     
     func handleQRCode(_ qrCode: String) {
@@ -34,7 +27,7 @@ struct CameraView: View {
                 // Update UI to show error message
                 print("There was an error adding the user to the album.")
                 addToAlbumError = true
-               
+                
             }
         }
     }
@@ -54,15 +47,15 @@ struct CameraView: View {
                     })
                 VStack{
                     AlbumPickerView(selectedAlbumID: $selectedAlbumID)
-                 
-                        Text("You need to select an album!")
-                            .bold()
-                            .foregroundColor(.red)
-                            .padding(.top, 10)
-                            .offset(y: checkCorrectAlbumID ? 0 : -30)
-                            .opacity(checkCorrectAlbumID ? 1.0 : 0.0)
-                            .scaleEffect(checkCorrectAlbumID ? 1.0 : 0.7)
-                           
+                    
+                    Text("You need to select an album!")
+                        .bold()
+                        .foregroundColor(.red)
+                        .padding(.top, 10)
+                        .offset(y: checkCorrectAlbumID ? 0 : -30)
+                        .opacity(checkCorrectAlbumID ? 1.0 : 0.0)
+                        .scaleEffect(checkCorrectAlbumID ? 1.0 : 0.7)
+                    
                     
                     
                     Spacer()
@@ -84,19 +77,19 @@ struct CameraView: View {
                                     }
                                     // Setting a timer to revert checkCorrectAlbumID after 3 seconds
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                            withAnimation(){
-                                                checkCorrectAlbumID = false
-                                            }
+                                        withAnimation(){
+                                            checkCorrectAlbumID = false
                                         }
-                                        return
+                                    }
+                                    return
                                     
                                 }
                                 
-                                      camera.isSaving = true
+                                camera.isSaving = true
                                 
-                                  
+                                
                                 DispatchQueue.global(qos: .userInteractive).async {
-                                    camera.savePost { success, imageURL in
+                                    camera.saveImage { success, imageURL in
                                         if success, let imageURL = imageURL {
                                             DispatchQueue.main.async {
                                                 camera.reTake() // UI-related task, should be on the main thread
@@ -108,7 +101,7 @@ struct CameraView: View {
                                     }
                                 }
                             }
-
+                                   
                                    , label: {
                                 
                                 if camera.isSaving {
@@ -116,18 +109,18 @@ struct CameraView: View {
                                     
                                 } else if camera.isSaved {
                                     ZStack {
-                                                // Drawing the circle
-                                                Circle()
-                                                    .fill(Color.green) // Fill circle with green color
-                                                    .frame(width: 65, height: 65) // Change this value to resize your circle
-                                                
-                                                // Placing the checkmark inside the circle
-                                                Image(systemName: "checkmark") // SF Symbol for checkmark
-                                                    .resizable()
-                                                    .foregroundColor(.white) // Making checkmark white
-                                                    .scaledToFit()
-                                                    .frame(width: 30, height: 30) // Change this value to resize your checkmark
-                                            }
+                                        // Drawing the circle
+                                        Circle()
+                                            .fill(Color.green) // Fill circle with green color
+                                            .frame(width: 65, height: 65) // Change this value to resize your circle
+                                        
+                                        // Placing the checkmark inside the circle
+                                        Image(systemName: "checkmark") // SF Symbol for checkmark
+                                            .resizable()
+                                            .foregroundColor(.white) // Making checkmark white
+                                            .scaledToFit()
+                                            .frame(width: 30, height: 30) // Change this value to resize your checkmark
+                                    }
                                 } else if !camera.isSaving && !camera.isSaved {
                                     Text("Save")
                                         .foregroundColor(.black)
@@ -182,12 +175,12 @@ struct CameraView: View {
                                         withAnimation(){
                                             checkCorrectAlbumID = false
                                         }}, label: {
-                                        Image(systemName: "xmark")
-                                            .foregroundColor(.white)
-                                            .padding()
-                                            .background(Color.black.opacity(0.5))
-                                            .clipShape(Circle())
-                                    })
+                                            Image(systemName: "xmark")
+                                                .foregroundColor(.white)
+                                                .padding()
+                                                .background(Color.black.opacity(0.5))
+                                                .clipShape(Circle())
+                                        })
                                 }
                             }
                             // Toggle to frontCamera
@@ -283,11 +276,11 @@ struct CameraView: View {
                 .frame(width: 300, height: 300, alignment: .center)
                 //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
                 .background(.clear)
-               
-       
-        
-       
-        }
+                
+                
+                
+                
+            }
             .popup(isPresented: $addToAlbumSuccess) {
                 VStack{
                     ZStack { // 4
@@ -352,11 +345,11 @@ struct CameraView: View {
                 .frame(width: 300, height: 300, alignment: .center)
                 //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
                 .background(.clear)
-               
-       
-        
-       
-        }
+                
+                
+                
+                
+            }
             .popup(isPresented: $addToAlbumError) {
                 VStack{
                     ZStack { // 4
@@ -421,15 +414,15 @@ struct CameraView: View {
                 .frame(width: 300, height: 300, alignment: .center)
                 //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
                 .background(.clear)
-               
-       
+                
+                
             }
         }
         .onAppear(perform: {
             camera.Check()
             camera.qrCodeFoundHandler = handleQRCode // Setting the handler when the view appears
-    })
+        })
         
     }
 }
-                               
+

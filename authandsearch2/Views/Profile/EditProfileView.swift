@@ -1,6 +1,5 @@
 
 import SwiftUI
-
 struct EditProfileView: View {
     @EnvironmentObject var userService: UserService
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>

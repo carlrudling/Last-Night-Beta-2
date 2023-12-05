@@ -1,11 +1,3 @@
-//
-//  AlbumViewModel.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-08-30.
-//
-
-
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
@@ -40,6 +32,7 @@ class AlbumService: ObservableObject {
     var albumUUid = UUID().uuidString
     
     
+    //MARK: - CREATE ALBUM
     // ADD_ALBUM
     private func addAlbum(_ album: Album) {
         guard userIsAuthenticated else {return}
@@ -96,7 +89,7 @@ class AlbumService: ObservableObject {
         }
     }
     
-    
+    //MARK: - FETCH, EDIT & UPDATE ALBUMS
     func fetchAlbums(forUserWithID uuid: String) {
         db.collection("albums").whereField("members", arrayContains: uuid).getDocuments { querySnapshot, error in
             guard let documents = querySnapshot?.documents, error == nil else {
@@ -147,7 +140,7 @@ class AlbumService: ObservableObject {
         }
     }
     
-    
+    //MARK: - Fetch Users, Leave Album & Remove Posts
     func fetchUsersFromAlbum(album: Album, userService: UserService, completion: @escaping ([User]) -> Void) {
         // An array to hold the fetched User objects
         var fetchedUsers: [User] = []
@@ -231,9 +224,8 @@ class AlbumService: ObservableObject {
     }
     
     
-    
+    // MARK: - FUNC FOR FINISHED ALBUMS
     // METHODS TESTED FOR PROFILEVIEW GRID
-    
     func fetchFinishedAlbums(forUserWithID uuid: String, completion: @escaping ([Album]) -> Void) {
         db.collection("albums").whereField("members", arrayContains: uuid).getDocuments { querySnapshot, error in
             guard let documents = querySnapshot?.documents else {
@@ -257,9 +249,6 @@ class AlbumService: ObservableObject {
             completion(albums)
         }
     }
-
-
-
 }
 
 

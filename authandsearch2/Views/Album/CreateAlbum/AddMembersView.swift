@@ -1,15 +1,8 @@
-//
-//  AddMembersView.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-11-08.
-//
-
 import SwiftUI
 
 struct AddMembersView: View {
     @EnvironmentObject var userService: UserService
-    @EnvironmentObject var albumService : AlbumService
+    @EnvironmentObject var albumService: AlbumService
     @EnvironmentObject var albumViewModel: AlbumViewModel
     @StateObject var usersLookup = UsersLookupViewModel()
     @Binding var isTabBarHidden: Bool
@@ -66,17 +59,17 @@ struct AddMembersView: View {
                 .cornerRadius(10), alignment: .center
         )
         
-      
+        
         .navigationBarBackButtonHidden(true)
-                    .navigationBarItems(leading:
-                        Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
-                            Image(systemName: "chevron.backward")
-                            .foregroundColor(.black)
-                            .padding(12)
-                           
-                          
-                        }
-                )
+        .navigationBarItems(leading:
+                                Button(action: { self.presentationMode.wrappedValue.dismiss()}) {
+            Image(systemName: "chevron.backward")
+                .foregroundColor(.black)
+                .padding(12)
+            
+            
+        }
+        )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear{
             isTabBarHidden = true
@@ -88,6 +81,3 @@ struct AddMembersView: View {
     }
     
 }
-
-
-// Propably you need to create another struct and call it when onTapgesture that displays the member (as selected)
