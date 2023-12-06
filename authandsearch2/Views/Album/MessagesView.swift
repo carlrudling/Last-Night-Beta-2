@@ -44,10 +44,12 @@ struct MessagesView: View {
                         ScrollView {
                             ForEach(messagesService.messages, id: \.id) { message in
                                 if let sender = userDictionary[message.senderID] {
+                                    let profileImageURL = sender.profileImageURL // This might be nil, an empty string, or a valid URL
+                                    
                                     MessageBubble(
                                         message: message,
                                         senderUsername: sender.username,
-                                        senderProfileImageURL: sender.profileImageURL,
+                                        senderProfileImageURL: profileImageURL,
                                         isCurrentUser: message.senderID == userService.uuid
                                     )
                                 }

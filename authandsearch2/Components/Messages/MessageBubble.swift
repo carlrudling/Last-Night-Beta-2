@@ -39,10 +39,10 @@ struct MessageBubble: View {
                     .frame(width: 30, height: 30)
                     .clipShape(Circle())
             } else {
-                // Fallback to default icon when URL is nil, empty, or non-existent
                 Image(systemName: "person.circle.fill")
                     .resizable()
                     .scaledToFill()
+                    .foregroundColor(.gray) // You can set any color you like
                     .frame(width: 30, height: 30)
                     .clipShape(Circle())
             }
