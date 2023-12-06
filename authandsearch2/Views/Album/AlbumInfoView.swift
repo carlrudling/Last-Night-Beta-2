@@ -33,7 +33,7 @@ struct AlbumInfoView: View {
                 HStack{
                     Spacer()
                     NavigationLink(
-                        destination: MessagesView(albumID: album.documentID ?? "", albumName: album.albumName) )  {
+                        destination: MessagesView(albumID: album.documentID ?? "", albumName: album.albumName, users: users) )  {
                             Image(systemName: "message")
                                 .resizable()
                                 .scaledToFill()

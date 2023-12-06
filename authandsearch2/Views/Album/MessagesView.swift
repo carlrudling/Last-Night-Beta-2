@@ -3,13 +3,17 @@ import SwiftUI
 struct MessagesView: View {
     @StateObject var messagesService: MessagesService
     @State private var albumName: String
+    @State private var userDictionary: [String: User] = [:]
+    
     @EnvironmentObject var userService: UserService
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     
-    init(albumID: String, albumName: String) {
+    
+    init(albumID: String, albumName: String, users: [User]) {
         _messagesService = StateObject(wrappedValue: MessagesService(albumID: albumID))
-        self._albumName = State(initialValue: albumName) // Correct initialization of albumName
+        self._albumName = State(initialValue: albumName)
+        self._userDictionary = State(initialValue: Dictionary(uniqueKeysWithValues: users.map { ($0.uuid, $0) }))
     }
     
     var body: some View {
@@ -18,10 +22,14 @@ struct MessagesView: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         ForEach(messagesService.messages, id: \.id) { message in
-                            MessageBubble(
-                                message: message,
-                                isCurrentUser: message.senderID == userService.uuid // You need to provide the current user's ID here
-                            )
+                            if let sender = userDictionary[message.senderID] {
+                                MessageBubble(
+                                    message: message,
+                                    senderUsername: sender.username,
+                                    senderProfileImageURL: sender.profileImageURL,
+                                    isCurrentUser: message.senderID == userService.uuid
+                                )
+                            }
                         }
                     }
                     .padding(.top, 10)
@@ -61,10 +69,5 @@ struct MessagesView: View {
     }
 }
 
-struct MessagesView_Previews: PreviewProvider {
-    static var previews: some View {
-        MessagesView(albumID: "dummyAlbumID", albumName: "Dummy Album Name")
-    }
-}
 
 
