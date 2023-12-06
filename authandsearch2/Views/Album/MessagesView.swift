@@ -4,7 +4,8 @@ struct MessagesView: View {
     @StateObject var messagesService: MessagesService
     @State private var albumName: String
     @State private var userDictionary: [String: User] = [:]
-    
+    @State private var keyboardIsShown: Bool = false
+
     @EnvironmentObject var userService: UserService
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
@@ -16,37 +17,60 @@ struct MessagesView: View {
         self._userDictionary = State(initialValue: Dictionary(uniqueKeysWithValues: users.map { ($0.uuid, $0) }))
     }
     
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
     var body: some View {
-        VStack {
+        
+        
+        ZStack {
+            // Invisible layer that will only react when the keyboard is shown
+            if keyboardIsShown {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        // Hide the keyboard when the clear area is tapped
+                        hideKeyboard()
+                        keyboardIsShown = false // Update the state
+                    }
+                    .zIndex(5) // Make sure this is above the form
+                    .frame(width: 300, height: 300)
+                
+            }
             VStack {
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        ForEach(messagesService.messages, id: \.id) { message in
-                            if let sender = userDictionary[message.senderID] {
-                                MessageBubble(
-                                    message: message,
-                                    senderUsername: sender.username,
-                                    senderProfileImageURL: sender.profileImageURL,
-                                    isCurrentUser: message.senderID == userService.uuid
-                                )
+                VStack {
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            ForEach(messagesService.messages, id: \.id) { message in
+                                if let sender = userDictionary[message.senderID] {
+                                    MessageBubble(
+                                        message: message,
+                                        senderUsername: sender.username,
+                                        senderProfileImageURL: sender.profileImageURL,
+                                        isCurrentUser: message.senderID == userService.uuid
+                                    )
+                                }
+                            }
+                        }
+                        .padding(.top, 10)
+                        .background(.white)
+                        .cornerRadius(30, corners: [.topLeft, .topRight])
+                        .onChange(of: messagesService.lastMessageId) { id in
+                            withAnimation{
+                                proxy.scrollTo(id, anchor: .bottom)
                             }
                         }
                     }
-                    .padding(.top, 10)
-                    .background(.white)
-                    .cornerRadius(30, corners: [.topLeft, .topRight])
-                    .onChange(of: messagesService.lastMessageId) { id in
-                        withAnimation{
-                            proxy.scrollTo(id, anchor: .bottom)
-                        }
-                    }
                 }
+                .background(Color(.purple))
+                
+                MessageField(messagesService: messagesService)
+                    .onTapGesture {
+                        keyboardIsShown = true
+                    }
+                
             }
-            .background(Color(.purple))
-            
-            MessageField(messagesService: messagesService)
-            
-            
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline) // Set the display mode to inline

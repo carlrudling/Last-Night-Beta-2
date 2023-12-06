@@ -17,7 +17,12 @@ struct EditProfileView: View {
     
     // MARK: FUNCTIONS
     private func updateUserProfile() {
-        userService.updateUserProfile(firstName: firstName, lastName: lastName, username: "@\(username)") { error in
+        // Use existing values if fields are empty
+        let newFirstName = firstName.isEmpty ? userService.user?.firstName : firstName
+        let newLastName = lastName.isEmpty ? userService.user?.lastName : lastName
+        let newUsername = username.isEmpty ? userService.user?.username : "@\(username)"
+        
+        userService.updateUserProfile(firstName: newFirstName ?? "", lastName: newLastName ?? "", username: newUsername ?? "") { error in
             if let error = error {
                 print("Failed to update user: \(error.localizedDescription)")
             } else {
@@ -104,6 +109,7 @@ struct EditProfileView: View {
                             } else {
                                 print("Image uploaded successfully")
                                 updateUserProfile()
+                                editProfileSheet = false
                             }
                         }
                     } else {

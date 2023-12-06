@@ -23,6 +23,11 @@ class UserService: ObservableObject {
         user != nil && userIsAuthenticated
     }
     
+    // Public method to refresh user data
+        func refreshUserData() {
+            sync() // Call the existing private sync method
+        }
+    
     // MARK: - Firebase Auth Functions
     // SIGN IN
     func signIn(email: String, password: String) {

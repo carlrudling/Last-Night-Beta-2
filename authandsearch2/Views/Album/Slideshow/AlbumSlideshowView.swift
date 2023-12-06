@@ -5,10 +5,14 @@ import Kingfisher
 struct AlbumSlideshowView: View {
     @EnvironmentObject var imageModel: ImageViewModel
     @EnvironmentObject var slideShowViewModel: SlideShowViewModel
+    @EnvironmentObject var userService: UserService
+    @EnvironmentObject var albumService: AlbumService
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var isTabBarHidden: Bool
     private let availableDetents: [PresentationDetent] = [.medium, .large]
     var album: Album
+    @State private var users: [User] = []
+    
     
     // Function to start the slideshow
     func startSlideshow() {
@@ -28,6 +32,14 @@ struct AlbumSlideshowView: View {
         }
     }
     
+    
+    
+    //Fetch Users
+    private func fetchUsers() {
+        albumService.fetchUsersFromAlbum(album: album, userService: userService) { fetchedUsers in
+            users = fetchedUsers
+        }
+    }
     
     // Function to stop the slideshow
     func stopSlideshow() {
@@ -168,7 +180,14 @@ struct AlbumSlideshowView: View {
                                         }
                                     }
                             }
-                            
+                            NavigationLink(
+                                destination: MessagesView(albumID: album.documentID ?? "", albumName: album.albumName, users: users) )  {
+                                    Image(systemName: "message")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .foregroundColor(.white)
+                                        .frame(width: 30, height: 30)
+                                }
                             
                             
                             Button(action: {
@@ -201,7 +220,7 @@ struct AlbumSlideshowView: View {
                                     .padding(.vertical)
                             }
                             .sheet(isPresented: $slideShowViewModel.showUserGrid) {
-                                UserGridView(selectedDetent: $slideShowViewModel.selectedDetent, album: album)
+                                UserGridView(selectedDetent: $slideShowViewModel.selectedDetent, album: album, users: users)
                                     .presentationDetents([.medium, .large], selection: $slideShowViewModel.selectedDetent)
                                     .presentationDragIndicator(.hidden)
                                     .presentationBackground(.white
@@ -302,6 +321,7 @@ struct AlbumSlideshowView: View {
             slideShowViewModel.posts = album.posts  // Update posts in the ViewModel
             slideShowViewModel.isAnimating = false
             preloadImages()
+            fetchUsers()
             
         }
         .onDisappear {

@@ -7,6 +7,11 @@ struct ProfileView: View {
     @State var editProfileSheet = false
     
     let spacing = 2.0
+    
+    private func refreshProfileData() {
+            userService.refreshUserData()
+        }
+    
     var body: some View {
         NavigationView{
             ZStack{
@@ -99,7 +104,7 @@ struct ProfileView: View {
                         .padding(.top, 15)                       }
                 }
             }
-            .sheet(isPresented: $editProfileSheet) {
+            .sheet(isPresented: $editProfileSheet, onDismiss: refreshProfileData) {
                 NavigationView {
                     EditProfileView(editProfileSheet: $editProfileSheet)
                 }
@@ -114,6 +119,7 @@ struct ProfileView: View {
                     print("Album in onAppear ProfileView: \(album.albumName), thumbnailURL: \(album.thumbnailURL ?? "nil")")
                 }
             }
+            userService.refreshUserData()
         }
         
     }

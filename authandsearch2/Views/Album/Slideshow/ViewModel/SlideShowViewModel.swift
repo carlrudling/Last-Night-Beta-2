@@ -11,6 +11,7 @@ class SlideShowViewModel: ObservableObject {
     // @Published var timer: Timer? = nil
     @Published var showPhotoGrid = false
     @Published var showUserGrid = false
+    @Published var showMessages = false
     @Published var playButtonPressed: Bool = false  // New state variable
     @Published var isLoading: Bool = true
     @Published var imagesForSlideshow: [UIImage] = []

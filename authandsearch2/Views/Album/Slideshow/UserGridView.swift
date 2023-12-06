@@ -2,12 +2,15 @@ import SwiftUI
 import Kingfisher
 
 struct UserGridView: View {
-    @EnvironmentObject var albumService: AlbumService
-    @EnvironmentObject var userService: UserService
-    
     @Binding var selectedDetent: PresentationDetent
-    @State private var users: [User] = [] // State to hold the fetched users
+    private var users: [User] // Use a private variable instead of a state
     var album: Album
+    
+    init(selectedDetent: Binding<PresentationDetent>, album: Album, users: [User]) {
+        self._selectedDetent = selectedDetent
+        self.album = album
+        self.users = users
+    }
     
     var body: some View {
         NavigationView {
@@ -41,10 +44,6 @@ struct UserGridView: View {
             }
         }
         .onAppear {
-            albumService.fetchUsersFromAlbum(album: album, userService: userService) { fetchedUsers in
-                users = fetchedUsers // Updating the state with fetched users
-                    
-            }
             selectedDetent = .medium
         }
     }

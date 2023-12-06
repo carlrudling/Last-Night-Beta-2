@@ -11,12 +11,10 @@ struct MessageBubble: View {
     var body: some View {
         HStack(alignment: .bottom, spacing: 10) {
             if !isCurrentUser {
-                // Profile image on the left for received messages
-                profileImageView
+                profileImageView // Profile image on the left for received messages
             }
             
             VStack(alignment: isCurrentUser ? .trailing : .leading) {
-                // Display the sender's username above the message
                 Text(senderUsername ?? "")
                     .font(.caption)
                     .foregroundColor(.gray)
@@ -25,8 +23,7 @@ struct MessageBubble: View {
             }
             
             if isCurrentUser {
-                // Profile image on the right for sent messages
-                profileImageView
+                profileImageView // Profile image on the right for sent messages
             }
         }
         .frame(maxWidth: .infinity, alignment: isCurrentUser ? .trailing : .leading)
@@ -35,13 +32,14 @@ struct MessageBubble: View {
     
     private var profileImageView: some View {
         Group {
-            if let urlString = senderProfileImageURL, let url = URL(string: urlString) {
+            if let urlString = senderProfileImageURL, !urlString.isEmpty, let url = URL(string: urlString) {
                 KFImage(url)
                     .resizable()
                     .scaledToFill()
                     .frame(width: 30, height: 30)
                     .clipShape(Circle())
             } else {
+                // Fallback to default icon when URL is nil, empty, or non-existent
                 Image(systemName: "person.circle.fill")
                     .resizable()
                     .scaledToFill()
@@ -50,6 +48,7 @@ struct MessageBubble: View {
             }
         }
     }
+
     
     private var messageContentView: some View {
         VStack(alignment: isCurrentUser ? .trailing : .leading) {
@@ -76,7 +75,7 @@ struct MessageBubble_Previews: PreviewProvider {
         MessageBubble(
             message: Message(id: "12345", text: "Hello, this is a message!", senderID: "currentUserID", timestamp: Date()),
             senderUsername: "Sender",
-            senderProfileImageURL: "https://example.com/profile.jpg",
+            senderProfileImageURL: nil, // Or an empty string
             isCurrentUser: false
         )
     }
