@@ -58,11 +58,11 @@ struct ProfileView: View {
                         Text(userService.user?.firstName ?? "Name")
                         Text(userService.user?.lastName ?? "")
                     }
-                    .font(.system(size: 20))
+                    .font(Font.custom("Chillax-Regular", size: 16))
                     .foregroundColor(.black)
                     
                     Text(userService.user?.username ?? "Unknown")
-                        .font(.system(size: 16))
+                        .font(Font.custom("Chillax-Regular", size: 12))
                         .foregroundColor(.black)
                         .padding(.bottom, 20)
                     
@@ -99,7 +99,7 @@ struct ProfileView: View {
                         editProfileSheet.toggle()
                     }) {
                         Text("Edit")
-                            .font(.system(size: 18))
+                            .font(Font.custom("Chillax-Regular", size: 16))
                             .foregroundColor(.white)
                         .padding(.top, 15)                       }
                 }

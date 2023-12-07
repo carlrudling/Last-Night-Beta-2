@@ -11,6 +11,7 @@ struct SearchUserBarView: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.black)
                 TextField("Searching for...", text: $keyword)
+                .font(Font.custom("Chillax-Regular", size: 16))
                 .autocapitalization(.none)
                 .foregroundColor(.black)
 

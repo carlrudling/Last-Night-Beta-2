@@ -13,6 +13,7 @@ struct HomeView: View {
     // Make list of fetched albums and if pressed nav to view to display all info of that album
     
     var body: some View {
+        
         VStack {
             
             
@@ -26,7 +27,7 @@ struct HomeView: View {
                     createAlbumSheet.toggle()
                 }) {
                     Text("Create Album")
-                        .font(Font.custom("Chillax", size: 20))
+                        .font(.custom("Chillax-Medium", size: 20))
                         .frame(width: 240, height: 60)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
@@ -50,6 +51,7 @@ struct HomeView: View {
                                     }
                                 })  {
                                     Text(album.albumName)
+                                        .font(.custom("Chillax-Regular", size: 18))
                                         .frame(width: 240, height: 40)
                                         .padding()
                                         .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))

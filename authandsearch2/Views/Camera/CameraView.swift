@@ -49,7 +49,7 @@ struct CameraView: View {
                     AlbumPickerView(selectedAlbumID: $selectedAlbumID)
                     
                     Text("You need to select an album!")
-                        .bold()
+                        .font(.custom("Chillax-Regular", size: 16))
                         .foregroundColor(.red)
                         .padding(.top, 10)
                         .offset(y: checkCorrectAlbumID ? 0 : -30)
@@ -243,6 +243,7 @@ struct CameraView: View {
                             }
                             
                             Text("Permissions not granted")
+                                .font(.custom("Chillax-Regular", size: 22))
                                 .font(.system(size: 22))
                                 .foregroundColor(.black)
                                 .bold()
@@ -250,7 +251,7 @@ struct CameraView: View {
                                 .padding(.top, 2)
                             
                             Text("To use the camera, you need to allow camera usage in settings.")
-                                .font(.system(size: 16))
+                                .font(.custom("Chillax-Regular", size: 16))
                                 .foregroundColor(.black)
                                 .padding(.top, 10)
                                 .padding(.horizontal, 20)
@@ -319,7 +320,7 @@ struct CameraView: View {
                                 .padding(.top, 2)
                             
                             Text("You've just joined a new album")
-                                .font(.system(size: 18))
+                                .font(.custom("Chillax-Regular", size: 18))
                                 .foregroundColor(.black)
                                 .padding(.top, 10)
                                 .padding(.horizontal, 20)

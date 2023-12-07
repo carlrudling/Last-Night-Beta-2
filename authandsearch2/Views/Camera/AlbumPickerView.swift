@@ -21,7 +21,8 @@ struct AlbumPickerView: View {
                 
                 Text(albumName == "" ? "Select album" : albumName)
                     .foregroundColor(Color.white)
-                
+                    .font(.custom("Chillax-Regular", size: 16))
+
             }
             .frame(width: 180)
             .padding()
@@ -36,6 +37,7 @@ struct AlbumPickerView: View {
                             ForEach(albumService.queryResultAlbums, id: \.uuid) { album in
                                 if album.isActive {
                                     Text(album.albumName)
+                                        .font(.custom("Chillax-Regular", size: 16))
                                         .frame(width: 180)
                                         .padding()
                                         .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))

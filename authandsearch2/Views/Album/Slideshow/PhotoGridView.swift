@@ -115,6 +115,7 @@ struct PhotoGridView: View {
                         }) {
                             HStack {
                                 Text("Create New SlideShow")
+                                    .font(Font.custom("Chillax-Regular", size: 16))
                                     .foregroundColor(.white)
                                     .padding(.leading, 10)
                                 
@@ -158,6 +159,7 @@ struct PhotoGridView: View {
                             
                             HStack {
                                 Text("Download Images")
+                                    .font(Font.custom("Chillax-Regular", size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()

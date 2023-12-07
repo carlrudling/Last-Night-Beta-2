@@ -23,6 +23,8 @@
 		D33287EB2B1EF741008D1F45 /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33287EA2B1EF741008D1F45 /* MessageField.swift */; };
 		D33287ED2B1EF7C9008D1F45 /* MessagesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33287EC2B1EF7C9008D1F45 /* MessagesService.swift */; };
 		D33287EF2B1EF8CB008D1F45 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33287EE2B1EF8CB008D1F45 /* MessagesView.swift */; };
+		D33287F32B226750008D1F45 /* Chillax-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D33287F22B226750008D1F45 /* Chillax-Regular.otf */; };
+		D33287FB2B2270A7008D1F45 /* Chillax-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */; };
 		D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */; };
 		D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */; };
 		D33D9F3E2A9D2A1C00498EA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D33D9F3D2A9D2A1C00498EA2 /* Assets.xcassets */; };
@@ -83,6 +85,9 @@
 		D33287EA2B1EF741008D1F45 /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		D33287EC2B1EF7C9008D1F45 /* MessagesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesService.swift; sourceTree = "<group>"; };
 		D33287EE2B1EF8CB008D1F45 /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
+		D33287F22B226750008D1F45 /* Chillax-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Chillax-Regular.otf"; sourceTree = "<group>"; };
+		D33287F42B2267F9008D1F45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Chillax-Medium.otf"; sourceTree = "<group>"; };
 		D33D9F362A9D2A1A00498EA2 /* authandsearch2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = authandsearch2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = authandsearch2App.swift; sourceTree = "<group>"; };
 		D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -183,6 +188,15 @@
 			path = Messages;
 			sourceTree = "<group>";
 		};
+		D33287F02B2266CF008D1F45 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */,
+				D33287F22B226750008D1F45 /* Chillax-Regular.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		D33D9F2D2A9D2A1A00498EA2 = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +217,8 @@
 		D33D9F382A9D2A1A00498EA2 /* authandsearch2 */ = {
 			isa = PBXGroup;
 			children = (
+				D33287F42B2267F9008D1F45 /* Info.plist */,
+				D33287F02B2266CF008D1F45 /* Fonts */,
 				D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */,
 				D3DF7B242AFC065C008A292E /* Extensions */,
 				D3539BE52AABF938008FB64B /* Components */,
@@ -458,6 +474,8 @@
 			files = (
 				D3518C182AE74142007BBD56 /* GoogleService-Info.plist in Resources */,
 				D33D9F412A9D2A1C00498EA2 /* Preview Assets.xcassets in Resources */,
+				D33287F32B226750008D1F45 /* Chillax-Regular.otf in Resources */,
+				D33287FB2B2270A7008D1F45 /* Chillax-Medium.otf in Resources */,
 				D33D9F3E2A9D2A1C00498EA2 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -648,6 +666,7 @@
 				DEVELOPMENT_TEAM = 45Z98QXDZ5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = authandsearch2/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "\"We need to access the camera to use this app\"";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "\"Hi we need acces to your photos to save images\"";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -681,6 +700,7 @@
 				DEVELOPMENT_TEAM = 45Z98QXDZ5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = authandsearch2/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "\"We need to access the camera to use this app\"";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "\"Hi we need acces to your photos to save images\"";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

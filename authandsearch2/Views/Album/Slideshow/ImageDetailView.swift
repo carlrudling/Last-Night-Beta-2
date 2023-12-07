@@ -36,12 +36,20 @@ struct ImageDetailView: View {
                                 
                                 
                             } else {
-                                Image(systemName: "person.crop.circle.fill")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .foregroundColor(.gray)
-                                    .frame(width: 40, height: 40)
-                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                ZStack{
+                                    Image(systemName: "person.crop.circle")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .foregroundColor(.white)
+                                        .frame(width: 40, height: 40)
+                                    Image(systemName: "person.crop.circle.fill")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .foregroundColor(.gray)
+                                        .frame(width: 40, height: 40)
+                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                }
+                               
                             }
                         }
                         .padding(.leading, 25)
@@ -49,7 +57,7 @@ struct ImageDetailView: View {
                         
                         
                         Text(fetchedUser.username)
-                            .font(.system(size: 18))
+                            .font(Font.custom("Chillax-Regular", size: 16))
                             .foregroundColor(.white)
                         
                         Spacer()
@@ -91,7 +99,7 @@ struct ImageDetailView: View {
                             }
                         }) {
                             Image(systemName: "arrow.down.to.line")
-                                .font(.system(size: 28))
+                                .font(.system(size: 24))
                                 .foregroundColor( isSaved ? .green : .white)
                                 .padding(.horizontal, 20)
                         }

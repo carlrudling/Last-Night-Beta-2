@@ -39,10 +39,10 @@ struct ProfileDisplayView: View {
                     .foregroundColor(.black)
                 VStack(alignment: .leading){
                     Text("\(user.firstName) \(user.lastName)")
-                        .font(.system(size: 20))
+                        .font(Font.custom("Chillax-Regular", size: 16))
                         .foregroundColor(.black)
                     Text("\(user.username)")
-                        .font(.system(size: 14))
+                        .font(Font.custom("Chillax-Regular", size: 12))
                         .foregroundColor(.black)
                     
                     

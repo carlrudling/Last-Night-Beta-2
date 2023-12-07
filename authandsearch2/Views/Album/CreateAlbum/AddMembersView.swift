@@ -36,7 +36,7 @@ struct AddMembersView: View {
             NavigationLink(destination: CheckMembersView(createAlbumSheet: $createAlbumSheet, isTabBarHidden: $isTabBarHidden), label: {
                 HStack{
                     Text("Next")
-                        .fontWeight(.semibold)
+                        .font(Font.custom("Chillax-Regular", size: 16))
                     Image(systemName: "arrow.right")
                 }
                 .frame(width: UIScreen.main.bounds.width - 52, height: 28)

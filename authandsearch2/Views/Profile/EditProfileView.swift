@@ -77,20 +77,20 @@ struct EditProfileView: View {
             Form {
                 // Maybe create the ability to change email aswell
                 Text("Current Firstname: \(userService.user?.firstName ?? "Unknown")")
-                    .font(Font.custom("Chillax", size: 18))
+                    .font(Font.custom("Chillax-Regular", size: 12))
                 TextField("New Firstname", text: $firstName)
                     .disableAutocorrection(true)
-                    .font(Font.custom("Chillax", size: 16))
+                    .font(Font.custom("Chillax-Regular", size: 16))
                 Text("Current Lastname: \(userService.user?.lastName ?? "Unknown")")
-                    .font(Font.custom("Chillax", size: 18))
+                    .font(Font.custom("Chillax-Regular", size: 12))
                 TextField("New Lastname", text: $lastName)
                     .disableAutocorrection(true)
-                    .font(Font.custom("Chillax", size: 16))
+                    .font(Font.custom("Chillax-Regular", size: 16))
                 Text("Current Username: \(userService.user?.username ?? "Unknown")")
-                    .font(Font.custom("Chillax", size: 18))
+                    .font(Font.custom("Chillax-Regular", size: 12))
                 TextField("New username", text: $username)
                     .disableAutocorrection(true)
-                    .font(Font.custom("Chillax", size: 16))
+                    .font(Font.custom("Chillax-Regular", size: 16))
                 
             }
             .frame(height: 300)
@@ -119,7 +119,7 @@ struct EditProfileView: View {
                     }
                 } label: {
                     Text("Save Changes")
-                        .font(.system(size: 14))
+                        .font(Font.custom("Chillax-Regular", size: 14))
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(.white)
@@ -135,7 +135,7 @@ struct EditProfileView: View {
                     userService.signOut()
                 } label: {
                     Text("Sign Out")
-                        .font(.system(size: 18))
+                        .font(Font.custom("Chillax-Regular", size: 18))
                         .frame(width: 100)
                         .padding()
                         .background(Color.red)

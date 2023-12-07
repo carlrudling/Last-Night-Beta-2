@@ -15,16 +15,29 @@ struct CheckMembersView: View {
     var body: some View {
         VStack{
             List {
-                Section(footer: Text("Swipe left to remove a member")) {
+                Section(footer: Text("Swipe left to remove a member")
+                    .font(Font.custom("Chillax-Regular", size: 12))
+) {
                     ForEach(albumViewModel.fetchedUsers, id: \.id) { user in
                         Text(user.username)
+                            .font(Font.custom("Chillax-Regular", size: 20))
+
                     }
                     .onDelete(perform: delete)
                 }
             }
             .frame(height: 500)
             .scrollContentBackground(.hidden)
-            .navigationTitle("Members")
+            .toolbar {
+                          ToolbarItem(placement: .principal) {
+                              Text("Members")
+                                  .font(Font.custom("Chillax-Regular", size: 20))
+                                  .foregroundColor(.black) // Set the color if needed
+                          }
+                      }
+            
+
+            
             
             Spacer()
             Button {
@@ -38,7 +51,7 @@ struct CheckMembersView: View {
                 
             } label: {
                 Text("Create Album")
-                    .font(Font.custom("Chillax", size: 20))
+                    .font(Font.custom("Chillax-Regular", size: 20))
                     .frame(maxWidth: .infinity) // Align the button to center horizontally
                     .padding()
                     .background(buttonPressed ? Color.green : Color.white)

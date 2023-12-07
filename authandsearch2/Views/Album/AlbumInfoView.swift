@@ -11,7 +11,8 @@ struct AlbumInfoView: View {
     @State private var users: [User] = []
     @State private var leaveAlbum: Bool = false
     @State private var editAlbumSheeet = false
-    
+    @State private var countdownText: String = "" // State variable for countdown text
+
     var album: Album
     
     let dateFormatter: DateFormatter = {
@@ -27,97 +28,141 @@ struct AlbumInfoView: View {
         return imagePath
     }
     
+    private func truncatedUsername(_ username: String) -> String {
+        let maxLength = 8
+        if username.count > maxLength {
+            let index = username.index(username.startIndex, offsetBy: maxLength)
+            return String(username[..<index]) + ".."
+        }
+        return username
+    }
+    
+    
+    // Function to update countdown
+        private func updateCountdown() {
+            let currentDate = Date()
+            let endDate = album.endDate
+
+            if currentDate < endDate {
+                let calendar = Calendar.current
+                let components = calendar.dateComponents([.day, .hour, .minute, .second], from: currentDate, to: endDate)
+
+                let days = components.day ?? 0
+                let hours = components.hour ?? 0
+                let minutes = components.minute ?? 0
+                let seconds = components.second ?? 0
+
+                countdownText = "Time remaining: \(days)d \(hours)h \(minutes)m \(seconds)s"
+            } else {
+                countdownText = "Album has ended"
+            }
+        }
+    
+    
     var body: some View {
         ZStack{
             /*
-            VStack{
-                HStack{
-                    Spacer()
-                    NavigationLink(
-                        destination: MessagesView(albumID: album.documentID ?? "", albumName: album.albumName, users: users) )  {
-                            Image(systemName: "message")
-                                .resizable()
-                                .scaledToFill()
-                                .foregroundColor(.black)
-                                .frame(width: 30, height: 30)
-                        }
-                }
-                Spacer()
-            }
-            .padding(.top, 20)
-            .padding(.trailing, 18)
-            .zIndex(2.0)
-            */
-        ScrollView(.vertical) {
-            VStack {
-                
-                Text(album.albumName)
-                    .foregroundColor(.black)
-                    .font(.system(size: 20))
-                Text("Ending: \(dateFormatter.string(from: album.endDate))")
-                    .foregroundColor(.black)
-                    .font(.system(size: 12))
-                Text("Scan to join!")
-                    .foregroundColor(.black)
-                    .font(.system(size: 12))
-                ZStack{
-                    openEndedShapeView(height: 85, width: 85)
-                    QRCodeView(data: album.documentID ?? "")
-                }
-                
-                Spacer()
-                Text("In the album")
-                    .foregroundColor(.black)
-                    .font(.system(size: 12))
-            }
-            LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 2) {
-                ForEach(users, id: \.uuid) { user in
-                    VStack {
-                        if let urlString = user.profileImageURL, let url = URL(string: urlString) {
-                            KFImage(url)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 70, height: 70)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.black, lineWidth: 2))
-                        } else {
-                            ZStack{
-                                Image(systemName: "person.crop.circle")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .foregroundColor(.white)
-                                    .frame(width: 70, height: 70)
-                                Image(systemName: "person.crop.circle.fill")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .foregroundColor(.gray)
-                                    .frame(width: 70, height: 70)
-                                    .overlay(Circle().stroke(Color.black, lineWidth: 2))
-                            }
-                        }
-                        Text(user.username)
-                            .font(.caption)
-                            .foregroundColor(.black)
+             VStack{
+             HStack{
+             Spacer()
+             NavigationLink(
+             destination: MessagesView(albumID: album.documentID ?? "", albumName: album.albumName, users: users) )  {
+             Image(systemName: "message")
+             .resizable()
+             .scaledToFill()
+             .foregroundColor(.black)
+             .frame(width: 30, height: 30)
+             }
+             }
+             Spacer()
+             }
+             .padding(.top, 20)
+             .padding(.trailing, 18)
+             .zIndex(2.0)
+             */
+            ScrollView(.vertical) {
+                VStack {
+                    
+                    Text(album.albumName)
+                        .foregroundColor(.black)
+                        .font(Font.custom("Chillax-Medium", size: 30))
+                        .padding(.bottom, 10)
+                    Text(countdownText)
+                        .font(Font.custom("Chillax-Regular", size: 12))
+                        .foregroundColor(.black)
+                        .font(.system(size: 12))
+                    Text("Scan to join!")
+                        .font(Font.custom("Chillax-Regular", size: 14))
+                        .foregroundColor(.black)
+                        .padding(.top, 20)
+                    ZStack{
+                        openEndedShapeView(height: 85, width: 85)
+                        QRCodeView(data: album.documentID ?? "")
                     }
-                    .padding(5)
+                    
+                    Spacer()
+                    VStack{
+                        Text("In the album")
+                            .foregroundColor(.black)
+                            .font(Font.custom("Chillax-Regular", size: 14))
+                        // Thin line
+                        Rectangle()
+                            .frame(height: 1)
+                            .foregroundColor(.black)
+                            .padding(.vertical, 2)
+                    }
+                    .padding(.top, 20)
+                    .padding(.bottom, -20)
                 }
-            }
-            .padding()
-            
-            Button(action: {
-                leaveAlbum = true
-            }) {
-                Text("Leave album")
-                    .font(.system(size: 20))
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.red)
-                    .cornerRadius(8)
-                    .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
-                    .padding(.bottom, 80)
+               
+                LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4), spacing: 1) {
+                    ForEach(users, id: \.uuid) { user in
+                        VStack {
+                            if let urlString = user.profileImageURL, let url = URL(string: urlString) {
+                                KFImage(url)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 60, height: 60)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(Color.black, lineWidth: 1))
+                            } else {
+                                ZStack{
+                                    Image(systemName: "person.crop.circle")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .foregroundColor(.white)
+                                        .frame(width: 60, height: 60)
+                                    Image(systemName: "person.crop.circle.fill")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .foregroundColor(.gray)
+                                        .frame(width: 60, height: 60)
+                                        .overlay(Circle().stroke(Color.black, lineWidth: 1))
+                                }
+                            }
+                            Text(truncatedUsername(user.username))
+                                .font(.caption)
+                                .foregroundColor(.black)
+                        }
+                        .padding(5)
+                    }
+                }
+                .padding()
+                
+                Button(action: {
+                    leaveAlbum = true
+                }) {
+                    Text("Leave album")
+                        .font(Font.custom("Chillax-Regular", size: 20))
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.red)
+                        .cornerRadius(8)
+                        .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
+                        .padding(.bottom, 80)
+                }
             }
         }
-    }
         .background(
             Rectangle()
                 .fill(Color.blue)
@@ -209,7 +254,7 @@ struct AlbumInfoView: View {
                                     .foregroundColor(.white)
                                     .padding(.bottom, 20)
                                     .padding(.trailing, 10)
-                               
+                                
                             }
                             
                         }
@@ -227,7 +272,7 @@ struct AlbumInfoView: View {
                         .fill(Color.white)
                         .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
                 )
-             
+                
             }
             .frame(width: 300, height: 300, alignment: .center)
             //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
@@ -244,6 +289,11 @@ struct AlbumInfoView: View {
             albumService.fetchUsersFromAlbum(album: album, userService: userService) { fetchedUsers in
                 users = fetchedUsers // Updating the state with fetched users
             }
+            updateCountdown() // Update countdown on appear
+                       let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+                       _ = self.onReceive(timer) { _ in
+                           self.updateCountdown()
+                       }
         }
         .background(.white)
         .navigationBarBackButtonHidden(true)
@@ -262,7 +312,7 @@ struct AlbumInfoView: View {
                         editAlbumSheeet.toggle()
                     } label: {
                         Text("Edit")
-                            .font(.system(size: 18))
+                            .font(Font.custom("Chillax-Regular", size: 16))
                             .foregroundColor(.black)
                             .padding(.top, 15)
                     }
