@@ -33,7 +33,6 @@ struct AlbumSlideshowView: View {
     }
     
     
-    
     //Fetch Users
     private func fetchUsers() {
         albumService.fetchUsersFromAlbum(album: album, userService: userService) { fetchedUsers in
@@ -78,12 +77,55 @@ struct AlbumSlideshowView: View {
                         .background(Color.black.opacity(0.4).edgesIgnoringSafeArea(.all))
                 }
                 
+                //--
+                // Black background
+                Color.black.edgesIgnoringSafeArea(.all)
                 
+                // Carousel view when play button is pressed
+                if slideShowViewModel.playButtonPressed {
+                CarouselView(currentImageIndex: $slideShowViewModel.currentImageIndex,
+                images: slideShowViewModel.imagesForSlideshow)
+                .edgesIgnoringSafeArea(.all)
+                .transition(.opacity)
+                } else {
+                // Play button
+                Button(action: startSlideshow) {
+                Image(systemName: "play.circle")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 100, height: 100)
+                .foregroundColor(.white)
+                }
+                .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+                
+                // Play button and other controls
+                    /*
+                    VStack {
+                        Spacer()
+                        
+                        // Play button to start/stop slideshow
+                        Button(action: {
+                            if slideShowViewModel.timer == nil {
+                                startSlideshow()
+                            } else {
+                                stopSlideshow()
+                            }
+                        }) {
+                            Image(systemName: slideShowViewModel.timer == nil ? "play.circle" : "pause.circle")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                                .foregroundColor(.white)
+                        }
+                    }
+                     */
+                //--
                 // Black background before slideshow starts
+                    /*
                 if !slideShowViewModel.playButtonPressed {
                     Color.black.edgesIgnoringSafeArea(.all)
                 }
-                
+               
                 // Slideshow images
                 if slideShowViewModel.playButtonPressed, slideShowViewModel.imagesForSlideshow.indices.contains(slideShowViewModel.currentImageIndex) {
                     AnyView(Image(uiImage: slideShowViewModel.imagesForSlideshow[slideShowViewModel.currentImageIndex])
@@ -93,7 +135,7 @@ struct AlbumSlideshowView: View {
                     //.transition(.move(edge: .trailing)) // Applying opacity transition
                     
                 }
-                
+                     
                 
                 
                 VStack {
@@ -118,7 +160,9 @@ struct AlbumSlideshowView: View {
                     Spacer()
                 }
                 .edgesIgnoringSafeArea(.all)
-                
+                    */
+                    
+                    
                 // Image Button to see photoGrid
                 
                 HStack {
@@ -227,7 +271,7 @@ struct AlbumSlideshowView: View {
                                     )
                             }
                             
-                            
+                        }
                         }
                     }
                 }  }
@@ -335,13 +379,6 @@ struct AlbumSlideshowView: View {
 
 
 
-struct AlbumSlideshowView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dummyAlbum = Album(uuid: "dummy", albumName: "dummy", photoLimit: 0, creator: "dummy")
-        let isTabBarHidden = Binding<Bool>(get: { true }, set: { _ in })
-        AlbumSlideshowView(isTabBarHidden: isTabBarHidden, album: dummyAlbum)
-    }
-}
 
 
 
