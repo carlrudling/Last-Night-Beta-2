@@ -64,8 +64,6 @@ struct AlbumSlideshowView: View {
     
     var body: some View {
         VStack {
-            
-            
             ZStack {
                 
                 // Loading until all Images are fetched
@@ -78,8 +76,7 @@ struct AlbumSlideshowView: View {
                 }
                 
                 //--
-                // Black background
-                Color.black.edgesIgnoringSafeArea(.all)
+              
                 
                 // Carousel view when play button is pressed
                 if slideShowViewModel.playButtonPressed {
@@ -185,7 +182,7 @@ struct AlbumSlideshowView: View {
                                 Image(systemName: "arrow.down.to.line")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 30)
+                                    .frame(height: 20)
                                     .foregroundColor(slideShowViewModel.successMessage ? .green :
                                                         slideShowViewModel.errorMessage ? .red : .white)
                                     .padding(.vertical)
@@ -224,6 +221,7 @@ struct AlbumSlideshowView: View {
                                         }
                                     }
                             }
+                            /*
                             NavigationLink(
                                 destination: MessagesView(albumID: album.documentID ?? "", albumName: album.albumName, users: users) )  {
                                     Image(systemName: "message")
@@ -233,14 +231,14 @@ struct AlbumSlideshowView: View {
                                         .frame(width: 30, height: 30)
                                 }
                             
-                            
+                            */
                             Button(action: {
                                 slideShowViewModel.showPhotoGrid.toggle()
                             }) {
                                 Image(systemName: "photo")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 30)
+                                    .frame(height: 20)
                                     .foregroundColor(.white)
                                     .padding(.vertical)
                             }
@@ -259,7 +257,7 @@ struct AlbumSlideshowView: View {
                                 Image(systemName: "person.2.fill")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 30)
+                                    .frame(height: 20)
                                     .foregroundColor(.white)
                                     .padding(.vertical)
                             }
@@ -275,6 +273,9 @@ struct AlbumSlideshowView: View {
                         }
                     }
                 }  }
+        }
+        .background{
+            Color.black.edgesIgnoringSafeArea(.all)
         }
         .edgesIgnoringSafeArea(.all)
         .navigationBarBackButtonHidden(true)

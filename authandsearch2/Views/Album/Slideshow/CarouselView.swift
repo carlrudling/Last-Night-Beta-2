@@ -15,6 +15,8 @@ struct CarouselView: View {
                     .clipped() // Clip the overflowing parts
                 
             }
+            .edgesIgnoringSafeArea(.all) // Ensure it covers the entire screen
+
         }
         .edgesIgnoringSafeArea(.all) // Ensure it covers the entire screen
         .frame(maxWidth: .infinity, maxHeight: .infinity) // Fill all available space

@@ -29,6 +29,7 @@ struct AlbumInfoView: View {
     
     var body: some View {
         ZStack{
+            /*
             VStack{
                 HStack{
                     Spacer()
@@ -46,6 +47,7 @@ struct AlbumInfoView: View {
             .padding(.top, 20)
             .padding(.trailing, 18)
             .zIndex(2.0)
+            */
         ScrollView(.vertical) {
             VStack {
                 

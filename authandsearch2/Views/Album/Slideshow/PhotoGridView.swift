@@ -26,7 +26,7 @@ struct PhotoGridView: View {
                 } label: {
                     HStack {
                         Spacer() // This will push the button to the right
-                        Image(systemName: "plus")
+                        Image(systemName: selectButtonPressed ? "plus" : "arrow.down.to.line")
                             .resizable()
                             .scaledToFit()
                             .frame(height: 20)
