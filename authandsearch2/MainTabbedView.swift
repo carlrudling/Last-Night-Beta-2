@@ -25,23 +25,26 @@ struct MainTabbedView: View {
             
             
             if !isTabBarHidden {
-                ZStack{
-                    HStack{
-                        ForEach((TabbedItems.allCases), id: \.self){ item in
-                            Button{
-                                selectedTab = item.rawValue
-                            } label: {
-                                CustomTabItem(imageName: item.iconName, isActive: (selectedTab == item.rawValue))
-                            }
+                HStack {
+                    ForEach(TabbedItems.allCases, id: \.self) { item in
+                        Button {
+                            selectedTab = item.rawValue
+                        } label: {
+                            CustomTabItem(imageName: item.iconName, isActive: (selectedTab == item.rawValue))
+                        }
+                        
+                        if item != TabbedItems.allCases.last {
+                            Spacer() // This will push the buttons apart
                         }
                     }
-                    .padding(6)
                 }
-                .frame(width: 190, height: 60)
-                .background(.purple.opacity(0.2))
-                .background(.white)
-                .cornerRadius(30)
                 .padding(.horizontal, 26)
+                .padding(.vertical, 6)
+                .frame(width: UIScreen.main.bounds.width - 60, height: 50) // Adjust the width to the screen width
+                .background(Color.white)
+                .cornerRadius(30)
+                .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 2)
+
             }
         }
     }
@@ -58,23 +61,25 @@ struct MainTabbedView_Previews: PreviewProvider {
 
 extension MainTabbedView{
     
-    func CustomTabItem(imageName: String, isActive: Bool) -> some View{
-        
-        HStack(spacing: 10){
-            Spacer()
+    func CustomTabItem(imageName: String, isActive: Bool) -> some View {
+        // Container for the image and its background
+        ZStack {
+            // Background Circle
+            Circle()
+                .fill(isActive ? Color.darkPurple : .clear)
+                .frame(width: 40, height: 40) // Size of the background circle
+                .shadow(color: isActive ? Color.black.opacity(0.5) : .clear, radius: 5, x: 0, y: 2)
+
+            // Image
             Image(systemName: imageName)
                 .resizable()
                 .renderingMode(.template)
                 .aspectRatio(contentMode: .fit)
-                .foregroundColor(isActive ? .black : .gray)
-                .frame(height: 35)
-            
-            Spacer()
+                .foregroundColor(isActive ? .white : .gray)
+                .frame(width: 25, height: 25) // Size of the image
         }
-        .frame(width: 60, height: 60)
-        .background(isActive ? .purple.opacity(0.4) : .clear)
-        .cornerRadius(30)
     }
+
     
     
 }

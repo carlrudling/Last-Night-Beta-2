@@ -14,24 +14,41 @@ struct HomeView: View {
     
     var body: some View {
         
-        VStack {
-            
-            
             VStack {
-                
-                
-                Spacer()
-                // Your SwiftUI content here
-                
+                Image("Discoball-Homeview2")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 60)
+                    .padding(.top, -220)
+                    .edgesIgnoringSafeArea(.top)
+                    .padding(.bottom, 60)
+                    
                 Button(action: {
                     createAlbumSheet.toggle()
                 }) {
-                    Text("Create Album")
-                        .font(.custom("Chillax-Medium", size: 20))
-                        .frame(width: 240, height: 60)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
-                        .foregroundColor(.white)
+                    ZStack {
+                           // Background with shadow
+                           RoundedRectangle(cornerRadius: 10)
+                               .fill(Color.lightPurple)
+                               .frame(width: 280, height: 80)
+                               .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
+
+                           // Overlay gradient
+                           HStack {
+                               Spacer()
+                               LinearGradient(stops: [
+                                   .init(color: .clear, location: 0.8),
+                                   .init(color: .black.opacity(0.1), location: 1.0),
+                               ], startPoint: .leading, endPoint: .trailing)
+                           }
+                           .frame(width: 280, height: 80)
+                           .cornerRadius(10)
+
+                           // Button Text
+                           Text("Create Album")
+                               .font(.custom("Chillax-Medium", size: 20))
+                               .foregroundColor(.white)
+                       }
                 }
                 .sheet(isPresented: $createAlbumSheet) {
                     NavigationView {
@@ -50,13 +67,31 @@ struct HomeView: View {
                                         AlbumSlideshowView(isTabBarHidden: $isTabBarHidden, album: album)
                                     }
                                 })  {
-                                    Text(album.albumName)
-                                        .font(.custom("Chillax-Regular", size: 18))
-                                        .frame(width: 240, height: 40)
-                                        .padding()
-                                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
-                                        .contentShape(Rectangle())
-                                        .foregroundColor(.white)
+                                    
+                                    ZStack {
+                                           // Background with shadow
+                                           RoundedRectangle(cornerRadius: 10)
+                                               .fill(Color.darkPurple)
+                                               .frame(width: 280, height: 80)
+                                               .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
+
+                                           // Overlay gradient
+                                           HStack {
+                                               Spacer()
+                                               LinearGradient(stops: [
+                                                   .init(color: .clear, location: 0.8),
+                                                   .init(color: .black.opacity(0.1), location: 1.0),
+                                               ], startPoint: .leading, endPoint: .trailing)
+                                           }
+                                           .frame(width: 280, height: 80)
+                                           .cornerRadius(10)
+
+                                           // Button Text
+                                           Text(album.albumName)
+                                                .font(.custom("Chillax-Regular", size: 18))
+                                               .foregroundColor(.white)
+                                       }
+                                    
                                 }
                             
                         }
@@ -64,11 +99,23 @@ struct HomeView: View {
                     }
                 }
                 .frame(maxHeight: 300)
-                .padding(.bottom, 120)
                 
                 
             }
-        }
+            .background(
+                ZStack{
+                    Color.backgroundWhite.edgesIgnoringSafeArea(.all)
+                    
+                    // First Layer: Custom Background View
+                    BackgroundView()
+                        .frame(width: 600, height: 1500)
+                        .rotationEffect(.degrees(-50))
+                        .offset(y: 300)
+                }
+                )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .edgesIgnoringSafeArea(.all)
+        
         
         
         

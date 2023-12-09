@@ -7,22 +7,29 @@ struct SignUpView: View {
     var body: some View {
         VStack {
             Text("Sign Up")
-                .font(.system(size: 25))
+                .font(Font.custom("Chillax-Regular", size: 20))
                 .foregroundColor(.black)
                 .padding(.top, 40)
                 .padding(.bottom, 40)
             
             Form{
-                Section(header: Text("Using Email & Password")){
+                Section(header: Text("Using Email & Password")
+                    .font(Font.custom("Chillax-Regular", size: 16))
+){
                     TextField("Username", text: $authViewModel.username)
+                        .font(Font.custom("Chillax-Regular", size: 16))
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                     TextField("First Name", text: $authViewModel.firstName)
+                        .font(Font.custom("Chillax-Regular", size: 16))
                     TextField("Last Name", text: $authViewModel.lastName)
+                        .font(Font.custom("Chillax-Regular", size: 16))
                     TextField("Email", text: $authViewModel.email)
+                        .font(Font.custom("Chillax-Regular", size: 16))
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                     SecureField("Password", text: $authViewModel.password)
+                        .font(Font.custom("Chillax-Regular", size: 16))
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                     if authViewModel.showErrorMessage {
@@ -40,7 +47,7 @@ struct SignUpView: View {
                     }) {
                         HStack{
                             Text("SIGN UP")
-                                .fontWeight(.semibold)
+                                .font(Font.custom("Chillax-Medium", size: 20))
                             Image(systemName: "arrow.right")
                         }
                     }
@@ -59,21 +66,20 @@ struct SignUpView: View {
             NavigationLink(destination: SignInView()) {
                 HStack(spacing: 3) {
                     Text("Don't have an account?")
+                        .font(Font.custom("Chillax-Regular", size: 16))
                         .foregroundColor(.white)
                     Text("Sign in")
-                        .fontWeight(.bold)
+                        .font(Font.custom("Chillax-Medium", size: 16))
                         .foregroundColor(.white)
                 }
             }
             
         }
         .background(
-            Rectangle()
-                .fill(Color.blue)
+            BackgroundView()
                 .frame(width: 600, height: 1500)
                 .rotationEffect(.degrees(-50))
                 .offset(y: 300)
-                .cornerRadius(10), alignment: .center
         )
     }
 }

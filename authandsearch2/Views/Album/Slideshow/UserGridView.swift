@@ -38,7 +38,7 @@ struct UserGridView: View {
                                     KFImage(url)
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 40, height: 40)
+                                        .frame(width: 60, height: 60)
                                         .clipShape(Circle())
                                         .overlay(Circle().stroke(Color.black, lineWidth: 1))
                                 } else {
@@ -46,7 +46,7 @@ struct UserGridView: View {
                                         .resizable()
                                         .scaledToFill()
                                         .foregroundColor(.gray)
-                                        .frame(width: 40, height: 40)
+                                        .frame(width: 60, height: 60)
                                         .overlay(Circle().stroke(Color.black, lineWidth: 1))
                                 }
                                 Text(truncatedUsername(user.username))

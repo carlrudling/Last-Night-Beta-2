@@ -13,50 +13,55 @@ struct AddMembersView: View {
     
     
     var body: some View {
-        let keywordBinding = Binding<String>(
-            get: {
-                albumViewModel.keyword
-            },
-            set: {
-                albumViewModel.keyword = $0
-                usersLookup.fetchUsers(with: albumViewModel.keyword)
-            }
-        )
-        VStack {
-            
-            
-            SearchUserBarView(keyword: keywordBinding)
-            ScrollView {
-                ForEach(usersLookup.queryResultUsers, id: \.uuid) { user in
-                    ProfileDisplayView(user: user)
-                    
+       
+        ZStack{
+            let keywordBinding = Binding<String>(
+                get: {
+                    albumViewModel.keyword
+                },
+                set: {
+                    albumViewModel.keyword = $0
+                    usersLookup.fetchUsers(with: albumViewModel.keyword)
                 }
-            }
-            
-            NavigationLink(destination: CheckMembersView(createAlbumSheet: $createAlbumSheet, isTabBarHidden: $isTabBarHidden), label: {
-                HStack{
-                    Text("Next")
-                        .font(Font.custom("Chillax-Regular", size: 16))
-                    Image(systemName: "arrow.right")
+            )
+            VStack {
+                
+                
+                SearchUserBarView(keyword: keywordBinding)
+                ScrollView {
+                    ForEach(usersLookup.queryResultUsers, id: \.uuid) { user in
+                        ProfileDisplayView(user: user)
+                        
+                    }
                 }
-                .frame(width: UIScreen.main.bounds.width - 52, height: 28)
-                .padding(15)
-                .background(.green)
-                .cornerRadius(8)
-                .foregroundColor(.white)
-                .disabled(!albumViewModel.albumValid)
-                .opacity(!albumViewModel.albumValid ? 0.5 : 1)
-            })
-            
+                
+                NavigationLink(destination: CheckMembersView(createAlbumSheet: $createAlbumSheet, isTabBarHidden: $isTabBarHidden), label: {
+                    HStack{
+                        Text("Next")
+                            .font(Font.custom("Chillax-Regular", size: 16))
+                        Image(systemName: "arrow.right")
+                    }
+                    .frame(width: UIScreen.main.bounds.width - 52, height: 28)
+                    .padding(15)
+                    .background(.green)
+                    .cornerRadius(8)
+                    .foregroundColor(.white)
+                    .disabled(!albumViewModel.albumValid)
+                    .opacity(!albumViewModel.albumValid ? 0.5 : 1)
+                })
+                
+            }
         }
         .padding(.horizontal, 20)
         .background(
-            Rectangle()
-                .fill(Color.blue)
-                .frame(width: 600, height: 1500)
-                .rotationEffect(.degrees(-50))
-                .offset(y: 300)
-                .cornerRadius(10), alignment: .center
+            ZStack{
+                Color.backgroundWhite.edgesIgnoringSafeArea(.all)
+
+                BackgroundView()
+                    .frame(width: 600, height: 1500)
+                    .rotationEffect(.degrees(-50))
+                    .offset(y: 300)
+            }
         )
         
         

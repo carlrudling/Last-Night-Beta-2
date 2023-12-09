@@ -25,6 +25,7 @@
 		D33287EF2B1EF8CB008D1F45 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33287EE2B1EF8CB008D1F45 /* MessagesView.swift */; };
 		D33287F32B226750008D1F45 /* Chillax-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D33287F22B226750008D1F45 /* Chillax-Regular.otf */; };
 		D33287FB2B2270A7008D1F45 /* Chillax-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */; };
+		D33287FD2B22BF8A008D1F45 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33287FC2B22BF8A008D1F45 /* BackgroundView.swift */; };
 		D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */; };
 		D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */; };
 		D33D9F3E2A9D2A1C00498EA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D33D9F3D2A9D2A1C00498EA2 /* Assets.xcassets */; };
@@ -88,6 +89,7 @@
 		D33287F22B226750008D1F45 /* Chillax-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Chillax-Regular.otf"; sourceTree = "<group>"; };
 		D33287F42B2267F9008D1F45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Chillax-Medium.otf"; sourceTree = "<group>"; };
+		D33287FC2B22BF8A008D1F45 /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		D33D9F362A9D2A1A00498EA2 /* authandsearch2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = authandsearch2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = authandsearch2App.swift; sourceTree = "<group>"; };
 		D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 			children = (
 				D3F5B0D02AC7F7CD007CCC0E /* ImagePicker.swift */,
 				D3DF7B302AFC2F94008A292E /* QRCodeView.swift */,
+				D33287FC2B22BF8A008D1F45 /* BackgroundView.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -504,6 +507,7 @@
 				D3539BE92AAC0005008FB64B /* PostService.swift in Sources */,
 				D38DF04B2AA7167F0001EADD /* Post.swift in Sources */,
 				D3F5B0D52ACA3DDD007CCC0E /* AlbumSlideshowView.swift in Sources */,
+				D33287FD2B22BF8A008D1F45 /* BackgroundView.swift in Sources */,
 				D33D9F4D2A9D2A6200498EA2 /* UserService.swift in Sources */,
 				D33D9F512A9D2AE300498EA2 /* AuthenticationView.swift in Sources */,
 				D33287E42B1EF65A008D1F45 /* Message.swift in Sources */,

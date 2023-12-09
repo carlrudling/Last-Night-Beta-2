@@ -26,7 +26,7 @@ struct AlbumPickerView: View {
             }
             .frame(width: 180)
             .padding()
-            .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color.darkPurple))
             .contentShape(Rectangle())
             
             
@@ -38,9 +38,10 @@ struct AlbumPickerView: View {
                                 if album.isActive {
                                     Text(album.albumName)
                                         .font(.custom("Chillax-Regular", size: 16))
+                                        .foregroundColor(.white)
                                         .frame(width: 180)
                                         .padding()
-                                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple))
+                                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.darkPurple))
                                         .contentShape(Rectangle())
                                     
                                         .onTapGesture {

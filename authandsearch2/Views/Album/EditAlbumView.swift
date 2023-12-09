@@ -238,12 +238,6 @@ struct EditAlbumView: View {
                 .frame(width: 300, height: 240, alignment: .center)
                 //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
                 
-                .background(
-                    // Clipped background
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.white)
-                        .shadow(color: .gray, radius: 6, x: 0, y: 3)
-                )
                 
             }
             .frame(width: 300, height: 300, alignment: .center)
@@ -251,12 +245,14 @@ struct EditAlbumView: View {
             .background(.clear)
         }
         .background(
-            Rectangle()
-                .fill(Color.blue)
-                .frame(width: 600, height: 1500)
-                .rotationEffect(.degrees(-50))
-                .offset(y: 300)
-                .cornerRadius(10), alignment: .center
+            ZStack{
+                Color.backgroundWhite.edgesIgnoringSafeArea(.all)
+
+                BackgroundView()
+                    .frame(width: 600, height: 1500)
+                    .rotationEffect(.degrees(-50))
+                    .offset(y: 300)
+            }
         )
         .padding(.horizontal, 20)
         .navigationBarBackButtonHidden(true)

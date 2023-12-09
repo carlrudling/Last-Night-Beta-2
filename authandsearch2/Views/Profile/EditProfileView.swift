@@ -146,6 +146,7 @@ struct EditProfileView: View {
             }
             
         }
+        .background(Color.backgroundWhite.edgesIgnoringSafeArea(.all))
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
                                 Button(action: { self.presentationMode.wrappedValue.dismiss() }) {

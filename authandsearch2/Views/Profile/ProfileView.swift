@@ -16,9 +16,12 @@ struct ProfileView: View {
         NavigationView{
             ZStack{
                 VStack{
-                    Color.purple
+                    LinearGradient(stops: [
+                        .init(color: .lightPurple, location: 0.1),
+                        .init(color: .darkPurple, location: 0.70),
+                    ], startPoint: .leading, endPoint: .trailing)
                         .edgesIgnoringSafeArea(.all)
-                        .frame(width: UIScreen.main.bounds.width, height: 100 )
+                        .frame(width: 900, height: 100)
                     Spacer()
                 }
                 VStack {
@@ -92,7 +95,7 @@ struct ProfileView: View {
                     Spacer()
                 }
             }
-            .background(Color.white) // Set the background color to white
+            .background(Color.backgroundWhite) // Set the background color to white
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {

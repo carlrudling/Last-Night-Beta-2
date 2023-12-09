@@ -15,11 +15,14 @@ struct SignInView: View {
                 .padding(.bottom, 40)
             
             Form {
-                Section(header: Text("Using Email & Password")){
+                Section(header: Text("Using Email & Password")
+                    .font(Font.custom("Chillax-Regular", size: 16))){
                     TextField("Email", text: $authViewModel.email)
+                            .font(Font.custom("Chillax-Regular", size: 16))
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                     SecureField("Password", text: $authViewModel.password)
+                            .font(Font.custom("Chillax-Regular", size: 16))
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                     if authViewModel.showErrorMessage {
@@ -38,6 +41,7 @@ struct SignInView: View {
                     }) {
                         HStack{
                             Text("SIGN IN")
+                                .font(Font.custom("Chillax-Medium", size: 20))
                                 .fontWeight(.semibold)
                             Image(systemName: "arrow.right")
                         }
@@ -56,21 +60,20 @@ struct SignInView: View {
             NavigationLink(destination: SignUpView()) {
                 HStack(spacing: 3) {
                     Text("Already have an account?")
+                        .font(Font.custom("Chillax-Regular", size: 16))
                         .foregroundColor(.white)
                     Text("Sign in")
-                        .fontWeight(.bold)
+                        .font(Font.custom("Chillax-Medium", size: 16))
                         .foregroundColor(.white)
                 }
             }
             
         }
         .background(
-            Rectangle()
-                .fill(Color.blue)
+            BackgroundView()
                 .frame(width: 600, height: 1500)
                 .rotationEffect(.degrees(-50))
                 .offset(y: 300)
-                .cornerRadius(10), alignment: .center
         )
     }
 }

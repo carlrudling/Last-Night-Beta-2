@@ -1,6 +1,7 @@
 import SwiftUI
 import CoreImage.CIFilterBuiltins
 import Kingfisher
+import Combine
 
 struct AlbumInfoView: View {
     @EnvironmentObject var imageModel: ImageViewModel
@@ -12,6 +13,7 @@ struct AlbumInfoView: View {
     @State private var leaveAlbum: Bool = false
     @State private var editAlbumSheeet = false
     @State private var countdownText: String = "" // State variable for countdown text
+    @State private var timer: AnyCancellable?
 
     var album: Album
     
@@ -21,6 +23,19 @@ struct AlbumInfoView: View {
         formatter.timeStyle = .short
         return formatter
     }()
+    
+    // Function to start the countdown timer
+        private func startCountdownTimer() {
+            timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect().sink { _ in
+                self.updateCountdown()
+            }
+        }
+
+        // Function to stop the countdown timer
+        private func stopCountdownTimer() {
+            timer?.cancel()
+            timer = nil
+        }
     
     func formattedImagePath(from imagePath: String) -> String {
         let imagePath = "\(imagePath).jpg"
@@ -164,12 +179,14 @@ struct AlbumInfoView: View {
             }
         }
         .background(
-            Rectangle()
-                .fill(Color.blue)
-                .frame(width: 600, height: 1500)
-                .rotationEffect(.degrees(-50))
-                .offset(y: 300)
-                .cornerRadius(10), alignment: .center
+            ZStack{
+                Color.backgroundWhite.edgesIgnoringSafeArea(.all)
+
+                BackgroundView()
+                    .frame(width: 600, height: 1500)
+                    .rotationEffect(.degrees(-50))
+                    .offset(y: 300)
+            }
         )
         .popup(isPresented: $leaveAlbum) {
             VStack{
@@ -294,6 +311,11 @@ struct AlbumInfoView: View {
                        _ = self.onReceive(timer) { _ in
                            self.updateCountdown()
                        }
+            startCountdownTimer() // Start countdown on appear
+
+        }
+        .onDisappear{
+            stopCountdownTimer() // Stop countdown on disappear
         }
         .background(.white)
         .navigationBarBackButtonHidden(true)

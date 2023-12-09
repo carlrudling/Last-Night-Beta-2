@@ -13,68 +13,75 @@ struct CheckMembersView: View {
     
     
     var body: some View {
-        VStack{
-            List {
-                Section(footer: Text("Swipe left to remove a member")
-                    .font(Font.custom("Chillax-Regular", size: 12))
-) {
-                    ForEach(albumViewModel.fetchedUsers, id: \.id) { user in
-                        Text(user.username)
-                            .font(Font.custom("Chillax-Regular", size: 20))
 
+            VStack{
+                List {
+                    Section(footer: Text("Swipe left to remove a member")
+                        .font(Font.custom("Chillax-Regular", size: 12))
+                    ) {
+                        ForEach(albumViewModel.fetchedUsers, id: \.id) { user in
+                            Text(user.username)
+                                .font(Font.custom("Chillax-Regular", size: 20))
+                            
+                        }
+                        .onDelete(perform: delete)
                     }
-                    .onDelete(perform: delete)
                 }
+                .padding(.top, 40)
+                .frame(height: 500)
+                .scrollContentBackground(.hidden)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Members")
+                            .font(Font.custom("Chillax-Regular", size: 20))
+                            .foregroundColor(.black) // Set the color if needed
+                    }
+                }
+                
+                
+                
+                
+                Spacer()
+                Button {
+                    buttonPressed = true
+                    albumViewModel.members.append(self.userService.uuid!)
+                    albumService.createAlbum(albumName: albumViewModel.albumName, endDate: albumViewModel.endDate, photoLimit: albumViewModel.photoLimit, members: albumViewModel.members, creator: albumViewModel.creator)
+                    albumViewModel.resetValues()
+                    createAlbumSheet = false
+                    isTabBarHidden = false
+                    
+                    
+                } label: {
+                    Text("Create Album")
+                        .font(Font.custom("Chillax-Regular", size: 20))
+                        .frame(maxWidth: .infinity) // Align the button to center horizontally
+                        .padding()
+                        .background(buttonPressed ? Color.green : Color.white)
+                        .foregroundColor(buttonPressed ? .white : Color.black)
+                        .clipShape(Capsule())
+                        .padding(.bottom, 40)
+                    
+                    
+                }
+                
             }
-            .frame(height: 500)
-            .scrollContentBackground(.hidden)
-            .toolbar {
-                          ToolbarItem(placement: .principal) {
-                              Text("Members")
-                                  .font(Font.custom("Chillax-Regular", size: 20))
-                                  .foregroundColor(.black) // Set the color if needed
-                          }
-                      }
-            
+        
+            .background(
+                ZStack{
+                    Color.backgroundWhite.edgesIgnoringSafeArea(.all)
 
-            
-            
-            Spacer()
-            Button {
-                buttonPressed = true
-                albumViewModel.members.append(self.userService.uuid!)
-                albumService.createAlbum(albumName: albumViewModel.albumName, endDate: albumViewModel.endDate, photoLimit: albumViewModel.photoLimit, members: albumViewModel.members, creator: albumViewModel.creator)
-                albumViewModel.resetValues()
-                createAlbumSheet = false
-                isTabBarHidden = false
-                
-                
-            } label: {
-                Text("Create Album")
-                    .font(Font.custom("Chillax-Regular", size: 20))
-                    .frame(maxWidth: .infinity) // Align the button to center horizontally
-                    .padding()
-                    .background(buttonPressed ? Color.green : Color.white)
-                    .foregroundColor(buttonPressed ? .white : Color.black)
-                    .clipShape(Capsule())
-                
-                
-            }
-            
-        }
+                    BackgroundView()
+                        .frame(width: 600, height: 1500)
+                        .rotationEffect(.degrees(-50))
+                        .offset(y: 300)
+                }
+            )
+        .edgesIgnoringSafeArea(.all)
         .padding(.horizontal, 20)
         .onAppear {
             albumViewModel.fetchAllUsers()
             print("The members: \(albumViewModel.members)")
         }
-        .background(
-            Rectangle()
-                .fill(Color.blue)
-                .frame(width: 600, height: 1500)
-                .rotationEffect(.degrees(-50))
-                .offset(y: 300)
-                .cornerRadius(10), alignment: .center
-        )
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
                                 Button(action: { self.presentationMode.wrappedValue.dismiss()}) {

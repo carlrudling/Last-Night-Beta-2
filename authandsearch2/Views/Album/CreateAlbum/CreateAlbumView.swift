@@ -17,6 +17,7 @@ struct CreateAlbumView: View {
     var body: some View {
         
         ZStack {
+            
             // Invisible layer that will only react when the keyboard is shown
             if keyboardIsShown {
                 Color.clear
@@ -98,12 +99,14 @@ struct CreateAlbumView: View {
             }
         }
         .background(
-            Rectangle()
-                .fill(Color.blue)
-                .frame(width: 600, height: 1500)
-                .rotationEffect(.degrees(-50))
-                .offset(y: 300)
-                .cornerRadius(10), alignment: .center
+            ZStack{
+                Color.backgroundWhite.edgesIgnoringSafeArea(.all)
+
+                BackgroundView()
+                    .frame(width: 600, height: 1500)
+                    .rotationEffect(.degrees(-50))
+                    .offset(y: 300)
+            }
         )
         .padding(.horizontal, 20)
         .navigationBarBackButtonHidden(true)
