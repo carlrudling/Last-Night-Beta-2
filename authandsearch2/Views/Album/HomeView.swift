@@ -13,7 +13,19 @@ struct HomeView: View {
     // Make list of fetched albums and if pressed nav to view to display all info of that album
     
     var body: some View {
-        
+        ZStack{
+            
+            VStack{
+                HStack{
+                  Text("Last Night")
+                        .font(.custom("Barrbar", size: 30))
+                        .foregroundColor(.black)
+                        .padding(.leading, 15)
+                        .padding(.top, 40)
+                    Spacer()
+                }
+                Spacer()
+            }
             VStack {
                 Image("Discoball-Homeview2")
                     .resizable()
@@ -22,33 +34,33 @@ struct HomeView: View {
                     .padding(.top, -220)
                     .edgesIgnoringSafeArea(.top)
                     .padding(.bottom, 60)
-                    
+                
                 Button(action: {
                     createAlbumSheet.toggle()
                 }) {
                     ZStack {
-                           // Background with shadow
-                           RoundedRectangle(cornerRadius: 10)
-                               .fill(Color.lightPurple)
-                               .frame(width: 280, height: 80)
-                               .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
-
-                           // Overlay gradient
-                           HStack {
-                               Spacer()
-                               LinearGradient(stops: [
-                                   .init(color: .clear, location: 0.8),
-                                   .init(color: .black.opacity(0.1), location: 1.0),
-                               ], startPoint: .leading, endPoint: .trailing)
-                           }
-                           .frame(width: 280, height: 80)
-                           .cornerRadius(10)
-
-                           // Button Text
-                           Text("Create Album")
-                               .font(.custom("Chillax-Medium", size: 20))
-                               .foregroundColor(.white)
-                       }
+                        // Background with shadow
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.lightPurple)
+                            .frame(width: 280, height: 80)
+                            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
+                        
+                        // Overlay gradient
+                        HStack {
+                            Spacer()
+                            LinearGradient(stops: [
+                                .init(color: .clear, location: 0.8),
+                                .init(color: .black.opacity(0.1), location: 1.0),
+                            ], startPoint: .leading, endPoint: .trailing)
+                        }
+                        .frame(width: 280, height: 80)
+                        .cornerRadius(10)
+                        
+                        // Button Text
+                        Text("Create Album")
+                            .font(.custom("Chillax-Medium", size: 20))
+                            .foregroundColor(.white)
+                    }
                 }
                 .sheet(isPresented: $createAlbumSheet) {
                     NavigationView {
@@ -69,28 +81,28 @@ struct HomeView: View {
                                 })  {
                                     
                                     ZStack {
-                                           // Background with shadow
-                                           RoundedRectangle(cornerRadius: 10)
-                                               .fill(Color.darkPurple)
-                                               .frame(width: 280, height: 80)
-                                               .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
-
-                                           // Overlay gradient
-                                           HStack {
-                                               Spacer()
-                                               LinearGradient(stops: [
-                                                   .init(color: .clear, location: 0.8),
-                                                   .init(color: .black.opacity(0.1), location: 1.0),
-                                               ], startPoint: .leading, endPoint: .trailing)
-                                           }
-                                           .frame(width: 280, height: 80)
-                                           .cornerRadius(10)
-
-                                           // Button Text
-                                           Text(album.albumName)
-                                                .font(.custom("Chillax-Regular", size: 18))
-                                               .foregroundColor(.white)
-                                       }
+                                        // Background with shadow
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.darkPurple)
+                                            .frame(width: 280, height: 80)
+                                            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
+                                        
+                                        // Overlay gradient
+                                        HStack {
+                                            Spacer()
+                                            LinearGradient(stops: [
+                                                .init(color: .clear, location: 0.8),
+                                                .init(color: .black.opacity(0.1), location: 1.0),
+                                            ], startPoint: .leading, endPoint: .trailing)
+                                        }
+                                        .frame(width: 280, height: 80)
+                                        .cornerRadius(10)
+                                        
+                                        // Button Text
+                                        Text(album.albumName)
+                                            .font(.custom("Chillax-Regular", size: 18))
+                                            .foregroundColor(.white)
+                                    }
                                     
                                 }
                             
@@ -102,6 +114,9 @@ struct HomeView: View {
                 
                 
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .edgesIgnoringSafeArea(.all)
+        }
             .background(
                 ZStack{
                     Color.backgroundWhite.edgesIgnoringSafeArea(.all)

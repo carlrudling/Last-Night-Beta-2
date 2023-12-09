@@ -26,6 +26,7 @@
 		D33287F32B226750008D1F45 /* Chillax-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D33287F22B226750008D1F45 /* Chillax-Regular.otf */; };
 		D33287FB2B2270A7008D1F45 /* Chillax-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */; };
 		D33287FD2B22BF8A008D1F45 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33287FC2B22BF8A008D1F45 /* BackgroundView.swift */; };
+		D33287FF2B24314A008D1F45 /* Barrbar-DOKOR.otf in Resources */ = {isa = PBXBuildFile; fileRef = D33287FE2B24314A008D1F45 /* Barrbar-DOKOR.otf */; };
 		D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */; };
 		D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */; };
 		D33D9F3E2A9D2A1C00498EA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D33D9F3D2A9D2A1C00498EA2 /* Assets.xcassets */; };
@@ -90,6 +91,7 @@
 		D33287F42B2267F9008D1F45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Chillax-Medium.otf"; sourceTree = "<group>"; };
 		D33287FC2B22BF8A008D1F45 /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
+		D33287FE2B24314A008D1F45 /* Barrbar-DOKOR.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Barrbar-DOKOR.otf"; sourceTree = "<group>"; };
 		D33D9F362A9D2A1A00498EA2 /* authandsearch2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = authandsearch2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = authandsearch2App.swift; sourceTree = "<group>"; };
 		D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 			children = (
 				D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */,
 				D33287F22B226750008D1F45 /* Chillax-Regular.otf */,
+				D33287FE2B24314A008D1F45 /* Barrbar-DOKOR.otf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -475,6 +478,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D33287FF2B24314A008D1F45 /* Barrbar-DOKOR.otf in Resources */,
 				D3518C182AE74142007BBD56 /* GoogleService-Info.plist in Resources */,
 				D33D9F412A9D2A1C00498EA2 /* Preview Assets.xcassets in Resources */,
 				D33287F32B226750008D1F45 /* Chillax-Regular.otf in Resources */,
