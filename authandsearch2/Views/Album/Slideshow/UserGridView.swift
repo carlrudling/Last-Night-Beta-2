@@ -42,12 +42,19 @@ struct UserGridView: View {
                                         .clipShape(Circle())
                                         .overlay(Circle().stroke(Color.black, lineWidth: 1))
                                 } else {
-                                    Image(systemName: "person.crop.circle.fill")
-                                        .resizable()
-                                        .scaledToFill()
-                                        .foregroundColor(.gray)
-                                        .frame(width: 60, height: 60)
-                                        .overlay(Circle().stroke(Color.black, lineWidth: 1))
+                                    ZStack{
+                                        Image(systemName: "person.crop.circle")
+                                            .resizable()
+                                            .scaledToFill()
+                                            .foregroundColor(.white)
+                                            .frame(width: 60, height: 60)
+                                        Image(systemName: "person.crop.circle.fill")
+                                            .resizable()
+                                            .scaledToFill()
+                                            .foregroundColor(.gray)
+                                            .frame(width: 60, height: 60)
+                                            .overlay(Circle().stroke(Color.black, lineWidth: 1))
+                                    }
                                 }
                                 Text(truncatedUsername(user.username))
                                     .font(Font.custom("Chillax-Regular", size: 12))
@@ -60,6 +67,18 @@ struct UserGridView: View {
                 }
             }
         }
+        .background(
+            ZStack{
+                Color.backgroundWhite.edgesIgnoringSafeArea(.all)
+                
+                // First Layer: Custom Background View
+                BackgroundView()
+                    .frame(width: 600, height: 1500)
+                    .rotationEffect(.degrees(-50))
+                    .offset(y: 300)
+            }
+            )
+
         .onAppear {
             selectedDetent = .medium
         }

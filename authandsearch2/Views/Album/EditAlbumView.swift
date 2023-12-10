@@ -132,7 +132,7 @@ struct EditAlbumView: View {
                         .font(Font.custom("Chillax", size: 20))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.purple)
+                        .background(Color.lightPurple)
                         .foregroundColor(.white)
                         .clipShape(Capsule())
                 }

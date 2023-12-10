@@ -315,7 +315,7 @@ struct AlbumSlideshowView: View {
                                 .zIndex(1) // Ensure it's above the background
                             Image(systemName: "play.circle.fill") // SF Symbol for checkmark
                                 .font(.system(size: 80))
-                                .foregroundColor(.purple)
+                                .foregroundColor(.darkPurple)
                             
                                 .zIndex(1) // Ensure it's above the background
                             
@@ -579,7 +579,7 @@ struct AlbumSlideshowView: View {
  .zIndex(1) // Ensure it's above the background
  Image(systemName: "play.circle.fill") // SF Symbol for checkmark
  .font(.system(size: 80))
- .foregroundColor(.purple)
+ .foregroundColor(.darkPurple)
  
  .zIndex(1) // Ensure it's above the background
  
