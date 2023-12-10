@@ -83,7 +83,7 @@ struct HomeView: View {
                                     ZStack {
                                         // Background with shadow
                                         RoundedRectangle(cornerRadius: 10)
-                                            .fill(Color.darkPurple)
+                                            .fill(album.isActive ? Color.darkPurple : .green)
                                             .frame(width: 280, height: 80)
                                             .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                                         

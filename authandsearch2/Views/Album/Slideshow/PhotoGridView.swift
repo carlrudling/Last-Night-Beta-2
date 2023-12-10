@@ -34,7 +34,7 @@ struct PhotoGridView: View {
                             .rotationEffect(.degrees(selectButtonPressed ? -45 : 0))
                             .frame(width: 40, height: 40) // Giving a frame to the button itself
                     }
-                    .background(selectButtonPressed ? Color.purple : Color.white) // Applying background color here
+                    .background(selectButtonPressed ? Color.darkPurple : Color.white) // Applying background color here
                 }
                 .frame(width: .infinity) // Making sure the Button covers the full width
                 
@@ -67,7 +67,7 @@ struct PhotoGridView: View {
                                     if selectButtonPressed && selectedImageUrls.contains(post.imageURL) {
                                         Circle()
                                             .frame(width: 25, height: 25)
-                                            .foregroundColor(.purple)
+                                            .foregroundColor(.darkPurple)
                                             .overlay(
                                                 Image(systemName: "checkmark")
                                                     .foregroundColor(.white)
@@ -130,7 +130,7 @@ struct PhotoGridView: View {
                             }
                             .padding()
                             .frame(width: UIScreen.main.bounds.width, alignment: .center)
-                            .background(Color.purple) // Button background color
+                            .background(Color.darkPurple) // Button background color
                             .padding(.bottom, -10)
                         }
                         
@@ -173,7 +173,7 @@ struct PhotoGridView: View {
                             .padding(.horizontal, 10)
                             .padding()
                             .frame(width: UIScreen.main.bounds.width, alignment: .center)
-                            .background(Color.purple)
+                            .background(Color.darkPurple)
                             .overlay(
                                 VStack {
                                     Rectangle()
