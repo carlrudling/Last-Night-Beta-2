@@ -27,6 +27,7 @@
 		D33287FB2B2270A7008D1F45 /* Chillax-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */; };
 		D33287FD2B22BF8A008D1F45 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33287FC2B22BF8A008D1F45 /* BackgroundView.swift */; };
 		D33287FF2B24314A008D1F45 /* Barrbar-DOKOR.otf in Resources */ = {isa = PBXBuildFile; fileRef = D33287FE2B24314A008D1F45 /* Barrbar-DOKOR.otf */; };
+		D33288012B26A51B008D1F45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33288002B26A51B008D1F45 /* GoogleService-Info.plist */; };
 		D33D9F3A2A9D2A1A00498EA2 /* authandsearch2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */; };
 		D33D9F3C2A9D2A1A00498EA2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */; };
 		D33D9F3E2A9D2A1C00498EA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D33D9F3D2A9D2A1C00498EA2 /* Assets.xcassets */; };
@@ -41,7 +42,6 @@
 		D33D9F602AA072FB00498EA2 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F5F2AA072FB00498EA2 /* Album.swift */; };
 		D33D9F622AA078E700498EA2 /* AlbumService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F612AA078E700498EA2 /* AlbumService.swift */; };
 		D33D9F692AA2BE2500498EA2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33D9F682AA2BE2500498EA2 /* HomeView.swift */; };
-		D3518C182AE74142007BBD56 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D30F307F2AE718D50015D649 /* GoogleService-Info.plist */; };
 		D3539BE42AABE43D008FB64B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D3539BE32AABE43D008FB64B /* FirebaseStorage */; };
 		D3539BE92AAC0005008FB64B /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3539BE82AAC0005008FB64B /* PostService.swift */; };
 		D3601ECE2B01CC8E007DCCDB /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3601ECD2B01CC8E007DCCDB /* SignInView.swift */; };
@@ -72,7 +72,6 @@
 /* Begin PBXFileReference section */
 		D300B39B2AC6BA2900CA7F3B /* AlbumInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumInfoView.swift; sourceTree = "<group>"; };
 		D300B39D2AC76E1E00CA7F3B /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
-		D30F307F2AE718D50015D649 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D326654C2AFC493200A098A6 /* SearchUserBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserBarView.swift; sourceTree = "<group>"; };
 		D326654E2AFC497100A098A6 /* ProfileDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDisplayView.swift; sourceTree = "<group>"; };
 		D32665512AFCAEF100A098A6 /* AddMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMembersView.swift; sourceTree = "<group>"; };
@@ -92,7 +91,8 @@
 		D33287FA2B2270A7008D1F45 /* Chillax-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Chillax-Medium.otf"; sourceTree = "<group>"; };
 		D33287FC2B22BF8A008D1F45 /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		D33287FE2B24314A008D1F45 /* Barrbar-DOKOR.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Barrbar-DOKOR.otf"; sourceTree = "<group>"; };
-		D33D9F362A9D2A1A00498EA2 /* authandsearch2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = authandsearch2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D33288002B26A51B008D1F45 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Desktop/Googleservice/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D33D9F362A9D2A1A00498EA2 /* LastNight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LastNight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33D9F392A9D2A1A00498EA2 /* authandsearch2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = authandsearch2App.swift; sourceTree = "<group>"; };
 		D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D33D9F3D2A9D2A1C00498EA2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -205,7 +205,7 @@
 		D33D9F2D2A9D2A1A00498EA2 = {
 			isa = PBXGroup;
 			children = (
-				D33D9F382A9D2A1A00498EA2 /* authandsearch2 */,
+				D33D9F382A9D2A1A00498EA2 /* LastNight */,
 				D33D9F372A9D2A1A00498EA2 /* Products */,
 				D3539BE22AABE43D008FB64B /* Frameworks */,
 			);
@@ -214,12 +214,12 @@
 		D33D9F372A9D2A1A00498EA2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D33D9F362A9D2A1A00498EA2 /* authandsearch2.app */,
+				D33D9F362A9D2A1A00498EA2 /* LastNight.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D33D9F382A9D2A1A00498EA2 /* authandsearch2 */ = {
+		D33D9F382A9D2A1A00498EA2 /* LastNight */ = {
 			isa = PBXGroup;
 			children = (
 				D33287F42B2267F9008D1F45 /* Info.plist */,
@@ -233,10 +233,10 @@
 				D33D9F3B2A9D2A1A00498EA2 /* ContentView.swift */,
 				D3F5B0CE2AC7C575007CCC0E /* MainTabbedView.swift */,
 				D33D9F3D2A9D2A1C00498EA2 /* Assets.xcassets */,
-				D30F307F2AE718D50015D649 /* GoogleService-Info.plist */,
+				D33288002B26A51B008D1F45 /* GoogleService-Info.plist */,
 				D33D9F3F2A9D2A1C00498EA2 /* Preview Content */,
 			);
-			path = authandsearch2;
+			path = LastNight;
 			sourceTree = "<group>";
 		};
 		D33D9F3F2A9D2A1C00498EA2 /* Preview Content */ = {
@@ -411,9 +411,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D33D9F352A9D2A1A00498EA2 /* authandsearch2 */ = {
+		D33D9F352A9D2A1A00498EA2 /* LastNight */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D33D9F442A9D2A1C00498EA2 /* Build configuration list for PBXNativeTarget "authandsearch2" */;
+			buildConfigurationList = D33D9F442A9D2A1C00498EA2 /* Build configuration list for PBXNativeTarget "LastNight" */;
 			buildPhases = (
 				D33D9F322A9D2A1A00498EA2 /* Sources */,
 				D33D9F332A9D2A1A00498EA2 /* Frameworks */,
@@ -423,7 +423,7 @@
 			);
 			dependencies = (
 			);
-			name = authandsearch2;
+			name = LastNight;
 			packageProductDependencies = (
 				D33D9F552A9D2C6E00498EA2 /* FirebaseAuth */,
 				D33D9F572A9D2C6E00498EA2 /* FirebaseFirestore */,
@@ -432,7 +432,7 @@
 				D3F5B0DC2AD5D905007CCC0E /* Kingfisher */,
 			);
 			productName = authandsearch2;
-			productReference = D33D9F362A9D2A1A00498EA2 /* authandsearch2.app */;
+			productReference = D33D9F362A9D2A1A00498EA2 /* LastNight.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -450,7 +450,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D33D9F312A9D2A1A00498EA2 /* Build configuration list for PBXProject "authandsearch2" */;
+			buildConfigurationList = D33D9F312A9D2A1A00498EA2 /* Build configuration list for PBXProject "LastNight" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -468,7 +468,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D33D9F352A9D2A1A00498EA2 /* authandsearch2 */,
+				D33D9F352A9D2A1A00498EA2 /* LastNight */,
 			);
 		};
 /* End PBXProject section */
@@ -479,11 +479,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D33287FF2B24314A008D1F45 /* Barrbar-DOKOR.otf in Resources */,
-				D3518C182AE74142007BBD56 /* GoogleService-Info.plist in Resources */,
 				D33D9F412A9D2A1C00498EA2 /* Preview Assets.xcassets in Resources */,
 				D33287F32B226750008D1F45 /* Chillax-Regular.otf in Resources */,
 				D33287FB2B2270A7008D1F45 /* Chillax-Medium.otf in Resources */,
 				D33D9F3E2A9D2A1C00498EA2 /* Assets.xcassets in Resources */,
+				D33288012B26A51B008D1F45 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,11 +670,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"authandsearch2/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"LastNIght/Preview Content\"";
 				DEVELOPMENT_TEAM = 45Z98QXDZ5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = authandsearch2/Info.plist;
+				INFOPLIST_FILE = LastNight/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "\"We need to access the camera to use this app\"";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "\"Hi we need acces to your photos to save images\"";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -685,8 +685,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mevima.authandsearch2;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mevima.LastNight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -704,11 +704,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"authandsearch2/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"LastNIght/Preview Content\"";
 				DEVELOPMENT_TEAM = 45Z98QXDZ5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = authandsearch2/Info.plist;
+				INFOPLIST_FILE = LastNight/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "\"We need to access the camera to use this app\"";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "\"Hi we need acces to your photos to save images\"";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -719,8 +719,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mevima.authandsearch2;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mevima.LastNight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -734,7 +734,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D33D9F312A9D2A1A00498EA2 /* Build configuration list for PBXProject "authandsearch2" */ = {
+		D33D9F312A9D2A1A00498EA2 /* Build configuration list for PBXProject "LastNight" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D33D9F422A9D2A1C00498EA2 /* Debug */,
@@ -743,7 +743,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D33D9F442A9D2A1C00498EA2 /* Build configuration list for PBXNativeTarget "authandsearch2" */ = {
+		D33D9F442A9D2A1C00498EA2 /* Build configuration list for PBXNativeTarget "LastNight" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D33D9F452A9D2A1C00498EA2 /* Debug */,

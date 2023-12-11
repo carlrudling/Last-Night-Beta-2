@@ -178,6 +178,7 @@ struct AlbumInfoView: View {
                 }
             }
         }
+        
         .background(
             ZStack{
                 Color.backgroundWhite.edgesIgnoringSafeArea(.all)

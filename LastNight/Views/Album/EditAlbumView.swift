@@ -74,6 +74,7 @@ struct EditAlbumView: View {
                         // Hide the keyboard when the clear area is tapped
                         hideKeyboard()
                         keyboardIsShown = false // Update the state
+                        
                     }
                     .zIndex(5) // Make sure this is above the form
                     .frame(width: 300, height: 300)
@@ -90,7 +91,10 @@ struct EditAlbumView: View {
                                 // When tapping on the TextField, indicate that the keyboard is shown
                                 keyboardIsShown = true
                             }
+                        
                     }
+                    
+                    
                     Section(footer: Text("Swipe to change")){
                         Text("Photo limit")
                         Picker("Photo limit", selection: $albumViewModel.photoLimit) {
@@ -116,33 +120,34 @@ struct EditAlbumView: View {
                     }
                     .scrollContentBackground(.hidden)
                 }
+                .padding(.top, 20)
+                .frame(height: 600)
                 .scrollContentBackground(.hidden)
                 .zIndex(0) // Ensure the form is below the invisible layer
                 
                 
-                Spacer()
-            }
-            VStack{
-                Spacer()
-                
-                Button {
-                    confirmationPopup = true
-                } label: {
-                    Text("Save changes")
-                        .font(Font.custom("Chillax", size: 20))
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.lightPurple)
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
+                VStack{
+                    Spacer()
+                    
+                    Button {
+                        confirmationPopup = true
+                    } label: {
+                        Text("Save changes")
+                            .font(Font.custom("Chillax", size: 20))
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.lightPurple)
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                    }
+                    .disabled(!isAlbumNameValid) // Disable the button if album name is not valid
+                    .zIndex(2) // Ensure the form is below the invisible layer
+                    .padding(.bottom, 30)
+                    
                 }
-                .disabled(!isAlbumNameValid) // Disable the button if album name is not valid
-                .zIndex(2) // Ensure the form is below the invisible layer
-                .padding(.bottom, 50)
-                
             }
-           
         }
+        
         .popup(isPresented: $confirmationPopup) {
             VStack{
                 ZStack { // 4
