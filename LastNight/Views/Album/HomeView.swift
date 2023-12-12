@@ -67,7 +67,7 @@ struct HomeView: View {
                         CreateAlbumView(isTabBarHidden: $isTabBarHidden, createAlbumSheet: $createAlbumSheet)
                     }
                 }
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack {
                         ForEach(albumService.queryResultAlbums, id: \.uuid) { album in
                             NavigationLink(

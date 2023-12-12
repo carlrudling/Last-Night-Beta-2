@@ -9,7 +9,7 @@ struct SignInView: View {
     var body: some View {
         VStack {
             Text("Sign In")
-                .font(.system(size: 25))
+                .font(Font.custom("Chillax-Regular", size: 25))
                 .foregroundColor(.black)
                 .padding(.top, 40)
                 .padding(.bottom, 40)
