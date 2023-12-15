@@ -3,6 +3,8 @@ import SwiftUI
 struct SignUpView: View {
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var authViewModel: AuthViewModel
+    @Environment(\.presentationMode) var presentationMode
+
     
     var body: some View {
         VStack {
@@ -43,6 +45,8 @@ struct SignUpView: View {
                         authViewModel.validateInputs()
                         if authViewModel.signUpisValid {
                             userService.signUp(username: "@\(authViewModel.username)", email: authViewModel.email, firstName: authViewModel.firstName, lastName: authViewModel.lastName, password: authViewModel.password, profileImage: authViewModel.profileImage, profileImageURL: authViewModel.profileImageURL)
+                            self.presentationMode.wrappedValue.dismiss()
+
                         }
                     }) {
                         HStack{
@@ -75,6 +79,7 @@ struct SignUpView: View {
             }
             
         }
+        .navigationBarBackButtonHidden(true)
         .background(
             BackgroundView()
                 .frame(width: 600, height: 1500)

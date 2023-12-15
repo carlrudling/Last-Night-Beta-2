@@ -69,6 +69,7 @@ struct SignInView: View {
             }
             
         }
+        .navigationBarBackButtonHidden(true)
         .background(
             BackgroundView()
                 .frame(width: 600, height: 1500)
