@@ -6,11 +6,14 @@ struct ImageDetailView: View {
     @EnvironmentObject var postService: PostService
     @EnvironmentObject var userService: UserService
     @EnvironmentObject var imageModel: ImageViewModel
+    @EnvironmentObject var albumService: AlbumService
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var isSaved : Bool = false
     @State private var bounceAmount: CGFloat = 1.0
     @State var showingErrorPopup = false
+    @State var setAlbumPlaceholder = false
    
+    var album: Album
     
     var body: some View {
         ZStack {
@@ -70,6 +73,26 @@ struct ImageDetailView: View {
                 HStack {
                     Spacer()
                     VStack {
+                        Button(action: {
+                            albumService.updateAlbumThumbnail(albumUUID: album.documentID ?? "", thumbnailURL: post.imageURL) { success in
+                                if success {
+                                    // Handle successful update, e.g., show confirmation to user
+                                    setAlbumPlaceholder.toggle()
+                                } else {
+                                    // Handle error
+                                }
+                            }
+                        }) {
+                            Image(systemName: setAlbumPlaceholder ? "star.fill" : "star")
+                                .font(.system(size: 24))
+                                .foregroundColor(setAlbumPlaceholder ? .yellow : .white)
+                                .padding(.horizontal, 20)
+                                .padding(.bottom, 20)
+                        }
+
+
+                        
+                        
                         Button(action: {
                             imageModel.requestPhotoLibraryPermission { permissionGranted in
                                 if permissionGranted {

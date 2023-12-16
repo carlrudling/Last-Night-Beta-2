@@ -17,7 +17,7 @@ struct CheckMembersView: View {
             VStack{
                 List {
                     Section(footer: Text("Swipe left to remove a member")
-                        .font(Font.custom("Chillax-Regular", size: 12))
+                        .font(Font.custom("Chillax-Regular", size: 14))
                     ) {
                         ForEach(albumViewModel.fetchedUsers, id: \.id) { user in
                             Text(user.username)

@@ -94,7 +94,7 @@ struct EditAlbumView: View {
                         
                     }
                     
-                    
+                    /*
                     Section(footer: Text("Swipe to change")){
                         Text("Photo limit")
                         Picker("Photo limit", selection: $albumViewModel.photoLimit) {
@@ -107,6 +107,7 @@ struct EditAlbumView: View {
                         .pickerStyle(.segmented)
                         .font(Font.custom("Chillax", size: 18))
                     }
+                    */
                     Section{
                         DatePicker("End date", selection: $albumViewModel.endDate, in: Date.now...)
                     }

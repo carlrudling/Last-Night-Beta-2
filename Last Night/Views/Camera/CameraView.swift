@@ -419,6 +419,7 @@ struct CameraView: View {
                 
             }
         }
+        .navigationBarBackButtonHidden(true)
         .onAppear(perform: {
             camera.Check()
             camera.qrCodeFoundHandler = handleQRCode // Setting the handler when the view appears

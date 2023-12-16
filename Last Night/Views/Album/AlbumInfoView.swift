@@ -116,18 +116,51 @@ struct AlbumInfoView: View {
                     }
                     
                     Spacer()
-                    VStack{
-                        Text("In the album")
-                            .foregroundColor(.black)
-                            .font(Font.custom("Chillax-Regular", size: 14))
+    
+                    ZStack{
+                        HStack{
+                            Spacer()
+                          
+                                VStack{
+                                    NavigationLink(destination:  CameraView(albumuuid: self.userService.uuid!), label: {
+                                        Image(systemName: "camera")
+                                            .font(.system(size: 25))
+                                            .foregroundColor(.black)
+
+                                })
+                                    .padding(.horizontal, 12)
+                                    .padding(.top, -280)
+
+
+                            Button {
+                                leaveAlbum = true
+                            } label: {
+                                Image(systemName: "rectangle.portrait.and.arrow.right")
+                                    .font(.system(size: 25))
+                                    .foregroundColor(.black)
+                                    .padding(.bottom, -5)
+                                    .padding(.horizontal, 5)
+                                
+                            }
+                            }
+                            
+                        }
+                        VStack{
+                            
+                            Text("In the album")
+                                .foregroundColor(.black)
+                                .font(Font.custom("Chillax-Regular", size: 14))
+                        
                         // Thin line
                         Rectangle()
                             .frame(height: 1)
                             .foregroundColor(.black)
                             .padding(.vertical, 2)
                     }
-                    .padding(.top, 20)
-                    .padding(.bottom, -20)
+                        .padding(.top, 20)
+                        .padding(.bottom, -20)
+                    }
+                   
                 }
                
                 LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4), spacing: 1) {
@@ -164,19 +197,9 @@ struct AlbumInfoView: View {
                 }
                 .padding()
                 
-                Button(action: {
-                    leaveAlbum = true
-                }) {
-                    Text("Leave album")
-                        .font(Font.custom("Chillax-Regular", size: 20))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.red)
-                        .cornerRadius(8)
-                        .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
-                        .padding(.bottom, 80)
-                }
             }
+            .padding(.top, 20)
+        
         }
         
         .background(

@@ -243,7 +243,7 @@ struct AlbumSlideshowView: View {
                                     .padding(.vertical)
                             }
                             .sheet(isPresented: $slideShowViewModel.showPhotoGrid) {
-                                PhotoGridView(selectedDetent: $slideShowViewModel.selectedDetent, posts: album.posts)
+                                PhotoGridView(selectedDetent: $slideShowViewModel.selectedDetent, posts: album.posts, album: album)
                                     .presentationDetents([.medium, .large], selection: $slideShowViewModel.selectedDetent)
                                     .presentationDragIndicator(.hidden)
                                     .presentationBackground(.white

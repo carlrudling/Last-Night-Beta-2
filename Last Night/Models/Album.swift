@@ -1,11 +1,3 @@
-//
-//  Album.swift
-//  authandsearch2
-//
-//  Created by Carl Rudling on 2023-08-30.
-//
-
-
 import Foundation
 import FirebaseFirestoreSwift
 
@@ -13,12 +5,13 @@ import FirebaseFirestoreSwift
 struct Album: Codable {
     var uuid: String
     var albumName: String
-    var endDate = Date()
+    var endDate: Date
+    var creationDate: Date
     var photoLimit : Int
     var members : [String] = []
     var creator : String
     var posts : [Post] = []
-    var thumbnailURL: String? // Add this line
+    var thumbnailURL: String?
     var messages: [Message] = []
 
     

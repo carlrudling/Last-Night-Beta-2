@@ -6,24 +6,22 @@ struct ProfileView: View {
     @EnvironmentObject var albumService: AlbumService
     @State var editProfileSheet = false
     
-    let spacing = 2.0
-    
+    let spacing = 40.0
+
     private func refreshProfileData() {
             userService.refreshUserData()
         }
     
+    var dateFormatter: DateFormatter {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MM/dd/yy"
+            return formatter
+        }
+    
+    
     var body: some View {
         NavigationView{
-            ZStack{
-                VStack{
-                    LinearGradient(stops: [
-                        .init(color: .lightPurple, location: 0.1),
-                        .init(color: .darkPurple, location: 0.70),
-                    ], startPoint: .leading, endPoint: .trailing)
-                        .edgesIgnoringSafeArea(.all)
-                        .frame(width: 900, height: 100)
-                    Spacer()
-                }
+       
                 VStack {
                     if let userProfile = userService.user, let profileImageURL = userProfile.profileImageURL, profileImageURL != "" {
                         
@@ -69,33 +67,73 @@ struct ProfileView: View {
                         .foregroundColor(.black)
                         .padding(.bottom, 20)
                     
-                    // Grid of albums with thumbnail images
-                    LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: spacing) {
-                        ForEach(albumService.finishedAlbumsWithThumbnails, id: \.uuid) { album in
-                            if let thumbnailURL = album.thumbnailURL, let url = URL(string: thumbnailURL) {
-                                NavigationLink(destination: AlbumSlideshowView(isTabBarHidden: .constant(false), album: album)) {
-                                    KFImage(url)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: UIScreen.main.bounds.width / 3, height: 180)
-                                        .clipped()
-                                        .overlay(
-                                            Image(systemName: "play.circle")
-                                                .resizable()
-                                                .frame(width: 50, height: 50)
-                                                .foregroundColor(.white)
-                                                .clipShape(Circle())
-                                                .opacity(0.8)
-                                        )
+                    Text("Memories")
+                        .font(Font.custom("Chillax-Regular", size: 16))
+                        .foregroundColor(.black)
+                        .padding(.bottom, 20)
+                    
+                    Rectangle()
+                        .frame(width: 200, height: 1) // Width of 200 points and height of 1 point
+                        .foregroundColor(.black) // Set the color of the line
+                    
+                    
+                    let cardWidth: CGFloat = 240
+                    let horizontalPadding = (UIScreen.main.bounds.width - cardWidth) / 2
+                    // Horizontal scroll view of albums with thumbnail images
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack(spacing: spacing) {
+                            ForEach(albumService.finishedAlbumsWithThumbnails, id: \.uuid) { album in
+                                if let thumbnailURL = album.thumbnailURL, let url = URL(string: thumbnailURL) {
+                                    NavigationLink(destination: AlbumSlideshowView(isTabBarHidden: .constant(false), album: album)) {
+                                        
+                                        ZStack{
+                                            Rectangle()
+                                                .fill(.white)
+                                                .frame(width: cardWidth, height: 320 )
+                                                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 5)
+                                                .cornerRadius(2)
+                                            VStack{
+                                                Text("\(dateFormatter.string(from: album.creationDate)) - \(dateFormatter.string(from: album.endDate))")
+                                                    .font(Font.custom("Chillax-Regular", size: 14))
+                                                    .foregroundColor(.black)
+                                                    .offset(y: 10)
+                                                    
+                                                   
+                                                    
+                                                KFImage(url)
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .frame(width: UIScreen.main.bounds.width / 3 + 80, height: 230) // Adjust the width as needed
+                                                    .clipped()
+                                                   
+                                                    .padding(.bottom, -20)
+                                    
+                                                
+                                                Text("\(album.albumName)")
+                                                    .font(Font.custom("Barrbar", size: 35))
+                                                    .foregroundColor(.black)
+                                                  
+                                                
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
-                        
+                        .padding(.horizontal, horizontalPadding) // Apply dynamic padding here
                     }
                     Spacer()
                 }
-            }
-            .background(Color.backgroundWhite) // Set the background color to white
+                .background(
+                    ZStack{
+                        Color.backgroundWhite.edgesIgnoringSafeArea(.all)
+
+                        BackgroundView()
+                            .frame(width: 600, height: 1500)
+                            .rotationEffect(.degrees(-50))
+                            .offset(y: 300)
+                    }
+                )
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -103,7 +141,7 @@ struct ProfileView: View {
                     }) {
                         Text("Edit")
                             .font(Font.custom("Chillax-Regular", size: 16))
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                         .padding(.top, 15)                       }
                 }
             }

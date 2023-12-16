@@ -46,8 +46,9 @@ class AlbumService: ObservableObject {
     
     // CREATE_ALBUM
     func createAlbum(albumName: String, endDate: Date, photoLimit: Int, members: [String], creator: String) {
+        let creationDate = Date()
         DispatchQueue.main.async {
-            let album = Album(uuid: self.albumUUid, albumName: albumName, endDate: endDate, photoLimit: photoLimit, members: members, creator: creator)
+            let album = Album(uuid: self.albumUUid, albumName: albumName, endDate: endDate, creationDate: creationDate, photoLimit: photoLimit, members: members, creator: creator)
             self.addAlbum(album)
             self.syncAlbums()
         }
@@ -233,6 +234,21 @@ class AlbumService: ObservableObject {
         
     }
     
+    // UPDATE ALBUM THUMBNAIL
+    func updateAlbumThumbnail(albumUUID: String, thumbnailURL: String, completion: @escaping (Bool) -> Void) {
+        let albumRef = db.collection("albums").document(albumUUID)
+
+        albumRef.updateData(["thumbnailURL": thumbnailURL]) { error in
+            if let error = error {
+                print("Error updating album: \(error)")
+                completion(false)
+            } else {
+                completion(true)
+            }
+        }
+    }
+
+    
     
     // MARK: - FUNC FOR FINISHED ALBUMS
     // METHODS TESTED FOR PROFILEVIEW GRID
@@ -259,6 +275,9 @@ class AlbumService: ObservableObject {
             completion(albums)
         }
     }
+    
+    
+    
     
     
     // MARK: - Functions Regarding Messages

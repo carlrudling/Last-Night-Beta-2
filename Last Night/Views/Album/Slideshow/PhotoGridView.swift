@@ -14,6 +14,7 @@ struct PhotoGridView: View {
     @State private var selectedImagePaths: [String] = []
     @State private var progress: CGFloat = 0
     @State var showingPopup = false
+    var album: Album
     
     var body: some View {
         ZStack {
@@ -76,7 +77,7 @@ struct PhotoGridView: View {
                                             .padding(4)
                                     }
                                 } else {
-                                    NavigationLink(destination: ImageDetailView(post: post)) {
+                                    NavigationLink(destination: ImageDetailView(post: post, album: album)) {
                                         KFImage(URL(string: post.imageURL))
                                             .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 300, height: 300)))
                                             .resizable()

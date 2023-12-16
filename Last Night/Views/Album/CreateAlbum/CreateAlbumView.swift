@@ -51,7 +51,7 @@ struct CreateAlbumView: View {
                                 keyboardIsShown = true
                             }
                     }
-                    
+                    /*
                     Section(){
                         Text("Photo limit")
                             .font(Font.custom("Chillax-Regular", size: 16))
@@ -66,6 +66,7 @@ struct CreateAlbumView: View {
                         .pickerStyle(.segmented)
                         .font(Font.custom("Chillax-Regular", size: 16))
                     }
+                    */
                     Section{
                         DatePicker("End date", selection: $albumViewModel.endDate, in: Date.now...)
                             .font(Font.custom("Chillax-Regular", size: 16))
