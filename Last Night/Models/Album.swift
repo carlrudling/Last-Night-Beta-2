@@ -22,6 +22,19 @@ struct Album: Codable {
     var isActive: Bool {
         return endDate > Date()
     }
+    
+    func isSameDay() -> Bool {
+        let calendar = Calendar.current
+
+        let creationDay = calendar.component(.day, from: creationDate)
+        let creationMonth = calendar.component(.month, from: creationDate)
+        let creationYear = calendar.component(.year, from: creationDate)
+
+        let endDay = calendar.component(.day, from: endDate)
+        let endMonth = calendar.component(.month, from: endDate)
+        let endYear = calendar.component(.year, from: endDate)
+
+        return creationDay == endDay && creationMonth == endMonth && creationYear == endYear
+    }
    
 }
-

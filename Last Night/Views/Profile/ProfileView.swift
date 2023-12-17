@@ -13,10 +13,11 @@ struct ProfileView: View {
         }
     
     var dateFormatter: DateFormatter {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MM/dd/yy"
-            return formatter
-        }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM"
+        return formatter
+    }
+
     
     
     var body: some View {
@@ -92,32 +93,43 @@ struct ProfileView: View {
                                             Rectangle()
                                                 .fill(.white)
                                                 .frame(width: cardWidth, height: 320 )
-                                                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 5)
                                                 .cornerRadius(2)
+                                                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+
+                                            
                                             VStack{
-                                                Text("\(dateFormatter.string(from: album.creationDate)) - \(dateFormatter.string(from: album.endDate))")
-                                                    .font(Font.custom("Chillax-Regular", size: 14))
-                                                    .foregroundColor(.black)
-                                                    .offset(y: 10)
+                                                if album.isSameDay() {
+                                                    Text("\(dateFormatter.string(from: album.creationDate))")
+                                                        .font(Font.custom("Chillax-Medium", size: 14))
+                                                        .foregroundColor(.black)
+                                                        .offset(y: 10)
+                                                } else {
+                                                    Text("\(dateFormatter.string(from: album.creationDate)) - \(dateFormatter.string(from: album.endDate))")
+                                                        .font(Font.custom("Chillax-Regular", size: 14))
+                                                        .foregroundColor(.black)
+                                                        .offset(y: 10)
                                                     
-                                                   
+                                                }
                                                     
                                                 KFImage(url)
                                                     .resizable()
                                                     .scaledToFill()
-                                                    .frame(width: UIScreen.main.bounds.width / 3 + 80, height: 230) // Adjust the width as needed
+                                                    .frame(width: UIScreen.main.bounds.width / 3 + 80, height: 250) // Adjust the width as needed
                                                     .clipped()
-                                                   
-                                                    .padding(.bottom, -20)
+                                                    .padding(.bottom, 10)
+                                                  
                                     
                                                 
                                                 Text("\(album.albumName)")
-                                                    .font(Font.custom("Barrbar", size: 35))
+                                                    .font(Font.custom("Chillax-Regular", size: 20))
                                                     .foregroundColor(.black)
+                                                    .offset(y: -10)
+
                                                   
                                                 
                                             }
                                         }
+                                      
                                     }
                                 }
                             }

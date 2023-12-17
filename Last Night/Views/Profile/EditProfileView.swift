@@ -40,6 +40,12 @@ struct EditProfileView: View {
             ZStack {
                 // Check if any image is selected or exists
                 if let uiImage = selectedImage ?? currentProfileImage {
+                    Circle()
+                        .frame(width: 100, height: 100)
+                        .foregroundColor(.gray) // You can set any color you like
+                        .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
+                        .shadow(radius: 10)
+                        .overlay(
                     Image(uiImage: uiImage)
                         .resizable()
                         .scaledToFill()
@@ -47,6 +53,7 @@ struct EditProfileView: View {
                         .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
                         .frame(width: 100, height: 100)
                         .padding()
+                    )
                 } else {
                     // Display a default system image when no image is available
                     Circle()
@@ -134,18 +141,17 @@ struct EditProfileView: View {
                 .disabled(isSaving) // Disable button while saving
                 
                 Spacer()
-                Button {
-                    signOutConfirmation.toggle()
-                    
-                } label: {
-                    Text("Sign Out")
-                        .font(Font.custom("Chillax-Regular", size: 18))
-                        .frame(width: 100)
-                        .padding()
-                        .background(Color.red)
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
-                        .padding(.bottom, 30)
+                HStack{
+                    Spacer()
+                    Button {
+                        signOutConfirmation.toggle()
+                        
+                    } label: {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .font(.system(size: 25))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 10)
+                    }
                 }
             }
         }
@@ -168,8 +174,8 @@ struct EditProfileView: View {
                     
                     VStack {
                         ZStack{
-                            Image(systemName: "power.circle") // SF Symbol for checkmark
-                                .font(.system(size: 80))
+                            Circle()
+                                .frame(width: 50, height: 50)
                                 .foregroundColor(.white)
                             
                                 .zIndex(1) // Ensure it's above the background
@@ -177,7 +183,9 @@ struct EditProfileView: View {
                                 .font(.system(size: 80))
                                 .foregroundColor(.red)
                                 .zIndex(1) // Ensure it's above the background
+                            
                         }
+
                         
                         Text("Sure you want to sign out?")
                             .font(Font.custom("Chillax-Medium", size: 18))
