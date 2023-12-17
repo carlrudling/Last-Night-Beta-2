@@ -11,7 +11,7 @@ struct Album: Codable {
     var members : [String] = []
     var creator : String
     var posts : [Post] = []
-    var thumbnailURL: String?
+    var userThumbnailURLs: [String: String] = [:] // Dictionary mapping user UUIDs to thumbnail URLs
     var messages: [Message] = []
 
     

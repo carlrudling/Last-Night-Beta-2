@@ -234,11 +234,11 @@ class AlbumService: ObservableObject {
         
     }
     
-    // UPDATE ALBUM THUMBNAIL
-    func updateAlbumThumbnail(albumUUID: String, thumbnailURL: String, completion: @escaping (Bool) -> Void) {
+    // UPDATE ALBUM THUMBNAIL FOR SPECIFIC USER
+    func updateUserAlbumThumbnail(albumUUID: String, userUUID: String, thumbnailURL: String, completion: @escaping (Bool) -> Void) {
         let albumRef = db.collection("albums").document(albumUUID)
 
-        albumRef.updateData(["thumbnailURL": thumbnailURL]) { error in
+        albumRef.updateData(["userThumbnailURLs.\(userUUID)": thumbnailURL]) { error in
             if let error = error {
                 print("Error updating album: \(error)")
                 completion(false)
@@ -247,6 +247,7 @@ class AlbumService: ObservableObject {
             }
         }
     }
+
 
     
     
@@ -262,12 +263,8 @@ class AlbumService: ObservableObject {
             var albums: [Album] = []
             
             for document in documents {
-                if var album = try? document.data(as: Album.self) {
-                    // Check if a thumbnailURL exists for the album
-                    if let thumbnailURL = album.thumbnailURL {
-                        album.thumbnailURL = thumbnailURL // Set the thumbnailURL for the album
-                    }
-                    
+                if let album = try? document.data(as: Album.self) {
+                    // No need to set thumbnailURL here, as userThumbnailURLs dictionary is already part of the Album object
                     albums.append(album)
                 }
             }
@@ -275,6 +272,7 @@ class AlbumService: ObservableObject {
             completion(albums)
         }
     }
+
     
     
     

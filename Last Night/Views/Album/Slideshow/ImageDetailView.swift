@@ -14,8 +14,9 @@ struct ImageDetailView: View {
     @State var setAlbumPlaceholder = false
     @State var reportPost = false
     @State var removeReport = false
-    @State var reportPostFail = false
-
+    @State var requestFail = false
+    @State var tumbnailCreated = false
+    
    
     var album: Album
     
@@ -79,13 +80,15 @@ struct ImageDetailView: View {
                     VStack {
                         
                         Button(action: {
-                            albumService.updateAlbumThumbnail(albumUUID: album.documentID ?? "", thumbnailURL: post.imageURL) { success in
-                                if success {
-                                    // Handle successful update, e.g., show confirmation to user
-                                    setAlbumPlaceholder.toggle()
-                                } else {
-                                    // Handle error
-                                }
+                            albumService.updateUserAlbumThumbnail(albumUUID: album.documentID ?? "", userUUID: userService.uuid ?? "", thumbnailURL: post.imageURL) { success in
+                                   if success {
+                                       // Handle successful update, e.g., show confirmation to user
+                                       setAlbumPlaceholder.toggle()
+                                       tumbnailCreated.toggle()
+                                   } else {
+                                       // Handle error
+                                       requestFail.toggle()
+                                   }
                             }
                         }) {
                             ZStack{
@@ -317,7 +320,7 @@ struct ImageDetailView: View {
                                        } else {
                                            reportPost = false
                                            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
-                                               reportPostFail = true
+                                               requestFail = true
                                                
                                            }
                                            print("Report failed or already reported by this user")
@@ -439,7 +442,7 @@ struct ImageDetailView: View {
                                     } else {
                                         removeReport = false
                                         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
-                                            reportPostFail = true
+                                            requestFail = true
                                             
                                         }
                                         print("Report failed or already reported by this user")
@@ -490,7 +493,7 @@ struct ImageDetailView: View {
         }
         
         
-        .popup(isPresented: $reportPostFail) {
+        .popup(isPresented: $requestFail) {
             VStack{
                 ZStack { // 4
                     
@@ -528,6 +531,80 @@ struct ImageDetailView: View {
                             .padding(.top, 2)
                         
                         Text("Your request couldn't be sent, please try again later.")
+                            .font(Font.custom("Chillax-Regular", size: 16))
+                            .foregroundColor(.white)
+                            .padding(.top, 10)
+                            .padding(.horizontal, 20)
+                            .multilineTextAlignment(.center)
+                            
+                        Spacer()
+                        
+                    }
+                    .padding(.top, -40) // Make space for the checkmark at the top
+                    
+                }
+                .frame(width: 300, height: 200, alignment: .center)
+                //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                
+                .background(
+                    // Clipped background
+                    RoundedRectangle(cornerRadius: 20)
+                            .fill(
+                                LinearGradient(stops: [
+                                    .init(color: .lightPurple, location: 0.001),
+                                    .init(color: .darkPurple, location: 0.99)
+                                ], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                
+                )
+            }
+            .frame(width: 300, height: 300, alignment: .center)
+            //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+            .background(.clear)
+           
+    
+   
+    }
+
+        .popup(isPresented: $tumbnailCreated) {
+            VStack{
+                ZStack { // 4
+                    
+                    VStack{
+                        HStack{
+                            Spacer()
+                            Image(systemName: "xmark")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .padding(10)
+                        }
+                        Spacer()
+                    }
+                    
+                    VStack {
+                        ZStack{
+                            Image(systemName: "star") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.white)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            Image(systemName: "star.fill") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.yellow)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            
+                        }
+                        
+                        Text("New album placeholder")
+                            .font(Font.custom("Chillax-Medium", size: 18))
+                            .foregroundColor(.white)
+                            .bold()
+                            .padding(.bottom, 5)
+                            .padding(.top, 2)
+                        
+                        Text("This image has been set as the new placeholder for the album, can be seen in your profile.")
                             .font(Font.custom("Chillax-Regular", size: 16))
                             .foregroundColor(.white)
                             .padding(.top, 10)

@@ -83,7 +83,9 @@ struct ProfileView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(spacing: spacing) {
                             ForEach(albumService.finishedAlbumsWithThumbnails, id: \.uuid) { album in
-                                if let thumbnailURL = album.thumbnailURL, let url = URL(string: thumbnailURL) {
+                                
+                                let thumbnailURL = album.userThumbnailURLs[userService.uuid ?? ""]
+                                if let thumbnailURL = thumbnailURL, let url = URL(string: thumbnailURL) {
                                     NavigationLink(destination: AlbumSlideshowView(isTabBarHidden: .constant(false), album: album)) {
                                         
                                         ZStack{
@@ -157,7 +159,6 @@ struct ProfileView: View {
             albumService.fetchFinishedAlbums(forUserWithID: userService.uuid ?? "") { [weak albumService] albums in
                 albumService?.finishedAlbumsWithThumbnails = albums
                 albums.forEach { album in
-                    print("Album in onAppear ProfileView: \(album.albumName), thumbnailURL: \(album.thumbnailURL ?? "nil")")
                 }
             }
             userService.refreshUserData()
