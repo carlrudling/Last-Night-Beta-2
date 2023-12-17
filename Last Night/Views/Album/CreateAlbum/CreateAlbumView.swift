@@ -36,7 +36,6 @@ struct CreateAlbumView: View {
             VStack() {
                 Text("Create Album")
                     .font(.custom("Chillax-Medium", size: 20))
-                    .font(.system(size: 25))
                     .foregroundColor(.black)
                     .padding(.top, 40)
                     .padding(.bottom, 40)

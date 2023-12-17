@@ -221,7 +221,7 @@ struct CameraView: View {
                                 Spacer()
                                 Image(systemName: "xmark")
                                     .font(.system(size: 18))
-                                    .foregroundColor(.black)
+                                    .foregroundColor(.white)
                                     .padding(10)
                             }
                             Spacer()
@@ -243,16 +243,14 @@ struct CameraView: View {
                             }
                             
                             Text("Permissions not granted")
-                                .font(.custom("Chillax-Regular", size: 22))
-                                .font(.system(size: 22))
-                                .foregroundColor(.black)
-                                .bold()
+                                .font(.custom("Chillax-Medium", size: 18))
+                                .foregroundColor(.white)
                                 .padding(.bottom, 5)
                                 .padding(.top, 2)
                             
                             Text("To use the camera, you need to allow camera usage in settings.")
                                 .font(.custom("Chillax-Regular", size: 16))
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                                 .padding(.top, 10)
                                 .padding(.horizontal, 20)
                                 .multilineTextAlignment(.center)
@@ -268,9 +266,14 @@ struct CameraView: View {
                     .background(
                         // Clipped background
                         RoundedRectangle(cornerRadius: 20)
-                            .fill(Color.white)
-                            .shadow(color: .gray, radius: 6, x: 0, y: 3)
-                    )
+                                .fill(
+                                    LinearGradient(stops: [
+                                        .init(color: .lightPurple, location: 0.001),
+                                        .init(color: .darkPurple, location: 0.99)
+                                    ], startPoint: .leading, endPoint: .trailing)
+                                )
+                                .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+        )
                     
                     
                 }
@@ -291,7 +294,7 @@ struct CameraView: View {
                                 Spacer()
                                 Image(systemName: "xmark")
                                     .font(.system(size: 18))
-                                    .foregroundColor(.black)
+                                    .foregroundColor(.white)
                                     .padding(10)
                             }
                             Spacer()
@@ -313,15 +316,14 @@ struct CameraView: View {
                             }
                             
                             Text("Success")
-                                .font(.system(size: 25))
-                                .foregroundColor(.black)
-                                .bold()
+                                .font(Font.custom("Chillax-Medium", size: 18))
+                                .foregroundColor(.white)
                                 .padding(.bottom, 5)
                                 .padding(.top, 2)
                             
                             Text("You've just joined a new album")
-                                .font(.custom("Chillax-Regular", size: 18))
-                                .foregroundColor(.black)
+                                .font(.custom("Chillax-Regular", size: 16))
+                                .foregroundColor(.white)
                                 .padding(.top, 10)
                                 .padding(.horizontal, 20)
                                 .multilineTextAlignment(.center)
@@ -337,9 +339,14 @@ struct CameraView: View {
                     .background(
                         // Clipped background
                         RoundedRectangle(cornerRadius: 20)
-                            .fill(Color.white)
-                            .shadow(color: .gray, radius: 6, x: 0, y: 3)
-                    )
+                                .fill(
+                                    LinearGradient(stops: [
+                                        .init(color: .lightPurple, location: 0.001),
+                                        .init(color: .darkPurple, location: 0.99)
+                                    ], startPoint: .leading, endPoint: .trailing)
+                                )
+                                .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+        )
                     
                     
                 }
@@ -360,7 +367,7 @@ struct CameraView: View {
                                 Spacer()
                                 Image(systemName: "xmark")
                                     .font(.system(size: 18))
-                                    .foregroundColor(.black)
+                                    .foregroundColor(.white)
                                     .padding(10)
                             }
                             Spacer()
@@ -382,15 +389,14 @@ struct CameraView: View {
                             }
                             
                             Text("Error")
-                                .font(.system(size: 25))
-                                .foregroundColor(.black)
-                                .bold()
+                                .font(.custom("Chillax-Medium", size: 18))
+                                .foregroundColor(.white)
                                 .padding(.bottom, 5)
                                 .padding(.top, 2)
                             
                             Text("Something went wrong.")
-                                .font(.system(size: 18))
-                                .foregroundColor(.black)
+                                .font(.custom("Chillax-Regular", size: 16))
+                                .foregroundColor(.white)
                                 .padding(.top, 10)
                                 .padding(.horizontal, 20)
                                 .multilineTextAlignment(.center)
@@ -406,9 +412,14 @@ struct CameraView: View {
                     .background(
                         // Clipped background
                         RoundedRectangle(cornerRadius: 20)
-                            .fill(Color.white)
-                            .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
-                    )
+                                .fill(
+                                    LinearGradient(stops: [
+                                        .init(color: .lightPurple, location: 0.001),
+                                        .init(color: .darkPurple, location: 0.99)
+                                    ], startPoint: .leading, endPoint: .trailing)
+                                )
+                                .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+        )
                     
                     
                 }

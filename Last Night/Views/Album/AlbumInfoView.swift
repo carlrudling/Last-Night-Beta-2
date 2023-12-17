@@ -105,7 +105,6 @@ struct AlbumInfoView: View {
                     Text(countdownText)
                         .font(Font.custom("Chillax-Regular", size: 12))
                         .foregroundColor(.black)
-                        .font(.system(size: 12))
                     Text("Scan to join!")
                         .font(Font.custom("Chillax-Regular", size: 14))
                         .foregroundColor(.black)
@@ -221,7 +220,7 @@ struct AlbumInfoView: View {
                             Spacer()
                             Image(systemName: "xmark")
                                 .font(.system(size: 18))
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                                 .padding(10)
                         }
                         Spacer()
@@ -240,16 +239,16 @@ struct AlbumInfoView: View {
                                 .zIndex(1) // Ensure it's above the background
                         }
                         
-                        Text("Sure you want to leave?")
-                            .font(.system(size: 22))
-                            .foregroundColor(.black)
+                        Text("Sure you want to leave the album?")
+                            .font(Font.custom("Chillax-Medium", size: 18))
+                            .foregroundColor(.white)
                             .bold()
                             .padding(.bottom, 5)
                             .padding(.top, 2)
                         
                         Text("If you leave the album all your posts will be deleted.")
-                            .font(.system(size: 16))
-                            .foregroundColor(.black)
+                            .font(Font.custom("Chillax-Regular", size: 16))
+                            .foregroundColor(.white)
                             .padding(.top, 5)
                             .padding(.horizontal, 20)
                             .multilineTextAlignment(.center)
@@ -260,7 +259,7 @@ struct AlbumInfoView: View {
                                 leaveAlbum = false
                             } label: {
                                 Text("No")
-                                    .font(.system(size: 20))
+                                    .font(Font.custom("Chillax-Regular", size: 18))
                                     .frame(maxWidth: .infinity)
                                     .padding(10)
                                     .background(
@@ -283,15 +282,20 @@ struct AlbumInfoView: View {
                                 
                             } label: {
                                 Text("Yes")
-                                    .font(.system(size: 20))
+                                    .font(Font.custom("Chillax-Regular", size: 18))
                                     .frame(width: 80)
                                     .padding(10)
                                     .background(
                                         // Clipped background
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .fill(Color.red)
-                                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
-                                    )
+                                        RoundedRectangle(cornerRadius: 20)
+                                                .fill(
+                                                    LinearGradient(stops: [
+                                                        .init(color: .lightPurple, location: 0.001),
+                                                        .init(color: .darkPurple, location: 0.99)
+                                                    ], startPoint: .leading, endPoint: .trailing)
+                                                )
+                                                .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                        )
                                     .foregroundColor(.white)
                                     .padding(.bottom, 20)
                                     .padding(.trailing, 10)
@@ -310,10 +314,14 @@ struct AlbumInfoView: View {
                 .background(
                     // Clipped background
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.white)
-                        .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
-                )
-                
+                            .fill(
+                                LinearGradient(stops: [
+                                    .init(color: .lightPurple, location: 0.001),
+                                    .init(color: .darkPurple, location: 0.99)
+                                ], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+    )
             }
             .frame(width: 300, height: 300, alignment: .center)
             //.padding(.top, 40) // Padding to push everything down so checkmark appears half out

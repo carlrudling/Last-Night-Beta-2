@@ -38,7 +38,7 @@ struct SignUpView: View {
                         withAnimation {
                             Text("\(authViewModel.errorMessage)")
                                 .foregroundColor(.red)
-                                .font(.system(size: 12))
+                                .font(Font.custom("Chillax-Regular", size: 12))
                         }
                     }
                     Button(action: {

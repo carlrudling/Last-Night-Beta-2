@@ -12,6 +12,9 @@ struct ImageDetailView: View {
     @State private var bounceAmount: CGFloat = 1.0
     @State var showingErrorPopup = false
     @State var setAlbumPlaceholder = false
+    @State var reportPost = false
+    @State var reportPostFail = false
+
    
     var album: Album
     
@@ -73,6 +76,7 @@ struct ImageDetailView: View {
                 HStack {
                     Spacer()
                     VStack {
+                        
                         Button(action: {
                             albumService.updateAlbumThumbnail(albumUUID: album.documentID ?? "", thumbnailURL: post.imageURL) { success in
                                 if success {
@@ -83,12 +87,32 @@ struct ImageDetailView: View {
                                 }
                             }
                         }) {
-                            Image(systemName: setAlbumPlaceholder ? "star.fill" : "star")
+                            ZStack{
+                                Image(systemName: "star")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                                   
+                                
+                                Image(systemName: setAlbumPlaceholder ? "star.fill" : "")
+                                    .font(.system(size: 17))
+                                    .foregroundColor(.yellow)
+                                   
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.bottom, 20)
+                        }
+                        
+                        Button(action: {
+                            reportPost.toggle()
+                        }) {
+                            Image(systemName:"exclamationmark.triangle")
                                 .font(.system(size: 24))
-                                .foregroundColor(setAlbumPlaceholder ? .yellow : .white)
+                                .foregroundColor( .white)
                                 .padding(.horizontal, 20)
                                 .padding(.bottom, 20)
                         }
+                        
+                    
 
 
                         
@@ -129,7 +153,7 @@ struct ImageDetailView: View {
                         
                         if  isSaved {
                             Text("Saved")
-                                .font(.system(size: 12))
+                                .font(Font.custom("Chillax-Regular", size: 12))
                                 .foregroundColor(.green)
                                 .offset(y: isSaved ? 0 : -20)
                                 .opacity(isSaved ? 1.0 : 0.0)
@@ -150,7 +174,7 @@ struct ImageDetailView: View {
                             Spacer()
                             Image(systemName: "xmark")
                                 .font(.system(size: 18))
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                                 .padding(10)
                         }
                         Spacer()
@@ -172,15 +196,15 @@ struct ImageDetailView: View {
                         }
                         
                         Text("Permissions not granted")
-                            .font(.system(size: 22))
-                            .foregroundColor(.black)
+                            .font(Font.custom("Chillax-Medium", size: 18))
+                            .foregroundColor(.white)
                             .bold()
                             .padding(.bottom, 5)
                             .padding(.top, 2)
                         
                         Text("To save images you need to allow access to images in settings.")
-                            .font(.system(size: 16))
-                            .foregroundColor(.black)
+                            .font(Font.custom("Chillax-Regular", size: 16))
+                            .foregroundColor(.white)
                             .padding(.top, 10)
                             .padding(.horizontal, 20)
                             .multilineTextAlignment(.center)
@@ -197,11 +221,15 @@ struct ImageDetailView: View {
                 .background(
                     // Clipped background
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.white)
-                        .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                            .fill(
+                                LinearGradient(stops: [
+                                    .init(color: .lightPurple, location: 0.001),
+                                    .init(color: .darkPurple, location: 0.99)
+                                ], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                
                 )
-                
-                
             }
             .frame(width: 300, height: 300, alignment: .center)
             //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
@@ -210,6 +238,203 @@ struct ImageDetailView: View {
     
    
     }
+        
+        .popup(isPresented: $reportPost) {
+            VStack{
+                ZStack { // 4
+                    
+                    VStack{
+                        HStack{
+                            Spacer()
+                            Image(systemName: "xmark")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .padding(10)
+                        }
+                        Spacer()
+                    }
+                    
+                    VStack {
+                        ZStack{
+                            Image(systemName: "exclamationmark.triangle") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.white)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            Image(systemName: "exclamationmark.triangle.fill") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.red)
+                                .zIndex(1) // Ensure it's above the background
+                        }
+                        
+                        Text("Want to report this post?")
+                            .font(Font.custom("Chillax-Medium", size: 18))
+                            .foregroundColor(.white)
+                            .bold()
+                            .padding(.bottom, 5)
+                            .padding(.top, 2)
+                        
+                        Text("After 3 users have made a report the post will be deleted.")
+                            .font(Font.custom("Chillax-Regular", size: 16))
+                            .foregroundColor(.white)
+                            .padding(.top, 5)
+                            .padding(.horizontal, 20)
+                            .multilineTextAlignment(.center)
+                        
+                        Spacer()
+                        HStack(spacing: 0) {
+                            Button {
+                                reportPost = false
+                            } label: {
+                                Text("No")
+                                    .font(Font.custom("Chillax-Regular", size: 18))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(10)
+                                    .background(
+                                        // Clipped background
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color.white)
+                                            //.shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 2)
+                                    )
+                                    .foregroundColor(.black)
+                                    .padding(.bottom, 20)
+                                    .padding(.horizontal, 10)
+                            }
+                            
+                            Button {
+                               //REPORT POST
+                                postService.reportPost(userUUID: userService.uuid ?? "", post: post, albumDocumentID: album.documentID ?? "") { success in
+                                       if success {
+                                           reportPost = false
+                                           print("Report successful")
+                                       } else {
+                                           reportPost = false
+                                           Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
+                                               reportPostFail = true
+                                               
+                                           }
+                                           print("Report failed or already reported by this user")
+                                       }
+                                   }
+                                
+                            } label: {
+                                Text("Yes")
+                                    .font(Font.custom("Chillax-Regular", size: 18))
+                                    .frame(width: 80)
+                                    .padding(10)
+                                    .background(
+                                        // Clipped background
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color.red)
+                                            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 2)
+                                    )
+                                    .foregroundColor(.white)
+                                    .padding(.bottom, 20)
+                                    .padding(.trailing, 10)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    .padding(.top, -40) // Make space for the checkmark at the top
+                    
+                }
+                .frame(width: 300, height: 240, alignment: .center)
+                //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                
+                .background(
+                    // Clipped background
+                    RoundedRectangle(cornerRadius: 20)
+                            .fill(
+                                LinearGradient(stops: [
+                                    .init(color: .lightPurple, location: 0.001),
+                                    .init(color: .darkPurple, location: 0.99)
+                                ], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+)
+            }
+            .frame(width: 300, height: 300, alignment: .center)
+            //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+            .background(.clear)
+            
+        }
+        
+        .popup(isPresented: $reportPostFail) {
+            VStack{
+                ZStack { // 4
+                    
+                    VStack{
+                        HStack{
+                            Spacer()
+                            Image(systemName: "xmark")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .padding(10)
+                        }
+                        Spacer()
+                    }
+                    
+                    VStack {
+                        ZStack{
+                            Image(systemName: "multiply.circle") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.white)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            Image(systemName: "multiply.circle.fill") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.red)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            
+                        }
+                        
+                        Text("Report couldn't be sent")
+                            .font(Font.custom("Chillax-Medium", size: 18))
+                            .foregroundColor(.white)
+                            .bold()
+                            .padding(.bottom, 5)
+                            .padding(.top, 2)
+                        
+                        Text("There was an issue with the report, please try again later.")
+                            .font(Font.custom("Chillax-Regular", size: 16))
+                            .foregroundColor(.white)
+                            .padding(.top, 10)
+                            .padding(.horizontal, 20)
+                            .multilineTextAlignment(.center)
+                            
+                        Spacer()
+                        
+                    }
+                    .padding(.top, -40) // Make space for the checkmark at the top
+                    
+                }
+                .frame(width: 300, height: 200, alignment: .center)
+                //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                
+                .background(
+                    // Clipped background
+                    RoundedRectangle(cornerRadius: 20)
+                            .fill(
+                                LinearGradient(stops: [
+                                    .init(color: .lightPurple, location: 0.001),
+                                    .init(color: .darkPurple, location: 0.99)
+                                ], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                
+                )
+            }
+            .frame(width: 300, height: 300, alignment: .center)
+            //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+            .background(.clear)
+           
+    
+   
+    }
+
         
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:

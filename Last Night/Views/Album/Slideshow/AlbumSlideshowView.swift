@@ -194,7 +194,7 @@ struct AlbumSlideshowView: View {
                             if slideShowViewModel.successMessage {
                                 Text("Saved")
                                     .foregroundColor(.green)
-                                    .font(.system(size: 12))
+                                    .font(Font.custom("Chillax-Regular", size: 12))
                                     .offset(y: slideShowViewModel.successMessage ? -15 : -30)
                                     .opacity(slideShowViewModel.successMessage ? 1.0 : 0.0)
                                 //.animation(.easeOut(duration: 0.5), value: slideShowViewModel.successMessage)
@@ -209,7 +209,7 @@ struct AlbumSlideshowView: View {
                             if slideShowViewModel.errorMessage {
                                 Text("Try again")
                                     .foregroundColor(.red)
-                                    .font(.system(size: 12))
+                                    .font(Font.custom("Chillax-Regular", size: 12))
                                     .offset(y: slideShowViewModel.errorMessage ? -15 : -30)
                                     .opacity(slideShowViewModel.errorMessage ? 1.0 : 0.0)
                                 //.animation(.easeOut(duration: 0.5), value: slideShowViewModel.errorMessage)
@@ -300,7 +300,7 @@ struct AlbumSlideshowView: View {
                             Spacer()
                             Image(systemName: "xmark")
                                 .font(.system(size: 18))
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                                 .padding(10)
                         }
                         Spacer()
@@ -322,14 +322,14 @@ struct AlbumSlideshowView: View {
                         }
                         
                         Text("New Slideshow Created")
-                            .font(.system(size: 22))
+                            .font(Font.custom("Chillax-Medium", size: 18))
                             .foregroundColor(.black)
                             .bold()
                             .padding(.bottom, 5)
                             .padding(.top, 2)
                         
                         Text("New slideshow has been created with selected images.")
-                            .font(.system(size: 16))
+                            .font(Font.custom("Chillax-Regular", size: 16))
                             .foregroundColor(.black)
                             .padding(.top, 10)
                             .padding(.horizontal, 20)
@@ -347,10 +347,14 @@ struct AlbumSlideshowView: View {
                 .background(
                     // Clipped background
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.white)
-                        .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
-                )
-                
+                            .fill(
+                                LinearGradient(stops: [
+                                    .init(color: .lightPurple, location: 0.001),
+                                    .init(color: .darkPurple, location: 0.99)
+                                ], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+    )
                 
             }
             .frame(width: 300, height: 300, alignment: .center)

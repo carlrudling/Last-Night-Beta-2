@@ -197,7 +197,7 @@ struct PhotoGridView: View {
                                         Spacer()
                                         Image(systemName: "xmark")
                                             .font(.system(size: 18))
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.white)
                                             .padding(10)
                                     }
                                     Spacer()
@@ -219,15 +219,15 @@ struct PhotoGridView: View {
                                     }
                                     
                                     Text("Permissions not granted")
-                                        .font(.system(size: 22))
-                                        .foregroundColor(.black)
+                                        .font(Font.custom("Chillax-Medium", size: 18))
+                                        .foregroundColor(.white)
                                         .bold()
                                         .padding(.bottom, 5)
                                         .padding(.top, 2)
                                     
                                     Text("To save images you need to allow access to images in settings.")
-                                        .font(.system(size: 16))
-                                        .foregroundColor(.black)
+                                        .font(Font.custom("Chillax-Regular", size: 16))
+                                        .foregroundColor(.white)
                                         .padding(.top, 10)
                                         .padding(.horizontal, 20)
                                         .multilineTextAlignment(.center)
@@ -244,9 +244,14 @@ struct PhotoGridView: View {
                             .background(
                                 // Clipped background
                                 RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color.white)
-                                    .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
-                            )
+                                        .fill(
+                                            LinearGradient(stops: [
+                                                .init(color: .lightPurple, location: 0.001),
+                                                .init(color: .darkPurple, location: 0.99)
+                                            ], startPoint: .leading, endPoint: .trailing)
+                                        )
+                                        .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                )
                             
                             
                         }
@@ -266,7 +271,7 @@ struct PhotoGridView: View {
                                         Spacer()
                                         Image(systemName: "xmark")
                                             .font(.system(size: 18))
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.white)
                                             .padding(10)
                                     }
                                     Spacer()
@@ -288,13 +293,14 @@ struct PhotoGridView: View {
                                     }
                                     
                                     Text("Images saved")
-                                        .font(.system(size: 22))
-                                        .bold()
+                                        .font(Font.custom("Chillax-Medium", size: 18))
+                                        .foregroundColor(.white)
                                         .padding(.bottom, 5)
                                         .padding(.top, 2)
                                     
                                     Text("The images you selected have successfully been downloaded.")
-                                        .font(.system(size: 16))
+                                        .font(Font.custom("Chillax-Regular", size: 16))
+                                        .foregroundColor(.white)
                                         .padding(.top, 10)
                                         .padding(.horizontal, 20)
                                         .multilineTextAlignment(.center)
@@ -311,9 +317,14 @@ struct PhotoGridView: View {
                             .background(
                                 // Clipped background
                                 RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color.white)
-                                    .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
-                            )
+                                        .fill(
+                                            LinearGradient(stops: [
+                                                .init(color: .lightPurple, location: 0.001),
+                                                .init(color: .darkPurple, location: 0.99)
+                                            ], startPoint: .leading, endPoint: .trailing)
+                                        )
+                                        .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                )
                             
                             
                         }

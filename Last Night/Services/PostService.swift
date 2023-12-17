@@ -53,6 +53,95 @@ class PostService: ObservableObject {
         }
     }
     
+    
+    func reportPost(userUUID: String, post: Post, albumDocumentID: String, completion: @escaping (Bool) -> Void) {
+        var updatedPost = post
+
+        // Check if the user has already reported this post
+        if updatedPost.reports[userUUID] == true {
+            completion(false) // Post already reported by this user
+            return
+        }
+
+        // Report the post
+        updatedPost.reports[userUUID] = true
+
+        // Check if the report count has reached the threshold
+        let reportCount = updatedPost.reports.count
+        if reportCount >= 3 {
+            // If threshold reached, remove the post
+            removePostFromAlbum(albumDocumentID: albumDocumentID, postID: post.Postuuid)
+        }
+
+        // Assuming each album contains its own posts, update the post in the album
+        let albumRef = db.collection("albums").document(albumDocumentID)
+        albumRef.getDocument { (document, error) in
+            if let document = document, document.exists, var album = try? document.data(as: Album.self) {
+                if let postIndex = album.posts.firstIndex(where: { $0.Postuuid == post.Postuuid }) {
+                    album.posts[postIndex] = updatedPost
+                    try? albumRef.setData(from: album) { error in
+                        if let error = error {
+                            print("Error updating post in album: \(error)")
+                            completion(false)
+                        } else {
+                            completion(true)
+                        }
+                    }
+                } else {
+                    print("Post not found in album")
+                    completion(false)
+                }
+            } else {
+                print("Album document does not exist or error: \(error?.localizedDescription ?? "")")
+                completion(false)
+            }
+        }
+    }
+
+    
+    func removePostFromAlbum(albumDocumentID: String, postID: String) {
+        let albumRef = db.collection("albums").document(albumDocumentID)
+
+        albumRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                var album = try? document.data(as: Album.self)
+                guard let postIndex = album?.posts.firstIndex(where: { $0.Postuuid == postID }) else {
+                    print("Post not found in album")
+                    return
+                }
+
+                // Get the post
+                let post = album?.posts[postIndex]
+
+                // Delete the image from Firebase Storage
+                let storageRef = Storage.storage().reference(withPath: post?.imagePath ?? "")
+                storageRef.delete { error in
+                    if let error = error {
+                        print("Error removing image from storage: \(error)")
+                    } else {
+                        print("Image successfully removed from storage")
+                        
+                        // Remove the post from the album's posts array
+                        album?.posts.remove(at: postIndex)
+
+                        // Update the album document in Firestore
+                        try? albumRef.setData(from: album) { error in
+                            if let error = error {
+                                print("Error updating album document: \(error)")
+                            } else {
+                                print("Post successfully removed from album")
+                            }
+                        }
+                    }
+                }
+            } else {
+                print("Album document does not exist or error: \(error?.localizedDescription ?? "")")
+            }
+        }
+    }
+
+
+    
 }
 
 

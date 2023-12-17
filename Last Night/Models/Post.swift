@@ -14,7 +14,8 @@ struct Post: Codable, Identifiable {
     var imagePath: String
     var imageURL: String
     var uploadTime: Date
-    
+    var reports: [String: Bool] = [:] // Dictionary to track reports, key is user UUID
+
     var id: String {
             return Postuuid
         }
@@ -25,7 +26,8 @@ struct Post: Codable, Identifiable {
                 "userUuid": userUuid,
                 "imagePath": imagePath,
                 "imageURL": imageURL,
-                "uploadTime": uploadTime
+                "uploadTime": uploadTime,
+                "reports": reports
             ]
         }
     

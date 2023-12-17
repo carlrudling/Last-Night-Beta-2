@@ -158,7 +158,7 @@ struct EditAlbumView: View {
                             Spacer()
                             Image(systemName: "xmark")
                                 .font(.system(size: 18))
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                                 .padding(10)
                         }
                         Spacer()
@@ -179,16 +179,15 @@ struct EditAlbumView: View {
                         }
                         
                         Text("Sure you want to change?")
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .bold()
+                            .font(Font.custom("Chillax-Medium", size: 18))
+                            .foregroundColor(.white)
                             .padding(.bottom, 5)
                             .padding(.top, 2)
                             .foregroundColor(.black)
                         
                         Text("If you press 'yes', the settings you've set here will become the new default.")
-                            .font(.system(size: 16))
-                            .foregroundColor(.black)
+                            .font(Font.custom("Chillax-Regular", size: 16))
+                            .foregroundColor(.white)
                             .padding(.top, 5)
                             .padding(.horizontal, 20)
                             .multilineTextAlignment(.center)
@@ -200,7 +199,7 @@ struct EditAlbumView: View {
                                 confirmationPopup = false
                             } label: {
                                 Text("No")
-                                    .font(.system(size: 20))
+                                    .font(Font.custom("Chillax-Regular", size: 18))
                                     .frame(maxWidth: .infinity)
                                     .padding(10)
                                     .background(
@@ -220,15 +219,20 @@ struct EditAlbumView: View {
                                 
                             } label: {
                                 Text("Yes")
-                                    .font(.system(size: 20))
+                                    .font(Font.custom("Chillax-Regular", size: 18))
                                     .frame(width: 80)
                                     .padding(10)
                                     .background(
                                         // Clipped background
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .fill(Color.red)
-                                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
-                                    )
+                                        RoundedRectangle(cornerRadius: 20)
+                                                .fill(
+                                                    LinearGradient(stops: [
+                                                        .init(color: .lightPurple, location: 0.001),
+                                                        .init(color: .darkPurple, location: 0.99)
+                                                    ], startPoint: .leading, endPoint: .trailing)
+                                                )
+                                                .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+                        )
                                     .foregroundColor(.white)
                                     .padding(.bottom, 20)
                                     .padding(.trailing, 10)
