@@ -11,7 +11,8 @@ struct EditProfileView: View {
     @State private var lastName = ""
     @State private var isSaving: Bool = false
     @Binding var editProfileSheet: Bool
-    
+    @State var signOutConfirmation = false
+
     // New State property for current profile image
     @State private var currentProfileImage: UIImage?
     
@@ -36,29 +37,31 @@ struct EditProfileView: View {
     var body: some View {
         
         VStack{
-            ZStack{
-                // Display current or selected profile image
-                Image(uiImage: selectedImage ?? currentProfileImage ?? UIImage())
-                    .resizable()
-                    .scaledToFill()
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
-                    .frame(width: 100, height: 100)
-                    .padding()
-                    .onAppear {
-                        if let userProfile = userService.user,
-                           let profileImageURL = userProfile.profileImageURL,
-                           let url = URL(string: profileImageURL) {
-                            // Load current profile image
-                            URLSession.shared.dataTask(with: url) { data, _, _ in
-                                if let data = data {
-                                    DispatchQueue.main.async {
-                                        self.currentProfileImage = UIImage(data: data)
-                                    }
-                                }
-                            }.resume()
-                        }
-                    }
+            ZStack {
+                // Check if any image is selected or exists
+                if let uiImage = selectedImage ?? currentProfileImage {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
+                        .frame(width: 100, height: 100)
+                        .padding()
+                } else {
+                    // Display a default system image when no image is available
+                    Circle()
+                        .frame(width: 100, height: 100)
+                        .foregroundColor(.gray) // You can set any color you like
+                        .overlay(Circle().stroke(Color.white, lineWidth: 4))  // Optional: Adds a border
+                        .shadow(radius: 10)
+                        .overlay(
+                            Image(systemName: "person.fill")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .foregroundColor(.white) // You can set the icon color
+                                .opacity(0.3)
+                        )
+                }
                 
                 // Button to open image picker
                 Button(action: {
@@ -132,7 +135,8 @@ struct EditProfileView: View {
                 
                 Spacer()
                 Button {
-                    userService.signOut()
+                    signOutConfirmation.toggle()
+                    
                 } label: {
                     Text("Sign Out")
                         .font(Font.custom("Chillax-Regular", size: 18))
@@ -144,10 +148,132 @@ struct EditProfileView: View {
                         .padding(.bottom, 30)
                 }
             }
+        }
+        
+        
+        .popup(isPresented: $signOutConfirmation) {
+            VStack{
+                ZStack { // 4
+                    
+                    VStack{
+                        HStack{
+                            Spacer()
+                            Image(systemName: "xmark")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .padding(10)
+                        }
+                        Spacer()
+                    }
+                    
+                    VStack {
+                        ZStack{
+                            Image(systemName: "power.circle") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.white)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            Image(systemName: "power.circle.fill") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.red)
+                                .zIndex(1) // Ensure it's above the background
+                        }
+                        
+                        Text("Sure you want to sign out?")
+                            .font(Font.custom("Chillax-Medium", size: 18))
+                            .foregroundColor(.white)
+                            .bold()
+                            .padding(.bottom, 5)
+                            .padding(.top, 2)
+                        
+                        Text("By pressing yes you will have signed out of your account.")
+                            .font(Font.custom("Chillax-Regular", size: 16))
+                            .foregroundColor(.white)
+                            .padding(.top, 5)
+                            .padding(.horizontal, 20)
+                            .multilineTextAlignment(.center)
+                        
+                        Spacer()
+                        HStack(spacing: 0) {
+                            Button {
+                                signOutConfirmation = false
+                            } label: {
+                                Text("No")
+                                    .font(Font.custom("Chillax-Regular", size: 18))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(10)
+                                    .background(
+                                        // Clipped background
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color.white)
+                                            //.shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 2)
+                                    )
+                                    .foregroundColor(.black)
+                                    .padding(.bottom, 20)
+                                    .padding(.horizontal, 10)
+                            }
+                            
+                            Button {
+                                
+                            
+                               //REPORT POST
+                                userService.signOut()
+                                signOutConfirmation = false
+                                
+                            } label: {
+                                Text("Yes")
+                                    .font(Font.custom("Chillax-Regular", size: 18))
+                                    .frame(width: 80)
+                                    .padding(10)
+                                    .background(
+                                        // Clipped background
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color.red)
+                                            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 2)
+                                    )
+                                    .foregroundColor(.white)
+                                    .padding(.bottom, 20)
+                                    .padding(.trailing, 10)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    .padding(.top, -40) // Make space for the checkmark at the top
+                    
+                }
+                .frame(width: 300, height: 240, alignment: .center)
+                //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                
+                .background(
+                    // Clipped background
+                    RoundedRectangle(cornerRadius: 20)
+                            .fill(
+                                LinearGradient(stops: [
+                                    .init(color: .lightPurple, location: 0.001),
+                                    .init(color: .darkPurple, location: 0.99)
+                                ], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+)
+            }
+            .frame(width: 300, height: 300, alignment: .center)
+            //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+            .background(.clear)
             
         }
-        .background(Color.backgroundWhite.edgesIgnoringSafeArea(.all))
-        .navigationBarBackButtonHidden(true)
+        .background(
+            ZStack{
+                Color.backgroundWhite.edgesIgnoringSafeArea(.all)
+                
+                // First Layer: Custom Background View
+                BackgroundView()
+                    .frame(width: 600, height: 1500)
+                    .rotationEffect(.degrees(-50))
+                    .offset(y: 300)
+            }
+            )        .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
                                 Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
             Image(systemName: "chevron.backward")
