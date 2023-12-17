@@ -97,6 +97,47 @@ class PostService: ObservableObject {
             }
         }
     }
+    
+    func removeReport(userUUID: String, post: Post, albumDocumentID: String, completion: @escaping (Bool) -> Void) {
+        var updatedPost = post
+
+        // Check if the user has already reported this post
+        if updatedPost.reports[userUUID] != true {
+            completion(false) // Post was not reported by this user
+            return
+        }
+
+        // Remove the report for this post
+        updatedPost.reports[userUUID] = nil
+
+        // Update the post in the album
+        let albumRef = db.collection("albums").document(albumDocumentID)
+        albumRef.getDocument { (document, error) in
+            if let document = document, document.exists, var album = try? document.data(as: Album.self) {
+                if let postIndex = album.posts.firstIndex(where: { $0.Postuuid == post.Postuuid }) {
+                    album.posts[postIndex] = updatedPost
+                    try? albumRef.setData(from: album) { error in
+                        if let error = error {
+                            print("Error updating post in album: \(error)")
+                            completion(false)
+                        } else {
+                            completion(true)
+                        }
+                    }
+                } else {
+                    print("Post not found in album")
+                    completion(false)
+                }
+            } else {
+                print("Album document does not exist or error: \(error?.localizedDescription ?? "")")
+                completion(false)
+            }
+        }
+    }
+    
+    func hasUserReportedPost(userUUID: String, post: Post) -> Bool {
+        return post.reports[userUUID] == true
+    }
 
     
     func removePostFromAlbum(albumDocumentID: String, postID: String) {
@@ -114,7 +155,7 @@ class PostService: ObservableObject {
                 let post = album?.posts[postIndex]
 
                 // Delete the image from Firebase Storage
-                let storageRef = Storage.storage().reference(withPath: post?.imagePath ?? "")
+                let storageRef = Storage.storage().reference(withPath: (post?.imagePath ?? "") + ".jpg" )
                 storageRef.delete { error in
                     if let error = error {
                         print("Error removing image from storage: \(error)")

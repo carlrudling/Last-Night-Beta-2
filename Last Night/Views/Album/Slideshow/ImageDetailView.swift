@@ -13,6 +13,7 @@ struct ImageDetailView: View {
     @State var showingErrorPopup = false
     @State var setAlbumPlaceholder = false
     @State var reportPost = false
+    @State var removeReport = false
     @State var reportPostFail = false
 
    
@@ -103,8 +104,14 @@ struct ImageDetailView: View {
                         }
                         
                         Button(action: {
-                            reportPost.toggle()
-                        }) {
+                            if postService.hasUserReportedPost(userUUID: userService.uuid ?? "", post: post) {
+                                removeReport.toggle()
+                                print("You have already reported this post.")
+                            } else {
+                                reportPost.toggle()
+                                print("You have not reported this post.")
+                                
+                            }}) {
                             Image(systemName:"exclamationmark.triangle")
                                 .font(.system(size: 24))
                                 .foregroundColor( .white)
@@ -361,6 +368,128 @@ struct ImageDetailView: View {
             
         }
         
+        .popup(isPresented: $removeReport) {
+            VStack{
+                ZStack { // 4
+                    
+                    VStack{
+                        HStack{
+                            Spacer()
+                            Image(systemName: "xmark")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .padding(10)
+                        }
+                        Spacer()
+                    }
+                    
+                    VStack {
+                        ZStack{
+                            Image(systemName: "exclamationmark.triangle") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.white)
+                            
+                                .zIndex(1) // Ensure it's above the background
+                            Image(systemName: "exclamationmark.triangle.fill") // SF Symbol for checkmark
+                                .font(.system(size: 80))
+                                .foregroundColor(.red)
+                                .zIndex(1) // Ensure it's above the background
+                        }
+                        
+                        Text("Want to remove report?")
+                            .font(Font.custom("Chillax-Medium", size: 18))
+                            .foregroundColor(.white)
+                            .bold()
+                            .padding(.bottom, 5)
+                            .padding(.top, 2)
+                        
+                        Text("If you press yes your report will be removed, remember reports are anonymous.")
+                            .font(Font.custom("Chillax-Regular", size: 16))
+                            .foregroundColor(.white)
+                            .padding(.top, 5)
+                            .padding(.horizontal, 20)
+                            .multilineTextAlignment(.center)
+                        
+                        Spacer()
+                        HStack(spacing: 0) {
+                            Button {
+                                removeReport = false
+                            } label: {
+                                Text("No")
+                                    .font(Font.custom("Chillax-Regular", size: 18))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(10)
+                                    .background(
+                                        // Clipped background
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color.white)
+                                            //.shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 2)
+                                    )
+                                    .foregroundColor(.black)
+                                    .padding(.bottom, 20)
+                                    .padding(.horizontal, 10)
+                            }
+                            
+                            Button {
+                               //REPORT POST
+                                postService.removeReport(userUUID: userService.uuid ?? "", post: post, albumDocumentID: album.documentID ?? "") { success in
+                                    if success {
+                                        removeReport = false
+                                        print("Report successful")
+                                    } else {
+                                        removeReport = false
+                                        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
+                                            reportPostFail = true
+                                            
+                                        }
+                                        print("Report failed or already reported by this user")
+                                    }
+                                }
+                            } label: {
+                                Text("Yes")
+                                    .font(Font.custom("Chillax-Regular", size: 18))
+                                    .frame(width: 80)
+                                    .padding(10)
+                                    .background(
+                                        // Clipped background
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color.red)
+                                            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 2)
+                                    )
+                                    .foregroundColor(.white)
+                                    .padding(.bottom, 20)
+                                    .padding(.trailing, 10)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    .padding(.top, -40) // Make space for the checkmark at the top
+                    
+                }
+                .frame(width: 300, height: 240, alignment: .center)
+                //.padding(.top, 40) // Padding to push everything down so checkmark appears half out¨
+                
+                .background(
+                    // Clipped background
+                    RoundedRectangle(cornerRadius: 20)
+                            .fill(
+                                LinearGradient(stops: [
+                                    .init(color: .lightPurple, location: 0.001),
+                                    .init(color: .darkPurple, location: 0.99)
+                                ], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+)
+            }
+            .frame(width: 300, height: 300, alignment: .center)
+            //.padding(.top, 40) // Padding to push everything down so checkmark appears half out
+            .background(.clear)
+            
+        }
+        
+        
         .popup(isPresented: $reportPostFail) {
             VStack{
                 ZStack { // 4
@@ -391,14 +520,14 @@ struct ImageDetailView: View {
                             
                         }
                         
-                        Text("Report couldn't be sent")
+                        Text("Something went wrong")
                             .font(Font.custom("Chillax-Medium", size: 18))
                             .foregroundColor(.white)
                             .bold()
                             .padding(.bottom, 5)
                             .padding(.top, 2)
                         
-                        Text("There was an issue with the report, please try again later.")
+                        Text("Your request couldn't be sent, please try again later.")
                             .font(Font.custom("Chillax-Regular", size: 16))
                             .foregroundColor(.white)
                             .padding(.top, 10)
